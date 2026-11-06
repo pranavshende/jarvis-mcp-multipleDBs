@@ -3,8 +3,9 @@ import React from 'react';
 export default function Navbar({ activeTab, setActiveTab, dbStatus }) {
   const tabs = [
     { id: 'founder', label: 'Founder Ground Truth' },
-    { id: 'metrics', label: 'Deterministic Metrics (15)' },
+    { id: 'knowledge', label: 'Knowledge Base & RAG' },
     { id: 'alerts', label: 'Alert Center & Actions' },
+    { id: 'metrics', label: 'Deterministic Metrics (15)' },
     { id: 'crosswalk', label: 'Canonical Crosswalk' },
     { id: 'sync', label: 'Supabase Replication' },
   ];

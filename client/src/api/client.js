@@ -183,3 +183,85 @@ export async function fetchActionHistory(limit = 50) {
   const res = await fetch(`${API_BASE}/actions/history?limit=${limit}`);
   return res.json();
 }
+
+// ----------------------------------------------------------------------------
+// Phase 3: Knowledge Base & RAG Retrieval APIs
+// ----------------------------------------------------------------------------
+
+export async function fetchKnowledgeStats() {
+  const res = await fetch(`${API_BASE}/knowledge/stats`);
+  return res.json();
+}
+
+export async function fetchKnowledgeSources(status = '', limit = 50, offset = 0) {
+  const params = new URLSearchParams();
+  if (status) params.append('status', status);
+  if (limit) params.append('limit', limit);
+  if (offset) params.append('offset', offset);
+  const res = await fetch(`${API_BASE}/knowledge/sources?${params.toString()}`);
+  return res.json();
+}
+
+export async function fetchKnowledgeSourceDetails(sourceId) {
+  const res = await fetch(`${API_BASE}/knowledge/sources/${sourceId}`);
+  return res.json();
+}
+
+export async function triggerKnowledgeIngestion(path = 'notes') {
+  const res = await fetch(`${API_BASE}/knowledge/sources/ingest`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ path })
+  });
+  return res.json();
+}
+
+export async function searchKnowledge(query, topK = 5, userRole = 'ROLE_FOUNDER') {
+  const res = await fetch(`${API_BASE}/knowledge/search`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ query, top_k: topK, user_role: userRole })
+  });
+  return res.json();
+}
+
+export async function retrieveRagContext(query, topK = 5, userRole = 'ROLE_FOUNDER') {
+  const res = await fetch(`${API_BASE}/knowledge/retrieve`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ query, top_k: topK, user_role: userRole })
+  });
+  return res.json();
+}
+
+export async function fetchCandidateFacts(status = '') {
+  const params = new URLSearchParams();
+  if (status) params.append('status', status);
+  const res = await fetch(`${API_BASE}/knowledge/candidates?${params.toString()}`);
+  return res.json();
+}
+
+export async function approveCandidateFact(candidateId, reviewerId = 'EMP-001 (Founder)', reviewerRole = 'ROLE_FOUNDER', comments = '') {
+  const res = await fetch(`${API_BASE}/knowledge/candidates/${candidateId}/approve`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ reviewer_id: reviewerId, reviewer_role: reviewerRole, comments })
+  });
+  return res.json();
+}
+
+export async function rejectCandidateFact(candidateId, reviewerId = 'EMP-001 (Founder)', reviewerRole = 'ROLE_FOUNDER', comments = '') {
+  const res = await fetch(`${API_BASE}/knowledge/candidates/${candidateId}/reject`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ reviewer_id: reviewerId, reviewer_role: reviewerRole, comments })
+  });
+  return res.json();
+}
+
+export async function fetchGlobalMemory(category = '') {
+  const params = new URLSearchParams();
+  if (category) params.append('category', category);
+  const res = await fetch(`${API_BASE}/knowledge/memory?${params.toString()}`);
+  return res.json();
+}

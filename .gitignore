@@ -28,3 +28,8 @@ desktop.ini
 # Build outputs
 dist/
 */dist/
+
+# Context bank shortcuts
+notes
+session_logs
+memory.jsonl

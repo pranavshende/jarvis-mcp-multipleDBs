@@ -5,6 +5,7 @@ import CrosswalkViewer from './components/CrosswalkViewer';
 import MetricsExplorer from './components/MetricsExplorer';
 import SyncStatusMonitor from './components/SyncStatusMonitor';
 import AlertCenter from './components/AlertCenter';
+import KnowledgeBase from './components/KnowledgeBase';
 import { fetchHealth } from './api/client';
 
 export default function App() {
@@ -31,14 +32,15 @@ export default function App() {
       
       <main style={{ flex: '1' }}>
         {activeTab === 'founder' && <FounderDashboard />}
-        {activeTab === 'metrics' && <MetricsExplorer />}
+        {activeTab === 'knowledge' && <KnowledgeBase />}
         {activeTab === 'alerts' && <AlertCenter />}
+        {activeTab === 'metrics' && <MetricsExplorer />}
         {activeTab === 'crosswalk' && <CrosswalkViewer />}
         {activeTab === 'sync' && <SyncStatusMonitor />}
       </main>
 
       <footer style={{ borderTop: '1px solid rgba(255,255,255,0.08)', padding: '16px 24px', textAlign: 'center', fontSize: '12px', color: '#64748b', background: '#0b0f19' }}>
-        Jarvis v1 • Meridian Supply Chain Intelligence Platform • Phase 1 & 2 Deterministic Architecture
+        Jarvis v1 • Meridian Supply Chain Intelligence Platform • Phase 1, 2 & 3 Enterprise Architecture
       </footer>
     </div>
   );

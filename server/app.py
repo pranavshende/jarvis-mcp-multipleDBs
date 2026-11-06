@@ -15,6 +15,7 @@ from routes.reconciliation import reconciliation_bp
 from routes.alerts import alerts_bp
 from routes.monitoring import monitoring_bp
 from routes.actions import actions_bp
+from routes.knowledge import knowledge_bp
 from services.queue.job_runner import JobRunner
 
 def create_app():
@@ -36,17 +37,22 @@ def create_app():
     app.register_blueprint(monitoring_bp)
     app.register_blueprint(actions_bp)
     
+    # Register Phase 3 Knowledge Base & RAG Blueprints
+    app.register_blueprint(knowledge_bp)
+    
     @app.route("/")
     def index():
         return jsonify({
-            "service": "Jarvis v1 Enterprise Intelligence Server (Phase 1 & Phase 2 Active)",
+            "service": "Jarvis v1 Enterprise Intelligence Server (Phase 1, 2 & 3 Active)",
             "endpoints": {
                 "health": "/api/health/db",
                 "metrics": "/api/metrics/list",
                 "reconciliation": "/api/reconciliation/history",
                 "alerts": "/api/alerts",
                 "monitoring": "/api/monitoring/status",
-                "actions": "/api/actions/pending"
+                "actions": "/api/actions/pending",
+                "knowledge_search": "/api/knowledge/search",
+                "knowledge_stats": "/api/knowledge/stats"
             }
         })
         
