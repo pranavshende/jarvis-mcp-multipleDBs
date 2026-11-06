@@ -61,3 +61,4 @@ Privileged users (`ROLE_ADMIN`, `ROLE_FOUNDER`) can inspect and manage failed jo
    - Marks the job as `DISMISSED` with mandatory justification notes.
 3. **Non-Negotiable Safety Barrier**:
    - Automatic or one-click DLQ replay of **restricted business actions** (e.g., credit holds, payout cancellations) is strictly prohibited. The system requires initiating a new action proposal with an explicit human confirmation token.
+

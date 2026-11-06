@@ -57,3 +57,4 @@ Privileged administrators (`ROLE_ADMIN`, `ROLE_FOUNDER`) can selectively flush c
 - `POST /api/admin/cache/invalidate` with `{"scope": "ALL"}`
 
 Audit logs record the admin ID, scope, cleared count, and timestamp in `jarvis_system.audit_logs`.
+

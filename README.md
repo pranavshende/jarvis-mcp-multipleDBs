@@ -25,44 +25,44 @@ Jarvis v1 sits **above** the operational systems as an intelligent control plane
 ## 2. Repository Structure
 
 ```
-d:\eigi.ai├── README.md                          # Master Project Guide & Quickstart
-├── project_docs/                      # Enterprise Specifications
-│   ├── PHASE_WISE_IMPLEMENTATION.md   # 7-Phase Implementation Roadmap
-│   ├── ARCHITECTURE.md                # 12-Layer System Architecture & Diagrams
-│   ├── AI_PROMPTS.md                  # 20 Production Prompts & Guardrails
-│   └── PERMISSIONS.md                 # RBAC, RLS, and Access Governance
+d:\eigi.ai├── README.md                    # Master Project Guide & Quickstart
+├── project_docs/                          # Enterprise Specifications
+│   ├── PHASE_WISE_IMPLEMENTATION.md       # 7-Phase Implementation Roadmap
+│   ├── ARCHITECTURE.md                    # 12-Layer System Architecture & Diagrams
+│   ├── AI_PROMPTS.md                      # 20 Production Prompts & Guardrails
+│   └── PERMISSIONS.md                     # RBAC, RLS, and Access Governance
 ├── docs/
-│   └── audit/                         # Phase 0 Audit & Security Specifications
-│       ├── DATA_DICTIONARY_V1.md      # Full 35-Table Schema & Replication Boundaries
-│       ├── SCHEMA_RELATIONSHIP_REPORT.md # Cross-Database Joins & Normalization
+│   └── audit/                             # Phase 0 Audit & Security Specifications
+│       ├── DATA_DICTIONARY_V1.md          # Full 35-Table Schema & Replication Boundaries
+│       ├── SCHEMA_RELATIONSHIP_REPORT.md  # Cross-Database Joins & Normalization
 │       ├── SECURITY_REMEDIATION_LOG.md# Deprecation of jarvis_svc & Read-Only DDL
-│       ├── SECURITY_THREAT_MODEL.md   # STRIDE & OWASP LLM Attack Vectors
-│       ├── ACCESS_CONTROL_MATRIX.md   # 8 Roles & 25 Employee Mapping
-│       ├── METRICS_DICTIONARY.md      # Deterministic SQL Definitions & Timezones
+│       ├── SECURITY_THREAT_MODEL.md       # STRIDE & OWASP LLM Attack Vectors
+│       ├── ACCESS_CONTROL_MATRIX.md       # 8 Roles & 25 Employee Mapping
+│       ├── METRICS_DICTIONARY.md          # Deterministic SQL Definitions & Timezones
 │       ├── IDENTITY_RESOLUTION_SPEC.md# Canonical Product & Entity Resolution
-│       └── DATA_GOVERNANCE_REVIEW.md  # GDPR & US-EU Cross-Border Sovereignty
-├── contracts/                         # Strongly-Typed System Contracts
-│   ├── canonical_crosswalk.sql        # Supabase DDL for Unified Crosswalk Table
-│   ├── tools.schema.json              # Draft-07 JSON Schema for all MCP Tools
-│   └── README.md                      # Contract Validation & Transport Guide
-├── eval/                              # Evaluation & Verification Harness
-│   └── baseline_eval.json             # 10 Ground-Truth Test Scenarios
-├── reports/                           # Executive Reports & Audit Logs
-│   ├── CONTEXT_INVENTORY.md           # 362-File Context Pack Inventory
-│   ├── PHASE_0_SUMMARY.md             # Comprehensive Audit & Findings Summary
-│   ├── UNRESOLVED_QUESTIONS.md        # Ambiguities, Missing Files & Action Items
-│   ├── PHASE_1_READINESS.md           # Readiness Assessment (READY WITH CONDITIONS)
-│   ├── schema_audit_raw.json          # Introspected Database Schema Dump
-│   ├── identity_joins_audit.json      # Forensic Join Matching Analysis
-│   └── timezone_verification_audit.json # Local vs UTC Timezone Comparison
-├── scripts/                           # Forensic Audit & Verification Scripts
-│   ├── audit_schema_integrity.py      # Database Schema Introspector
-│   ├── inspect_identity_joins.py      # Cross-System Join & Crosswalk Analyzer
-│   └── verify_timezone_offsets.py     # Facility Local vs UTC Offset Calculator
-└── jarvis-mvp/                        # Working Demonstration Prototype (Port 3000)
-    ├── server.js                      # Fastify/Express Mock Server
-    ├── public/index.html              # Interactive Operations Dashboard UI
-    └── README.md                      # Demonstration Guide
+│       └── DATA_GOVERNANCE_REVIEW.md      # GDPR & US-EU Cross-Border Sovereignty
+├── contracts/                             # Strongly-Typed System Contracts
+│   ├── canonical_crosswalk.sql            # Supabase DDL for Unified Crosswalk Table
+│   ├── tools.schema.json                  # Draft-07 JSON Schema for all MCP Tools
+│   └── README.md                          # Contract Validation & Transport Guide
+├── eval/                                  # Evaluation & Verification Harness
+│   └── baseline_eval.json                 # 10 Ground-Truth Test Scenarios
+├── reports/                               # Executive Reports & Audit Logs
+│   ├── CONTEXT_INVENTORY.md               # 362-File Context Pack Inventory
+│   ├── PHASE_0_SUMMARY.md                 # Comprehensive Audit & Findings Summary
+│   ├── UNRESOLVED_QUESTIONS.md            # Ambiguities, Missing Files & Action Items
+│   ├── PHASE_1_READINESS.md               # Readiness Assessment (READY WITH CONDITIONS)
+│   ├── schema_audit_raw.json              # Introspected Database Schema Dump
+│   ├── identity_joins_audit.json          # Forensic Join Matching Analysis
+│   └── timezone_verification_audit.json   # Local vs UTC Timezone Comparison
+├── scripts/                               # Forensic Audit & Verification Scripts
+│   ├── audit_schema_integrity.py          # Database Schema Introspector
+│   ├── inspect_identity_joins.py          # Cross-System Join & Crosswalk Analyzer
+│   └── verify_timezone_offsets.py         # Facility Local vs UTC Offset Calculator
+└── jarvis-mvp/                            # Working Demonstration Prototype (Port 3000)
+    ├── server.js                          # Fastify/Express Mock Server
+    ├── public/index.html                  # Interactive Operations Dashboard UI
+    └── README.md                          # Demonstration Guide
 ```
 
 ---

@@ -1,0 +1,52 @@
+{
+  "total_tests": 9,
+  "passed": 9,
+  "failed": 0,
+  "tests": [
+    {
+      "test_name": "Schema Existence (Core Schemas)",
+      "status": "PASSED",
+      "details": "Found: ['analytics', 'jarvis_alerts', 'jarvis_memory', 'jarvis_system', 'public']"
+    },
+    {
+      "test_name": "pgvector Extension Active",
+      "status": "PASSED",
+      "details": "Extension vector active (v0.8.2)"
+    },
+    {
+      "test_name": "Required Tables Check",
+      "status": "PASSED",
+      "details": "Verified 19 essential tables exist. Missing: []"
+    },
+    {
+      "test_name": "Financial Numeric Precision (Numeric Type)",
+      "status": "PASSED",
+      "details": "Type: numeric(10,2)"
+    },
+    {
+      "test_name": "AR Aging Buckets Mathematical Consistency",
+      "status": "PASSED",
+      "details": "Total Open AR: $1,688,673.39, Sum of Buckets: $1,688,673.39"
+    },
+    {
+      "test_name": "Inventory FIFO Valuation Ground Truth",
+      "status": "PASSED",
+      "details": "Bins: 1061, Valuation: $8,117,870.16"
+    },
+    {
+      "test_name": "Warehouse Timezone Offsets Integrity",
+      "status": "PASSED",
+      "details": "EWR1: America/New_York, ONT1: America/Los_Angeles"
+    },
+    {
+      "test_name": "Transaction Rollback & Isolation",
+      "status": "PASSED",
+      "details": "Rollback cleanly unrolled uncommitted row"
+    },
+    {
+      "test_name": "Database Statement Timeout Setting",
+      "status": "PASSED",
+      "details": "Active timeout: 8s"
+    }
+  ]
+}

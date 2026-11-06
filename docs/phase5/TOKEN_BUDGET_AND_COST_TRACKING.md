@@ -37,3 +37,4 @@ Simultaneously, `jarvis_system.department_budgets` updates `current_usd_spend` a
 ## 3. Non-Blockable Critical Safety Exception
 
 **Strict Rule:** Discretionary conversational questions and exploratory queries may be throttled or rejected when a department exhausts its budget (`is_exhausted = true`). However, **critical operational alerts, dock emergency escalations, and security anomaly detections are NEVER blocked** by budget exhaustion.
+

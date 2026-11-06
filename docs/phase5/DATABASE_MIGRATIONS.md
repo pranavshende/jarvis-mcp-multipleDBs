@@ -116,3 +116,4 @@ The schema was successfully deployed to Supabase PostgreSQL:
 - Executed via: `server/scripts/deploy_phase5_schema.py`
 - Connection: Supabase Pooler (`aws-0-ap-south-1.pooler.supabase.com`)
 - Result: All tables, foreign keys, and indexes created with `exit_code=0`.
+

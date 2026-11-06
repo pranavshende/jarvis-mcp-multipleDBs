@@ -90,3 +90,4 @@ Phase 5 introduces five production-grade enterprise optimization, evaluation, an
 | **DLQ Exponential Backoff** | Jobs retry at 10s, 30s, and 90s before dead-letter transfer. | `test_dlq_handler.ts` Test 1 & 2 |
 | **Budget Fail-Safe** | Critical security/operational alerts bypass departmental budget locks. | `test_model_router_and_budgets.ts` Test 6 |
 | **Prompt Injection Immunity** | System prompts, delimiters, and payroll data cannot be extracted via adversarial instructions. | `run_redteam.ts` (15/15 Defended) |
+

@@ -107,3 +107,4 @@ The cache exposes real-time operational telemetry via `CompositeCache.getStats()
 - `hitRatio`: Percentage of requests served from cache.
 - `avgLatencyMs`: Average response time of cache hits.
 - `estimatedTokenSavings`: Estimated LLM prompt/output tokens avoided (approx. 450 tokens/hit).
+

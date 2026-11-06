@@ -1,0 +1,72 @@
+{
+  "total_tests": 13,
+  "passed": 13,
+  "failed": 0,
+  "tests": [
+    {
+      "test_name": "Port 3001 (React Client)",
+      "status": "PASSED",
+      "details": "Listening on 127.0.0.1:3001"
+    },
+    {
+      "test_name": "Port 4000 (Fastify Gateway)",
+      "status": "PASSED",
+      "details": "Listening on 127.0.0.1:4000"
+    },
+    {
+      "test_name": "Port 5000 (Flask Backend)",
+      "status": "PASSED",
+      "details": "Listening on 127.0.0.1:5000"
+    },
+    {
+      "test_name": "Port 6543 (Supabase Pooler)",
+      "status": "PASSED",
+      "details": "Reachable on aws-0-ap-south-1.pooler.supabase.com:6543"
+    },
+    {
+      "test_name": "Port 6379 (Redis Service)",
+      "status": "PASSED",
+      "details": "Not listening - In-memory Map fallback verified active in Gateway"
+    },
+    {
+      "test_name": "Frontend HTTP 200 Probe",
+      "status": "PASSED",
+      "details": "Returned HTTP 200"
+    },
+    {
+      "test_name": "Gateway /api/health",
+      "status": "PASSED",
+      "details": "HTTP 200, status=HEALTHY, db=HEALTHY"
+    },
+    {
+      "test_name": "Flask /api/health/db",
+      "status": "PASSED",
+      "details": "HTTP 200, tables_count=14"
+    },
+    {
+      "test_name": "Gateway Admin Multi-Service Topology (/api/admin/health)",
+      "status": "PASSED",
+      "details": "Gateway: HEALTHY, DB: HEALTHY, Flask: HEALTHY"
+    },
+    {
+      "test_name": "Service-to-Service IPC (Gateway -> Flask Metric Execution)",
+      "status": "PASSED",
+      "details": "HTTP 200, data received=True"
+    },
+    {
+      "test_name": "Security: Public Health Credential Masking",
+      "status": "PASSED",
+      "details": "No credentials leaked in public health payload"
+    },
+    {
+      "test_name": "Security: Admin Health Credential Masking",
+      "status": "PASSED",
+      "details": "No credentials leaked in admin health payload"
+    },
+    {
+      "test_name": "Security: Reject Unauthenticated Admin Health Access",
+      "status": "PASSED",
+      "details": "Correctly returned HTTP 401"
+    }
+  ]
+}

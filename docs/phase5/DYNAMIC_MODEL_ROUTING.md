@@ -60,3 +60,4 @@ flowchart TD
 - Fallback execution triggers on HTTP 429 (Rate Limit), 503/504 (Provider Outage), or request timeout.
 - The system logs a structured warning and updates provider health metrics in `jarvis_system.audit_logs`.
 - **Silent Downgrade Guard:** If a fallback model lacks the necessary reasoning context or tool-calling schema, the request fails safely with an explicit error rather than hallucinating.
+

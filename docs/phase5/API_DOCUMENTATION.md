@@ -210,3 +210,4 @@ All admin endpoints require an active Founder/Executive MCP Bearer token in the 
 ### 5.2. Get Security Event Logs
 - **Endpoint**: `GET /api/admin/security/events`
 - **Description**: Returns security audit records (`DENIED`, `CONFIRMATION_REQUIRED`, `ERROR`) from `jarvis_system.audit_logs`.
+

@@ -174,7 +174,8 @@ class AlertManager:
                 conn.commit()
                 return {"status": "SUCCESS", "alert_id": alert_id}
 
-    def resolve_alert(self, alert_id, user_id, resolution_note=""):
+    def resolve_alert(self, alert_id, user_id, resolution_note="", notes=""):
+        note_to_use = notes or resolution_note
         with get_db_connection(read_only=False) as conn:
             with conn.cursor() as cur:
                 cur.execute("""
@@ -185,12 +186,15 @@ class AlertManager:
                 cur.execute("""
                     INSERT INTO jarvis_alerts.alert_feedback (alert_id, user_id, feedback_type, notes)
                     VALUES (%(id)s, %(user_id)s, 'RESOLVE', %(note)s);
-                """, {"id": alert_id, "user_id": user_id, "note": resolution_note})
+                """, {"id": alert_id, "user_id": user_id, "note": note_to_use})
                 conn.commit()
                 return {"status": "SUCCESS", "alert_id": alert_id}
 
-    def snooze_alert(self, alert_id, user_id, hours=4, reason=""):
-        snooze_until = datetime.now() + timedelta(hours=hours)
+    def snooze_alert(self, alert_id, user_id, hours=4, duration_minutes=None, reason=""):
+        if duration_minutes is not None:
+            snooze_until = datetime.now() + timedelta(minutes=duration_minutes)
+        else:
+            snooze_until = datetime.now() + timedelta(hours=hours)
         with get_db_connection(read_only=False) as conn:
             with conn.cursor() as cur:
                 cur.execute("""

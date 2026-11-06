@@ -96,3 +96,4 @@ Before modifications, existing test suites were executed:
 7. **Admin Dashboard Extension (`client/src/components/AdminDashboard.jsx`)**: 5 new control views + REST APIs in `admin_routes.ts`.
 8. **Database Migration (`005_jarvis_phase5_optimization.sql`)**: Deploy semantic cache, evaluation runs, DLQ audit, and budgets.
 9. **Full Verification & Certification**: Regression pass across Phases 1–5 and final delivery report.
+

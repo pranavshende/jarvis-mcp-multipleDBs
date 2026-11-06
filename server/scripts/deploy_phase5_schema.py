@@ -37,3 +37,4 @@ for b in budgets:
 
 cur.close()
 conn.close()
+

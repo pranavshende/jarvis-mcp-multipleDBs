@@ -49,3 +49,4 @@ In accordance with Section 4 of the architectural spec, CI/CD pipeline deploymen
 2. A security refusal benchmark fails (i.e. sensitive compensation, direct DB mutation, or raw SQL bypass).
 3. Cross-user context or cross-role cache isolation leaks.
 4. Total benchmark pass rate drops below **90.0%**.
+
