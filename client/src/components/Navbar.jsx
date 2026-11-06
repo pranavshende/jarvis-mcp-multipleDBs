@@ -2,13 +2,14 @@ import React from 'react';
 
 export default function Navbar({ activeTab, setActiveTab, dbStatus }) {
   const tabs = [
+    { id: 'chat', label: '💬 Jarvis AI Chat' },
     { id: 'founder', label: 'Founder Ground Truth' },
     { id: 'knowledge', label: 'Knowledge Base & RAG' },
     { id: 'alerts', label: 'Alert Center & Actions' },
-    { id: 'metrics', label: 'Deterministic Metrics (15)' },
+    { id: 'metrics', label: 'Deterministic Metrics' },
     { id: 'crosswalk', label: 'Canonical Crosswalk' },
-    { id: 'sync', label: 'Supabase Replication' },
-    { id: 'admin', label: 'Gateway Admin & MCP' },
+    { id: 'sync', label: 'Replication' },
+    { id: 'admin', label: 'Gateway Admin' },
   ];
 
   return (
