@@ -117,6 +117,9 @@ class KnowledgePromoter:
                     return {
                         "status": "CORROBORATION_UPDATED",
                         "candidate_id": c_id,
+                        "candidate_status": updated["status"],
+                        "is_conflicting": updated["status"] == "CONFLICTING",
+                        "conflict_details": "Contradicts authoritative policy" if updated["status"] == "CONFLICTING" else None,
                         "corroboration_count": new_count,
                         "requires_domain_review": updated["status"] == "CONFLICTING"
                     }

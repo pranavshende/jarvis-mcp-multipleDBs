@@ -265,3 +265,71 @@ export async function fetchGlobalMemory(category = '') {
   const res = await fetch(`${API_BASE}/knowledge/memory?${params.toString()}`);
   return res.json();
 }
+
+// ============================================================================
+// Phase 4: Gateway & Admin Control Plane APIs
+// ============================================================================
+
+const DEFAULT_ADMIN_TOKEN = 'msc_mcp_founder_sec_7a8f9b1c2d3e4f5a6b7c8d9e0f1a2b3c';
+
+function getAdminHeaders() {
+  const token = localStorage.getItem('jarvis_mcp_token') || DEFAULT_ADMIN_TOKEN;
+  return {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`
+  };
+}
+
+export async function fetchAdminTokens() {
+  const res = await fetch('/api/admin/tokens', { headers: getAdminHeaders() });
+  return res.json();
+}
+
+export async function createAdminToken(tokenData) {
+  const res = await fetch('/api/admin/tokens', {
+    method: 'POST',
+    headers: getAdminHeaders(),
+    body: JSON.stringify(tokenData)
+  });
+  return res.json();
+}
+
+export async function revokeAdminToken(tokenId) {
+  const res = await fetch(`/api/admin/tokens/${tokenId}/revoke`, {
+    method: 'POST',
+    headers: getAdminHeaders()
+  });
+  return res.json();
+}
+
+export async function rotateAdminToken(tokenId) {
+  const res = await fetch(`/api/admin/tokens/${tokenId}/rotate`, {
+    method: 'POST',
+    headers: getAdminHeaders()
+  });
+  return res.json();
+}
+
+export async function fetchAdminModels() {
+  const res = await fetch('/api/admin/models', { headers: getAdminHeaders() });
+  return res.json();
+}
+
+export async function fetchAdminSpend(days = 30) {
+  const res = await fetch(`/api/admin/models/spend?days=${days}`, { headers: getAdminHeaders() });
+  return res.json();
+}
+
+export async function fetchAdminHealth() {
+  const res = await fetch('/api/admin/health', { headers: getAdminHeaders() });
+  return res.json();
+}
+
+export async function queryGatewayIntent(queryText) {
+  const res = await fetch('http://127.0.0.1:4000/api/query', {
+    method: 'POST',
+    headers: getAdminHeaders(),
+    body: JSON.stringify({ query: queryText })
+  });
+  return res.json();
+}

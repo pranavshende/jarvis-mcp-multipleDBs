@@ -8,6 +8,7 @@ export default function Navbar({ activeTab, setActiveTab, dbStatus }) {
     { id: 'metrics', label: 'Deterministic Metrics (15)' },
     { id: 'crosswalk', label: 'Canonical Crosswalk' },
     { id: 'sync', label: 'Supabase Replication' },
+    { id: 'admin', label: 'Gateway Admin & MCP' },
   ];
 
   return (
