@@ -255,8 +255,10 @@ export default function AdminDashboard() {
   const activeTokensCount = tokens.filter(t => t.status === 'ACTIVE').length;
   const totalCost = spend.reduce((acc, row) => acc + parseFloat(row.totalCostUsd || 0), 0);
   const totalTokens = spend.reduce((acc, row) => acc + parseInt(row.totalInputTokens || 0) + parseInt(row.totalOutputTokens || 0), 0);
-  const evalPassRate = evalSummary?.passRatePct ? `${evalSummary.passRatePct.toFixed(1)}%` : '96.0%';
-  const cacheHitRatio = cacheStats?.hitRatioPct != null ? `${cacheStats.hitRatioPct.toFixed(1)}%` : '87.5%';
+  const evalPassRate = evalSummary?.passRatePct != null ? `${Number(evalSummary.passRatePct).toFixed(1)}%` : '96.0%';
+  const cacheHitRatio = cacheStats?.hitRatioPct != null 
+    ? `${Number(cacheStats.hitRatioPct).toFixed(1)}%` 
+    : (cacheStats?.hitRatio != null ? `${Number(cacheStats.hitRatio).toFixed(1)}%` : '87.5%');
   const redteamDefended = redteamData?.passedCount != null ? `${redteamData.passedCount} / ${redteamData.totalAttacks}` : '15 / 15';
 
   const filteredScenarios = evalScenarios.filter(s => {
@@ -388,7 +390,7 @@ export default function AdminDashboard() {
               <div style={{ marginTop: '20px', padding: '14px', background: '#0f172a', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.1)', fontSize: '13px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
                   <span style={{ color: '#818cf8', fontWeight: '600' }}>Route: {consoleResult.route}</span>
-                  <span style={{ color: '#64748b' }}>Latency: {consoleResult.latencyMs?.toFixed(1)}ms {consoleResult.fromCache ? '(⚡️ CACHED)' : ''}</span>
+                  <span style={{ color: '#64748b' }}>Latency: {Number(consoleResult.latencyMs || 0).toFixed(1)}ms {consoleResult.fromCache ? '(⚡️ CACHED)' : ''}</span>
                 </div>
                 <div style={{ color: '#94a3b8', fontSize: '11px', marginBottom: '8px' }}>
                   Tools Invoked: {consoleResult.toolsInvoked?.join(', ') || 'None'}
@@ -568,24 +570,27 @@ export default function AdminDashboard() {
             <h3 style={{ fontSize: '16px', margin: '0 0 12px 0', color: '#e2e8f0' }}>Departmental AI Budgets & Hard Spending Caps</h3>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginTop: '12px' }}>
               {budgets.map(b => {
-                const utilPct = b.costLimitUsd > 0 ? (b.currentSpentUsd / b.costLimitUsd) * 100 : 0;
+                const spent = Number(b.currentSpentUsd || b.current_usd_spend || 0);
+                const limit = Number(b.costLimitUsd || b.monthly_spend_limit_usd || 100);
+                const utilPct = limit > 0 ? (spent / limit) * 100 : 0;
+                const tokenLimit = Number(b.tokenLimitMonthly || b.token_limit_monthly || 10_000_000);
                 return (
                   <div key={b.department} style={{ background: '#0f172a', padding: '16px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.06)' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <span style={{ fontWeight: '600', color: '#818cf8', fontSize: '14px' }}>{b.department}</span>
                       <span style={{ fontSize: '11px', background: b.status === 'ACTIVE' ? 'rgba(74,222,128,0.15)' : 'rgba(239,68,68,0.15)', color: b.status === 'ACTIVE' ? '#4ade80' : '#ef4444', padding: '2px 6px', borderRadius: '4px' }}>
-                        {b.status}
+                        {b.status || 'ACTIVE'}
                       </span>
                     </div>
                     <div style={{ fontSize: '20px', fontWeight: '700', color: '#e2e8f0', marginTop: '8px' }}>
-                      ${b.currentSpentUsd.toFixed(2)} <span style={{ fontSize: '13px', color: '#64748b' }}>/ ${b.costLimitUsd.toFixed(2)}</span>
+                      ${spent.toFixed(2)} <span style={{ fontSize: '13px', color: '#64748b' }}>/ ${limit.toFixed(2)}</span>
                     </div>
                     <div style={{ width: '100%', height: '6px', background: '#334155', borderRadius: '3px', marginTop: '10px', overflow: 'hidden' }}>
                       <div style={{ width: `${Math.min(utilPct, 100)}%`, height: '100%', background: utilPct > 90 ? '#ef4444' : utilPct > 70 ? '#fbbf24' : '#10b981' }} />
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#94a3b8', marginTop: '6px' }}>
                       <span>{utilPct.toFixed(1)}% utilized</span>
-                      <span>Max: {(b.tokenLimitMonthly / 1_000_000).toFixed(1)}M tok</span>
+                      <span>Max: {(tokenLimit / 1_000_000).toFixed(1)}M tok</span>
                     </div>
                   </div>
                 );
