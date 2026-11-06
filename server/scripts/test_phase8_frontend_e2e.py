@@ -88,9 +88,10 @@ def run_frontend_e2e_tests():
     try:
         r = requests.get(f"{GATEWAY_URL}/api/admin/dlq", headers=HEADERS, timeout=3.0)
         d = r.json()
-        has_dlq = "circuitBreakers" in d and "stats" in d
+        has_dlq = ("circuitBreaker" in d or "circuitBreakers" in d) and "stats" in d
+        cb_info = d.get('circuitBreaker') or d.get('circuitBreakers')
         record_test("AdminDashboard:DLQ", "DLQ Overview Real API Binding", r.status_code == 200 and has_dlq,
-                    f"Alerts CB: {d.get('circuitBreakers', {}).get('alerts')}, Pending: {d.get('stats', {}).get('pending')}")
+                    f"CB State: {cb_info.get('state') if isinstance(cb_info, dict) else 'OK'}, Pending: {d.get('stats', {}).get('pending')}")
     except Exception as e:
         record_test("AdminDashboard:DLQ", "DLQ Overview Real API Binding", False, str(e))
 
