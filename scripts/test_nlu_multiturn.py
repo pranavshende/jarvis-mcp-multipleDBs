@@ -27,3 +27,4 @@ print('Pronouns Resolved:', r2.get('nluAnalysis', {}).get('pronounsResolved'))
 print('Entities:', r2.get('entities'))
 print('Route:', r2.get('route'))
 print('Response Preview:\n', r2.get('response', '')[:250])
+
