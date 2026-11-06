@@ -53,3 +53,4 @@ Every metric query was mapped deterministically to its backend SQL RPC without a
 
 ### 3.4. Strategic Synthesis
 - 10/10 strategic queries successfully synthesized deterministic quantitative calculations alongside operational knowledge citations (e.g., executive margin briefings, partner risk summaries).
+

@@ -35,3 +35,4 @@ $$\text{CacheKey} = \text{SHA256}(\text{Query} \mid \text{Parameters} \mid \text
 4. **User-Specific Isolation**: User A's private context is isolated by `UserId`; User B cannot retrieve User A's cached private results.
 5. **ETL Watermark Invalidation**: Advancing the ETL watermark timestamp in `analytics.reconciliation_logs` invalidates prior financial cache entries immediately. Stale metrics cannot be served.
 6. **Selective Invalidation Control Plane**: Administrative invalidation by scope (`ALL`, `FINANCIAL`, `KNOWLEDGE`, `ROLE`, `USER`, `WATERMARK`) clears targets accurately across L1 and L2 layers.
+

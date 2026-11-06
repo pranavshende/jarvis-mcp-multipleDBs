@@ -40,3 +40,4 @@ with open("docs/testing/cache_benchmark.json", "w", encoding="utf-8") as f:
         "sla_target_ms": 100.0,
         "sla_passed": p99 < 100.0
     }, f, indent=2)
+

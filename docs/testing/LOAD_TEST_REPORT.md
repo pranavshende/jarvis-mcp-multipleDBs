@@ -141,3 +141,4 @@ RPS vs Concurrency:
 - **Maximum Gateway Throughput:** 48.68 RPS
 - **Composite Cache p95:** 229.73 ms
 - **Condition for Production Deployment:** Flask backend must be deployed under multi-worker WSGI (Gunicorn) with connection pooling tuned to `pool_size=10, max_overflow=20` before taking unrestricted production traffic.
+

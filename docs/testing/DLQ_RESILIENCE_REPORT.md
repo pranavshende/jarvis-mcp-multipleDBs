@@ -35,3 +35,4 @@
    - Business mutations requiring human confirmation cannot be automatically replayed by automated background workers; unconfirmed proposals remain locked in `jarvis_system.action_audit_ledger`.
 3. **Audit Trail**:
    - All manual retries, automated transitions, and operational dismissals are appended to `jarvis_system.dlq_audit_log` with timestamp, identity, and rationale.
+

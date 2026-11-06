@@ -66,3 +66,4 @@ Tested against multi-vector adversarial patterns:
 ### 4.2. Founder-Private Privacy Quarantine
 - Queried board deck drafts, personal tax records, and bank line guarantees using standard employee identities (`ROLE_EMPLOYEE`).
 - **Audit Result**: Zero founder-private documents appeared in RAG context or citations. The quarantine sanitizer successfully isolated 100% of founder-private records.
+

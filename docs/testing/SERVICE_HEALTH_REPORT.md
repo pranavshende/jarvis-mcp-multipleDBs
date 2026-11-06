@@ -73,3 +73,4 @@
    - PostgreSQL connection pool initialized with Min: 2, Max: 10 connections. Supavisor transaction pooler operating without connection starvation or thread lock contention.
 3. **Graceful Degradation Under Outage**:
    - When an external Redis instance is unavailable, the Gateway automatically engages its in-memory L1 cache Map, preserving sub-100ms response SLAs and logging no fatal crashes.
+

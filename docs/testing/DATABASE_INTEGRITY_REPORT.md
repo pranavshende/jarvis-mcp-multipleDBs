@@ -64,3 +64,4 @@ Warehouse receiving operates under local facility calendars:
    - An insert into `jarvis_system.audit_logs` within an active transaction followed by a forced `conn.rollback()` was verified to leave zero uncommitted state in the database.
 2. **Statement Timeout**:
    - Active database timeout verified at **8,000 ms** (`8s`). Long-running runaway queries are automatically terminated by the PostgreSQL server before exhausting connection pool threads.
+
