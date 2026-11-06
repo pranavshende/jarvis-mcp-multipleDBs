@@ -1,7 +1,7 @@
 -- ============================================================================
 -- CANONICAL PRODUCT & ENTITY CROSSWALK DEFINITIONS
 -- Schema: analytics
--- Target: Supabase Managed PostgreSQL (eu-central-1)
+-- Target: Supabase Managed PostgreSQL
 -- ============================================================================
 
 CREATE SCHEMA IF NOT EXISTS analytics;
@@ -13,9 +13,9 @@ CREATE TABLE IF NOT EXISTS analytics.dim_product_crosswalk (
     canonical_name VARCHAR(255) NOT NULL,
     set_code VARCHAR(32),
     brand_name VARCHAR(64),
-    portal_catalog_id INTEGER UNIQUE,
+    portal_catalog_id VARCHAR(64) UNIQUE,
     portal_mfr_code VARCHAR(64),
-    wms_item_id INTEGER UNIQUE,
+    wms_item_id VARCHAR(64) UNIQUE,
     wms_upc VARCHAR(32),
     mapping_confidence NUMERIC(3, 2) NOT NULL CHECK (mapping_confidence >= 0.00 AND mapping_confidence <= 1.00),
     mapping_method VARCHAR(32) NOT NULL CHECK (mapping_method IN ('EXACT_UPC', 'CURATED_MAP', 'FUZZY_NORMALIZED', 'MANUAL_PENDING')),
