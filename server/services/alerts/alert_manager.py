@@ -58,12 +58,14 @@ class AlertManager:
                 """, {"fp": fingerprint})
                 existing = cur.fetchone()
 
-                if existing and existing["status"] in ("NEW", "ACKNOWLEDGED", "IN_PROGRESS", "SNOOZED"):
-                    # Deduplicate: update existing alert
+                if existing:
+                    # Deduplicate: update existing alert (and re-open to NEW if previously RESOLVED)
                     cur.execute("""
                         UPDATE jarvis_alerts.alert_history
                         SET occurrence_count = occurrence_count + 1,
                             last_detected_at = NOW(),
+                            status = CASE WHEN status = 'RESOLVED' THEN 'NEW' ELSE status END,
+                            resolved_at = CASE WHEN status = 'RESOLVED' THEN NULL ELSE resolved_at END,
                             summary = %(summary)s,
                             action_payload = %(action_payload)s,
                             metadata = %(metadata)s,

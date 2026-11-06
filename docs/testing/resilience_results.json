@@ -1,0 +1,55 @@
+{
+  "total_tests": 8,
+  "passed": 8,
+  "failed": 0,
+  "tests": [
+    {
+      "test": "Error Hygiene: Gateway Stack Masking",
+      "status": "PASSED",
+      "evidence": "HTTP 400, Stack trace leaked: False",
+      "details": {}
+    },
+    {
+      "test": "Error Hygiene: Flask Stack Masking",
+      "status": "PASSED",
+      "evidence": "HTTP 400, Stack trace leaked: False",
+      "details": {}
+    },
+    {
+      "test": "Payload Limits: 2MB Overflow Rejection",
+      "status": "PASSED",
+      "evidence": "HTTP 413 (Expected 413 Payload Too Large)",
+      "details": {}
+    },
+    {
+      "test": "Cache Resilience: In-Memory L1 Fallback",
+      "status": "PASSED",
+      "evidence": "Status: 200, Active entries: 0, Hit ratio: 78.08%",
+      "details": {}
+    },
+    {
+      "test": "AI Resilience: Multi-Tier Failover Isolation",
+      "status": "PASSED",
+      "evidence": "Fast: gemini-2.5-flash -> gemini-1.5-flash-8b | Deep: gemini-2.5-pro -> gemini-2.5-flash",
+      "details": {}
+    },
+    {
+      "test": "DLQ Resilience: Circuit Breaker State Tracking",
+      "status": "PASSED",
+      "evidence": "Circuit Breaker State: CLOSED, Trip Threshold: 5 consecutive errors",
+      "details": {}
+    },
+    {
+      "test": "Database Resilience: Atomic Transaction Rollback",
+      "status": "PASSED",
+      "evidence": "Triggered Duplicate PK: Rolled back=True, Orphaned Rows in DB: 0",
+      "details": {}
+    },
+    {
+      "test": "Service Recovery: Automated Health Check Status",
+      "status": "PASSED",
+      "evidence": "Gateway /api/health: 200 (HEALTHY), Flask /api/health/db: 200 (HEALTHY)",
+      "details": {}
+    }
+  ]
+}
