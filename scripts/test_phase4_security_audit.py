@@ -90,7 +90,9 @@ def run_security_audit():
 
         # Rotate token
         rot_res = requests.post(f"{GATEWAY_URL}/api/admin/tokens/{token_id}/rotate", headers=auth_h, json={})
-        new_raw_token = rot_res.json().get("rawToken")
+        rot_data = rot_res.json()
+        new_raw_token = rot_data.get("rawToken")
+        new_token_id = rot_data.get("tokenRecord", {}).get("id")
 
         # Verify old token is now REJECTED (401)
         r_old_after = requests.get(f"{GATEWAY_URL}/api/tools", headers={"Authorization": f"Bearer {old_raw_token}"})
@@ -104,7 +106,7 @@ def run_security_audit():
                     f"Initial: {r_old.status_code}, After Rotation: {r_old_after.status_code}, New: {r_new.status_code}")
 
         # Clean up by revoking new token
-        requests.post(f"{GATEWAY_URL}/api/admin/tokens/{token_id}/revoke", headers=auth_h, json={})
+        requests.post(f"{GATEWAY_URL}/api/admin/tokens/{new_token_id}/revoke", headers=auth_h, json={})
         r_revoked = requests.get(f"{GATEWAY_URL}/api/tools", headers={"Authorization": f"Bearer {new_raw_token}"})
         record_test("Auth", "Explicit Token Revocation Enforces HTTP 401", r_revoked.status_code == 401, f"HTTP {r_revoked.status_code}")
 

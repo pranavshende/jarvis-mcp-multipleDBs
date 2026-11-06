@@ -2,6 +2,7 @@ import { UserContext } from '../security/request_context.js';
 import { ToolRegistry } from '../mcp/tool_registry.js';
 import { ModelRouter } from './model_router.js';
 import { CompositeCache, CacheCategory } from '../cache/composite_cache.js';
+import { PromptGuard } from '../security/prompt_guard.js';
 
 export interface RouteResult {
   route: 'METRIC' | 'KNOWLEDGE' | 'DUAL_SYNTHESIS' | 'RESTRICTED_ACTION' | 'UNSUPPORTED';
@@ -18,6 +19,17 @@ export class IntentRouter {
     const cleanQuery = query.trim().toLowerCase();
     const toolsInvoked: string[] = [];
     const citations: string[] = [];
+
+    // 0. Adversarial Prompt Guard Inspection
+    const guardCheck = PromptGuard.inspectInput(query);
+    if (!guardCheck.isSafe) {
+      return {
+        route: 'UNSUPPORTED',
+        response: `[SECURITY NOTICE: Direct instruction override or boundary evasion pattern detected (${guardCheck.attackCategory || 'PROMPT_INJECTION'}). Request refused under MSC safety policies.]`,
+        toolsInvoked: [],
+        latencyMs: performance.now() - startTime,
+      };
+    }
 
     // 1. Detect Restricted Action Proposal or Confirmation
     if (

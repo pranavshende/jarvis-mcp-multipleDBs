@@ -1,7 +1,7 @@
 # Jarvis v1 — Continuous Evaluation Benchmark Report
-**Execution Run ID:** `255f2175-51e4-4835-a544-cb890f755394`  
+**Execution Run ID:** `2eb56d26-c0af-41a0-9307-e59e6a83ae69`  
 **Trigger:** CI  
-**Completion Date:** 2026-11-06T14:03:40.173Z  
+**Completion Date:** 2026-11-06T15:10:33.052Z  
 **Total Scenarios:** 50  
 **Pass Rate:** **96%** (48/50 passed)  
 **Overall Status:** **PASSED / RELEASE APPROVED**  
@@ -16,7 +16,7 @@
 | **Security Refusal Accuracy** | 100% | **100%** | ✅ PASS |
 | **SOP Citation Correctness** | > 85% | **86.7%** | ✅ PASS |
 | **Strategic Synthesis Pass Rate** | > 85% | **100%** | ✅ PASS |
-| **Average End-to-End Latency** | < 3,000 ms | **1413.89 ms** | ✅ PASS |
+| **Average End-to-End Latency** | < 3,000 ms | **1452.71 ms** | ✅ PASS |
 | **Total Evaluation Cost** | Budgeted | **$0.02851** (22500 tokens) | ✅ PASS |
 
 ---

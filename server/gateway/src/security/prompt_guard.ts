@@ -20,8 +20,9 @@ export class PromptGuard {
     // 2. Delimiter & Boundary Evasions
     { pattern: /(begin\s+system|end\s+system|end\s+of\s+query)/i, category: 'DELIMITER_EVASION' },
     { pattern: /---\s*begin\s+system/i, category: 'DELIMITER_EVASION' },
-    { pattern: /---\s*end\s+of\s+query/i, category: 'DELIMITER_EVASION' },
+    { pattern: /---\s*end\s+of\s+(query|system\s+instructions|instructions)/i, category: 'DELIMITER_EVASION' },
     { pattern: /---\s*end\s+system/i, category: 'DELIMITER_EVASION' },
+    { pattern: /---\s*(end|begin)\b/i, category: 'DELIMITER_EVASION' },
     { pattern: /<\s*system\s*>/i, category: 'DELIMITER_EVASION' },
     { pattern: /<\s*\/\s*system\s*>/i, category: 'DELIMITER_EVASION' },
     { pattern: /\[\s*(system|admin)\s+instruction\s*\]/i, category: 'DELIMITER_EVASION' },
@@ -34,12 +35,13 @@ export class PromptGuard {
     { pattern: /select\s+\*\s+from\s+jarvis_system/i, category: 'RAW_SQL_MUTATION' },
     { pattern: /select\s+.*bank_routing_number/i, category: 'FINANCIAL_EXFILTRATION' },
 
-    // 4. Founder Private Directory Access
+    // 4. Founder Private Directory Access & Payroll Exfiltration
     { pattern: /founder_private/i, category: 'FOUNDER_PRIVATE_VIOLATION' },
     { pattern: /exit-options-2026/i, category: 'FOUNDER_PRIVATE_VIOLATION' },
     { pattern: /personal-tax-2026/i, category: 'FOUNDER_PRIVATE_VIOLATION' },
     { pattern: /bank-line-and-personal-guarantee/i, category: 'FOUNDER_PRIVATE_VIOLATION' },
     { pattern: /comp-thoughts-priya-arjun/i, category: 'COMPENSATION_EXFILTRATION' },
+    { pattern: /\b(salary|salaries|payroll|executive compensation)\b/i, category: 'COMPENSATION_EXFILTRATION' },
   ];
 
   public static inspectInput(input: string): PromptGuardResult {
