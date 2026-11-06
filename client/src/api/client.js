@@ -325,11 +325,11 @@ export async function fetchAdminHealth() {
   return res.json();
 }
 
-export async function queryGatewayIntent(queryText) {
+export async function queryGatewayIntent(queryText, sessionId = 'default') {
   const res = await fetch('http://127.0.0.1:4000/api/query', {
     method: 'POST',
     headers: getAdminHeaders(),
-    body: JSON.stringify({ query: queryText })
+    body: JSON.stringify({ query: queryText, sessionId })
   });
   return res.json();
 }

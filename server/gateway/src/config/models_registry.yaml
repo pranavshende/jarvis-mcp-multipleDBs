@@ -5,7 +5,7 @@ tiers:
   fast_tier:
     description: "Low-latency deterministic intent classification, parameter extraction, and basic SOP lookups"
     primary:
-      model_id: "gemini-2.5-flash"
+      model_id: "gemini-3.5-flash-lite"
       provider: "google"
       cost_in_per_m: 0.075
       cost_out_per_m: 0.30
@@ -14,7 +14,7 @@ tiers:
       supports_tools: true
       enabled: true
     fallback:
-      model_id: "gemini-1.5-flash-8b"
+      model_id: "gemini-3.5-flash"
       provider: "google"
       cost_in_per_m: 0.0375
       cost_out_per_m: 0.15
@@ -27,7 +27,7 @@ tiers:
   deep_tier:
     description: "Multi-step analytical synthesis, complex financial reconciliation explanations, and cross-domain reasoning"
     primary:
-      model_id: "gemini-2.5-pro"
+      model_id: "gemini-3.5-flash"
       provider: "google"
       cost_in_per_m: 1.25
       cost_out_per_m: 5.00
@@ -36,7 +36,7 @@ tiers:
       supports_tools: true
       enabled: true
     fallback:
-      model_id: "gemini-2.5-flash"
+      model_id: "gemini-3.5-flash-lite"
       provider: "google"
       cost_in_per_m: 0.075
       cost_out_per_m: 0.30

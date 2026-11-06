@@ -71,8 +71,8 @@ export default function JarvisChatbot({ onNavigateTab }) {
     const startTime = performance.now();
 
     try {
-      // Call live Fastify Gateway Intent / RAG API
-      const res = await queryGatewayIntent(query);
+      // Call live Fastify Gateway Intent / RAG API with session ID
+      const res = await queryGatewayIntent(query, currentSessionId);
       const latency = Math.round((performance.now() - startTime) * 100) / 100;
 
       const botMessage = {
@@ -803,3 +803,4 @@ export default function JarvisChatbot({ onNavigateTab }) {
     </div>
   );
 }
+

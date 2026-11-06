@@ -47,14 +47,14 @@ export async function buildGatewayServer(): Promise<FastifyInstance> {
 
     // Intent Router: Unified Conversational Entrypoint
     protectedApp.post('/api/query', async (request, reply) => {
-      const body = request.body as { query?: string };
+      const body = request.body as { query?: string; sessionId?: string };
       if (!body || !body.query) {
         reply.status(400).send({ error: 'BAD_REQUEST', message: "Field 'query' is required." });
         return;
       }
 
       const user = request.userContext!;
-      const result = await IntentRouter.routeAndExecute(body.query, user);
+      const result = await IntentRouter.routeAndExecute(body.query, user, body.sessionId || 'default');
       reply.send(result);
     });
 
