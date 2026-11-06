@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import { pool } from '../config/db.js';
 import { UserContext } from '../security/request_context.js';
 import { ModelConfig, ModelRouter } from '../orchestrator/model_router.js';
@@ -25,11 +26,11 @@ export class AuditService {
       `;
 
       await pool.query(query, [
-        params.user.requestId,
-        params.user.userId,
-        params.user.email,
-        params.user.role,
-        params.user.clientType,
+        params.user.requestId || crypto.randomUUID(),
+        params.user.userId || 'USR-ANONYMOUS',
+        params.user.email || 'unknown@meridian.internal',
+        params.user.role || 'ROLE_USER',
+        params.user.clientType || 'API',
         params.querySummary ? params.querySummary.substring(0, 500) : null,
         params.toolName || null,
         params.actionType || null,

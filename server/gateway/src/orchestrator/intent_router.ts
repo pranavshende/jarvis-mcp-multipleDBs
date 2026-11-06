@@ -1,6 +1,7 @@
 import { UserContext } from '../security/request_context.js';
 import { ToolRegistry } from '../mcp/tool_registry.js';
 import { ModelRouter } from './model_router.js';
+import { CompositeCache, CacheCategory } from '../cache/composite_cache.js';
 
 export interface RouteResult {
   route: 'METRIC' | 'KNOWLEDGE' | 'DUAL_SYNTHESIS' | 'RESTRICTED_ACTION' | 'UNSUPPORTED';
@@ -8,6 +9,7 @@ export interface RouteResult {
   citations?: string[];
   toolsInvoked: string[];
   latencyMs: number;
+  fromCache?: boolean;
 }
 
 export class IntentRouter {
@@ -68,6 +70,26 @@ export class IntentRouter {
       cleanQuery.includes('rules for') ||
       cleanQuery.includes('what are our');
 
+    // Determine cache category
+    const category: CacheCategory = isMetricQuery
+      ? 'FINANCIAL_METRIC'
+      : cleanQuery.includes('my ') || cleanQuery.includes('private')
+      ? 'USER_SPECIFIC'
+      : 'KNOWLEDGE_SOP';
+
+    // 3. Fast Composite Semantic Cache Check (< 15ms target)
+    const cached = await CompositeCache.get(query, {}, user, category);
+    if (cached.hit && cached.data) {
+      return {
+        route: cached.data.route || (isMetricQuery ? 'METRIC' : 'KNOWLEDGE'),
+        response: cached.data.response,
+        citations: cached.data.citations || [],
+        toolsInvoked: ['composite_semantic_cache'],
+        latencyMs: performance.now() - startTime,
+        fromCache: true,
+      };
+    }
+
     // PATH C: DUAL SYNTHESIS ROUTE
     if (isMetricQuery && isKnowledgeQuery) {
       // Step 1: Metric lookup
@@ -89,12 +111,20 @@ export class IntentRouter {
 
       const combinedResponse = `### Jarvis Dual-Synthesis Operational Response\n\n#### 1. Certified Operational Metrics (Phase 1)\n\`\`\`json\n${metricData}\n\`\`\`\n\n#### 2. Authoritative Company Policies & SOPs (Phase 3)\n${ragText}\n\n*Synthesized under Role: ${user.role} (${user.email})*`;
 
-      return {
+      const routeResult: RouteResult = {
         route: 'DUAL_SYNTHESIS',
         response: combinedResponse,
         toolsInvoked,
         latencyMs: performance.now() - startTime,
       };
+
+      await CompositeCache.set(query, {}, user, category, {
+        route: routeResult.route,
+        response: routeResult.response,
+        citations: routeResult.citations,
+      });
+
+      return routeResult;
     }
 
     // PATH A: BUSINESS METRIC ROUTE
@@ -117,12 +147,19 @@ export class IntentRouter {
       const res = await ToolRegistry.executeTool(toolName, { metric_id: metricId }, user);
       const resultText = res?.content?.[0]?.text || 'No data returned';
 
-      return {
+      const routeResult: RouteResult = {
         route: 'METRIC',
         response: `### Certified Business Metric Result\n\n${resultText}`,
         toolsInvoked,
         latencyMs: performance.now() - startTime,
       };
+
+      await CompositeCache.set(query, {}, user, category, {
+        route: routeResult.route,
+        response: routeResult.response,
+      });
+
+      return routeResult;
     }
 
     // PATH B: DOCUMENT KNOWLEDGE ROUTE
@@ -130,11 +167,18 @@ export class IntentRouter {
     const ragRes = await ToolRegistry.executeTool('search_company_knowledge', { query, top_k: 5 }, user);
     const ragText = ragRes?.content?.[0]?.text || 'No matching MSC knowledge found.';
 
-    return {
+    const routeResult: RouteResult = {
       route: 'KNOWLEDGE',
       response: `### Meridian Company Knowledge Base\n\n${ragText}`,
       toolsInvoked,
       latencyMs: performance.now() - startTime,
     };
+
+    await CompositeCache.set(query, {}, user, category, {
+      route: routeResult.route,
+      response: routeResult.response,
+    });
+
+    return routeResult;
   }
 }

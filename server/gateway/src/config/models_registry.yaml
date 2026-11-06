@@ -45,3 +45,14 @@ tiers:
       supports_tools: true
       enabled: true
     timeout_ms: 30000
+
+providers:
+  google:
+    env_key: "GEMINI_API_KEY"
+    status: "ACTIVE"
+  anthropic:
+    env_key: "ANTHROPIC_API_KEY"
+    status: "STANDBY"
+  openai:
+    env_key: "OPENAI_API_KEY"
+    status: "STANDBY"

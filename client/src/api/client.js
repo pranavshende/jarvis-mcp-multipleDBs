@@ -333,3 +333,84 @@ export async function queryGatewayIntent(queryText) {
   });
   return res.json();
 }
+
+// ============================================================================
+// Phase 5: Evaluation, Cache, DLQ, Model Budgets & Security Center APIs
+// ============================================================================
+
+export async function fetchAdminEvaluationSummary() {
+  const res = await fetch('/api/admin/evaluation/summary', { headers: getAdminHeaders() });
+  return res.json();
+}
+
+export async function fetchAdminEvaluationRuns() {
+  const res = await fetch('/api/admin/evaluation/runs', { headers: getAdminHeaders() });
+  return res.json();
+}
+
+export async function fetchAdminEvaluationScenarios() {
+  const res = await fetch('/api/admin/evaluation/scenarios', { headers: getAdminHeaders() });
+  return res.json();
+}
+
+export async function fetchAdminCacheStats() {
+  const res = await fetch('/api/admin/cache/stats', { headers: getAdminHeaders() });
+  return res.json();
+}
+
+export async function fetchAdminCacheEntries() {
+  const res = await fetch('/api/admin/cache/entries', { headers: getAdminHeaders() });
+  return res.json();
+}
+
+export async function invalidateAdminCache(scope = 'ALL', targetValue = null) {
+  const res = await fetch('/api/admin/cache/invalidate', {
+    method: 'POST',
+    headers: getAdminHeaders(),
+    body: JSON.stringify({ scope, targetValue })
+  });
+  return res.json();
+}
+
+export async function fetchAdminBudgets() {
+  const res = await fetch('/api/admin/models/budgets', { headers: getAdminHeaders() });
+  return res.json();
+}
+
+export async function fetchAdminModelUsage() {
+  const res = await fetch('/api/admin/models/usage', { headers: getAdminHeaders() });
+  return res.json();
+}
+
+export async function fetchAdminDLQ() {
+  const res = await fetch('/api/admin/dlq', { headers: getAdminHeaders() });
+  return res.json();
+}
+
+export async function retryAdminDLQJob(jobId, reason = 'Admin Dashboard manual retry') {
+  const res = await fetch(`/api/admin/dlq/${encodeURIComponent(jobId)}/retry`, {
+    method: 'POST',
+    headers: getAdminHeaders(),
+    body: JSON.stringify({ reason })
+  });
+  return res.json();
+}
+
+export async function dismissAdminDLQJob(jobId, reason = 'Admin Dashboard manual dismiss') {
+  const res = await fetch(`/api/admin/dlq/${encodeURIComponent(jobId)}/dismiss`, {
+    method: 'POST',
+    headers: getAdminHeaders(),
+    body: JSON.stringify({ reason })
+  });
+  return res.json();
+}
+
+export async function fetchAdminRedTeamResults() {
+  const res = await fetch('/api/admin/security/redteam', { headers: getAdminHeaders() });
+  return res.json();
+}
+
+export async function fetchAdminSecurityEvents() {
+  const res = await fetch('/api/admin/security/events', { headers: getAdminHeaders() });
+  return res.json();
+}

@@ -234,15 +234,19 @@ ToolRegistry.registerTool({
       return { isError: true, content: [{ type: 'text', text: `Knowledge retrieval failed: ${res.error}` }] };
     }
 
-    const chunks = res.data?.results || [];
-    if (chunks.length === 0) {
+    const chunks = res.data?.chunks || res.data?.results || [];
+    if (chunks.length === 0 && !res.data?.context_text) {
       return { content: [{ type: 'text', text: 'No relevant MSC company documents found for this query.' }] };
+    }
+
+    if (res.data?.context_text) {
+      return { content: [{ type: 'text', text: res.data.context_text }] };
     }
 
     const formatted = chunks
       .map(
         (c: any, i: number) =>
-          `### [${i + 1}] ${c.citation}\n${c.content}\n*(Relevance Score: ${c.rerank_score})*\n`
+          `### [${i + 1}] ${c.citation}\n${c.content}\n*(Relevance Score: ${c.rerank_score || 1.0})*\n`
       )
       .join('\n---\n\n');
 
