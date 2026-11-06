@@ -4,8 +4,9 @@ Server Configuration Module for Jarvis v1 Flask Backend.
 """
 import os
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ENV_PATH = os.path.join(BASE_DIR, ".env")
+SERVER_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.dirname(SERVER_DIR)
+ENV_PATH = os.path.join(SERVER_DIR, ".env") if os.path.exists(os.path.join(SERVER_DIR, ".env")) else os.path.join(BASE_DIR, ".env")
 
 def load_env():
     env_vars = {}

@@ -41,6 +41,7 @@ export class ModelRouter {
       path.resolve(__dirname, '../../src/config/models_registry.yaml'),
       path.resolve(process.cwd(), 'src/config/models_registry.yaml'),
       path.resolve(process.cwd(), 'gateway/src/config/models_registry.yaml'),
+      path.resolve(process.cwd(), 'server/gateway/src/config/models_registry.yaml'),
     ];
 
     let yamlPath = '';
