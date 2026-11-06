@@ -40,3 +40,17 @@ export async function fetchSyncStatus() {
   const res = await fetch(`${API_BASE}/sync/status`);
   return res.json();
 }
+
+export async function fetchReconciliationHistory() {
+  const res = await fetch(`${API_BASE}/reconciliation/history`);
+  return res.json();
+}
+
+export async function triggerReconciliation() {
+  const res = await fetch(`${API_BASE}/reconciliation/run`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ mode: 'MANUAL_DASHBOARD' })
+  });
+  return res.json();
+}
