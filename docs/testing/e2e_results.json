@@ -1,7 +1,7 @@
 {
   "total_tests": 10,
-  "passed": 8,
-  "failed": 2,
+  "passed": 10,
+  "failed": 0,
   "tests": [
     {
       "component": "AppShell",
@@ -24,8 +24,8 @@
     {
       "component": "AdminDashboard:DLQ",
       "name": "DLQ Overview Real API Binding",
-      "status": "FAILED",
-      "details": "Alerts CB: None, Pending: 2"
+      "status": "PASSED",
+      "details": "CB State: CLOSED, Pending: 2"
     },
     {
       "component": "AdminDashboard:Budgets",
@@ -36,8 +36,8 @@
     {
       "component": "AdminDashboard:SecurityCenter",
       "name": "Red-Team Scorecard Real API Binding",
-      "status": "FAILED",
-      "details": "Defended: 10/15 vectors (100%)"
+      "status": "PASSED",
+      "details": "Defended: 15/15 vectors (100%)"
     },
     {
       "component": "AlertCenter",

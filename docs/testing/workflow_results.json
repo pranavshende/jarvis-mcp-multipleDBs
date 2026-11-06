@@ -1,0 +1,70 @@
+{
+  "total_workflows": 8,
+  "passed": 0,
+  "failed": 8,
+  "workflows": [
+    {
+      "workflow": "Workflow 1: Financial Query",
+      "status": "FAILED",
+      "evidence": "Status: 200, DB overdue: $346,086.60, Audit Log ID: c53acac1-e63d-4ea7-962a-6cf320a07e92, Latency: 6097.0ms",
+      "details": {
+        "gateway_response": "### Certified Business Metric Result\n\n{\n  \"result\": {\n    \"category\": \"FINANCE\",\n    \"data\": [\n      {\n        \"credit_limit\": 250000,\n        \"current_balance\": 57623.79,\n        \"overdue_1_30d\": 569",
+        "audit_id": "c53acac1-e63d-4ea7-962a-6cf320a07e92"
+      }
+    },
+    {
+      "workflow": "Workflow 2: Knowledge Query",
+      "status": "FAILED",
+      "evidence": "Status: 401, Route: None, Citations Count: 0, Latency: 211.8ms",
+      "details": {
+        "citations": [],
+        "response_preview": ""
+      }
+    },
+    {
+      "workflow": "Workflow 3: Dual Synthesis",
+      "status": "FAILED",
+      "evidence": "Metrics Tool: False, Knowledge Tool: False, Combined Latency: 1557.1ms",
+      "details": {
+        "metric_preview": "{'isError': True, 'content': [{'type': 'text', 'text': \"Error: Tool 'get_ar_aging_summary' not found",
+        "knowledge_preview": "{'isError': True, 'content': [{'type': 'text', 'text': \"Error: Tool 'search_knowledge_base' not foun"
+      }
+    },
+    {
+      "workflow": "Workflow 4: Restricted Business Action",
+      "status": "FAILED",
+      "evidence": "HTTPConnectionPool(host='127.0.0.1', port=5000): Read timed out. (read timeout=5.0)",
+      "details": {}
+    },
+    {
+      "workflow": "Workflow 5: Alert Lifecycle",
+      "status": "FAILED",
+      "evidence": "relation \"jarvis_alerts.active_alerts\" does not exist\nLINE 1: ...CT status, acknowledged_by, resolution_notes FROM jarvis_ale...\n                                                             ^\n",
+      "details": {}
+    },
+    {
+      "workflow": "Workflow 6: Failed Worker Recovery",
+      "status": "FAILED",
+      "evidence": "relation \"jarvis_system.dead_letter_queue\" does not exist\nLINE 2:             INSERT INTO jarvis_system.dead_letter_queue\n                                ^\n",
+      "details": {}
+    },
+    {
+      "workflow": "Workflow 7: Cached Query Workflow",
+      "status": "FAILED",
+      "evidence": "Miss Latency: 24.7ms, Hit Latency: 14.98ms, fromCache: False, Invalidation: True",
+      "details": {
+        "lat_miss_ms": 24.71613883972168,
+        "lat_hit_ms": 14.97650146484375,
+        "tools": null
+      }
+    },
+    {
+      "workflow": "Workflow 8: AI Provider Fallback & Cost Guardrails",
+      "status": "FAILED",
+      "evidence": "Tiers: OK, Fast Primary: None, Fallback: None, Budgets Monitored: 4",
+      "details": {
+        "fast_tier": null
+      }
+    }
+  ]
+}
