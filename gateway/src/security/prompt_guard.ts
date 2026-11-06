@@ -11,6 +11,7 @@ export class PromptGuard {
     { pattern: /ignore\s+(all\s+)?(previous|prior)\s+(instructions|rules|policies|commands)/i, category: 'INSTRUCTION_OVERRIDE' },
     { pattern: /disregard\s+(all\s+)?(previous|prior)\s+(instructions|rules|policies|commands)/i, category: 'INSTRUCTION_OVERRIDE' },
     { pattern: /you\s+are\s+now\s+in\s+(developer|unrestricted|god|superadmin|dan)\s+mode/i, category: 'JAILBREAK_ATTEMPT' },
+    { pattern: /(act\s+as\s+unrestricted|dan\s+mode|unrestricted\s+mode)/i, category: 'JAILBREAK_ATTEMPT' },
     { pattern: /superadmin\s+mode/i, category: 'JAILBREAK_ATTEMPT' },
     { pattern: /print\s+(the\s+)?(database\s+credentials|api\s+(master\s+)?token)/i, category: 'CREDENTIAL_EXFILTRATION' },
     { pattern: /dump\s+(all\s+)?(active\s+)?api\s+(keys|tokens)/i, category: 'CREDENTIAL_EXFILTRATION' },

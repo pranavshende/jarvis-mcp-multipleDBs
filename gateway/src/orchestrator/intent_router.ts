@@ -65,9 +65,9 @@ export class IntentRouter {
     }
 
     if (
-      cleanQuery.includes('place on credit hold') ||
-      cleanQuery.includes('set credit hold') ||
-      cleanQuery.includes('quarantine inventory')
+      (cleanQuery.includes('credit hold') && (cleanQuery.includes('place') || cleanQuery.includes('set') || cleanQuery.includes('put') || cleanQuery.includes('apply'))) ||
+      cleanQuery.includes('quarantine inventory') ||
+      cleanQuery.includes('quarantine lot')
     ) {
       return {
         route: 'RESTRICTED_ACTION',
