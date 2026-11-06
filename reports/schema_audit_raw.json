@@ -1,0 +1,2225 @@
+{
+  "seller_db": {
+    "sql_tables": {
+      "members": {
+        "columns": [
+          {
+            "name": "member_id",
+            "type": "integer",
+            "nullable": false
+          },
+          {
+            "name": "discord_handle",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "email",
+            "type": "text",
+            "nullable": false
+          },
+          {
+            "name": "full_name",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "phone",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "address_line1",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "city",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "state",
+            "type": "character(2)",
+            "nullable": true
+          },
+          {
+            "name": "created_at",
+            "type": "timestamp with time zone",
+            "nullable": false
+          },
+          {
+            "name": "status",
+            "type": "text",
+            "nullable": false
+          },
+          {
+            "name": "tier",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "preferred_payout",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "payout_notes",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "referred_by",
+            "type": "integer",
+            "nullable": true
+          }
+        ],
+        "primary_keys": [],
+        "foreign_keys": []
+      },
+      "payout_methods": {
+        "columns": [
+          {
+            "name": "method_id",
+            "type": "integer",
+            "nullable": false
+          },
+          {
+            "name": "member_id",
+            "type": "integer",
+            "nullable": false
+          },
+          {
+            "name": "method",
+            "type": "text",
+            "nullable": false
+          },
+          {
+            "name": "paypal_email",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "ach_bank_name",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "ach_account_last4",
+            "type": "character(4)",
+            "nullable": true
+          },
+          {
+            "name": "is_default",
+            "type": "boolean",
+            "nullable": true
+          },
+          {
+            "name": "verified_at",
+            "type": "timestamp with time zone",
+            "nullable": true
+          },
+          {
+            "name": "updated_at",
+            "type": "timestamp with time zone",
+            "nullable": true
+          }
+        ],
+        "primary_keys": [],
+        "foreign_keys": []
+      },
+      "buy_list": {
+        "columns": [
+          {
+            "name": "seller_sku",
+            "type": "text",
+            "nullable": false
+          },
+          {
+            "name": "product_name",
+            "type": "text",
+            "nullable": false
+          },
+          {
+            "name": "brand",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "set_name",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "buy_price",
+            "type": "numeric(10,2)",
+            "nullable": false
+          },
+          {
+            "name": "active",
+            "type": "boolean",
+            "nullable": true
+          },
+          {
+            "name": "updated_at",
+            "type": "timestamp with time zone",
+            "nullable": true
+          }
+        ],
+        "primary_keys": [],
+        "foreign_keys": []
+      },
+      "buy_list_changes": {
+        "columns": [
+          {
+            "name": "change_id",
+            "type": "integer",
+            "nullable": false
+          },
+          {
+            "name": "seller_sku",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "old_price",
+            "type": "numeric(10,2)",
+            "nullable": true
+          },
+          {
+            "name": "new_price",
+            "type": "numeric(10,2)",
+            "nullable": true
+          },
+          {
+            "name": "changed_by",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "changed_at",
+            "type": "timestamp with time zone",
+            "nullable": true
+          },
+          {
+            "name": "reason",
+            "type": "text",
+            "nullable": true
+          }
+        ],
+        "primary_keys": [],
+        "foreign_keys": []
+      },
+      "submissions": {
+        "columns": [
+          {
+            "name": "submission_id",
+            "type": "text",
+            "nullable": false
+          },
+          {
+            "name": "member_id",
+            "type": "integer",
+            "nullable": false
+          },
+          {
+            "name": "destination",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "carrier",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "tracking_number",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "status",
+            "type": "text",
+            "nullable": false
+          },
+          {
+            "name": "quoted_total",
+            "type": "numeric(12,2)",
+            "nullable": true
+          },
+          {
+            "name": "approved_total",
+            "type": "numeric(12,2)",
+            "nullable": true
+          },
+          {
+            "name": "created_at",
+            "type": "timestamp with time zone",
+            "nullable": true
+          },
+          {
+            "name": "shipped_at",
+            "type": "timestamp with time zone",
+            "nullable": true
+          },
+          {
+            "name": "received_at",
+            "type": "timestamp with time zone",
+            "nullable": true
+          },
+          {
+            "name": "inspected_at",
+            "type": "timestamp with time zone",
+            "nullable": true
+          },
+          {
+            "name": "paid_at",
+            "type": "timestamp with time zone",
+            "nullable": true
+          }
+        ],
+        "primary_keys": [],
+        "foreign_keys": []
+      },
+      "submission_items": {
+        "columns": [
+          {
+            "name": "item_id",
+            "type": "integer",
+            "nullable": false
+          },
+          {
+            "name": "submission_id",
+            "type": "text",
+            "nullable": false
+          },
+          {
+            "name": "seller_sku",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "qty",
+            "type": "integer",
+            "nullable": true
+          },
+          {
+            "name": "quoted_unit_price",
+            "type": "numeric(10,2)",
+            "nullable": true
+          },
+          {
+            "name": "qty_accepted",
+            "type": "integer",
+            "nullable": true
+          },
+          {
+            "name": "line_status",
+            "type": "text",
+            "nullable": true
+          }
+        ],
+        "primary_keys": [],
+        "foreign_keys": []
+      },
+      "payouts": {
+        "columns": [
+          {
+            "name": "payout_id",
+            "type": "text",
+            "nullable": false
+          },
+          {
+            "name": "member_id",
+            "type": "integer",
+            "nullable": true
+          },
+          {
+            "name": "submission_id",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "method",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "amount",
+            "type": "numeric(12,2)",
+            "nullable": true
+          },
+          {
+            "name": "status",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "initiated_at",
+            "type": "timestamp with time zone",
+            "nullable": true
+          },
+          {
+            "name": "paid_at",
+            "type": "timestamp with time zone",
+            "nullable": true
+          },
+          {
+            "name": "ach_batch_id",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "failure_reason",
+            "type": "text",
+            "nullable": true
+          }
+        ],
+        "primary_keys": [],
+        "foreign_keys": []
+      },
+      "wallet_ledger": {
+        "columns": [
+          {
+            "name": "entry_id",
+            "type": "integer",
+            "nullable": false
+          },
+          {
+            "name": "member_id",
+            "type": "integer",
+            "nullable": true
+          },
+          {
+            "name": "created_at",
+            "type": "timestamp with time zone",
+            "nullable": true
+          },
+          {
+            "name": "entry_type",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "amount",
+            "type": "numeric(12,2)",
+            "nullable": true
+          },
+          {
+            "name": "balance_after",
+            "type": "numeric(12,2)",
+            "nullable": true
+          },
+          {
+            "name": "reference",
+            "type": "text",
+            "nullable": true
+          }
+        ],
+        "primary_keys": [],
+        "foreign_keys": []
+      },
+      "support_tickets": {
+        "columns": [
+          {
+            "name": "ticket_id",
+            "type": "text",
+            "nullable": false
+          },
+          {
+            "name": "member_id",
+            "type": "integer",
+            "nullable": true
+          },
+          {
+            "name": "discord_channel_id",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "category",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "subject",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "body",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "status",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "priority",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "assigned_to",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "opened_at",
+            "type": "timestamp with time zone",
+            "nullable": true
+          },
+          {
+            "name": "closed_at",
+            "type": "timestamp with time zone",
+            "nullable": true
+          }
+        ],
+        "primary_keys": [],
+        "foreign_keys": []
+      },
+      "staff_users": {
+        "columns": [
+          {
+            "name": "user_id",
+            "type": "integer",
+            "nullable": false
+          },
+          {
+            "name": "email",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "name",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "role",
+            "type": "text",
+            "nullable": true
+          }
+        ],
+        "primary_keys": [],
+        "foreign_keys": []
+      }
+    },
+    "csv_stats": {
+      "buy_list": {
+        "file_size_bytes": 56971,
+        "row_count": 600,
+        "columns": [
+          "seller_sku",
+          "product_name",
+          "brand",
+          "set_name",
+          "buy_price",
+          "active",
+          "updated_at"
+        ],
+        "null_counts": {
+          "seller_sku": 0,
+          "product_name": 0,
+          "brand": 0,
+          "set_name": 0,
+          "buy_price": 0,
+          "active": 0,
+          "updated_at": 0
+        }
+      },
+      "buy_list_changes": {
+        "file_size_bytes": 102379,
+        "row_count": 1114,
+        "columns": [
+          "change_id",
+          "seller_sku",
+          "old_price",
+          "new_price",
+          "changed_by",
+          "changed_at",
+          "reason"
+        ],
+        "null_counts": {
+          "change_id": 0,
+          "seller_sku": 0,
+          "old_price": 0,
+          "new_price": 0,
+          "changed_by": 0,
+          "changed_at": 0,
+          "reason": 0
+        }
+      },
+      "members": {
+        "file_size_bytes": 853795,
+        "row_count": 6040,
+        "columns": [
+          "member_id",
+          "discord_handle",
+          "email",
+          "full_name",
+          "phone",
+          "address_line1",
+          "city",
+          "state",
+          "created_at",
+          "status",
+          "tier",
+          "preferred_payout",
+          "payout_notes",
+          "referred_by"
+        ],
+        "null_counts": {
+          "member_id": 0,
+          "discord_handle": 0,
+          "email": 0,
+          "full_name": 0,
+          "phone": 0,
+          "address_line1": 0,
+          "city": 0,
+          "state": 0,
+          "created_at": 0,
+          "status": 0,
+          "tier": 0,
+          "preferred_payout": 0,
+          "payout_notes": 5906,
+          "referred_by": 5340
+        }
+      },
+      "payouts": {
+        "file_size_bytes": 359970,
+        "row_count": 3689,
+        "columns": [
+          "payout_id",
+          "member_id",
+          "submission_id",
+          "method",
+          "amount",
+          "status",
+          "initiated_at",
+          "paid_at",
+          "ach_batch_id",
+          "failure_reason"
+        ],
+        "null_counts": {
+          "payout_id": 0,
+          "member_id": 0,
+          "submission_id": 0,
+          "method": 0,
+          "amount": 0,
+          "status": 0,
+          "initiated_at": 0,
+          "paid_at": 133,
+          "ach_batch_id": 2317,
+          "failure_reason": 3612
+        }
+      },
+      "payout_methods": {
+        "file_size_bytes": 265107,
+        "row_count": 3221,
+        "columns": [
+          "method_id",
+          "member_id",
+          "method",
+          "paypal_email",
+          "ach_bank_name",
+          "ach_account_last4",
+          "is_default",
+          "verified_at",
+          "updated_at"
+        ],
+        "null_counts": {
+          "method_id": 0,
+          "member_id": 0,
+          "method": 0,
+          "paypal_email": 1992,
+          "ach_bank_name": 1778,
+          "ach_account_last4": 1778,
+          "is_default": 0,
+          "verified_at": 0,
+          "updated_at": 0
+        }
+      },
+      "staff_users": {
+        "file_size_bytes": 489,
+        "row_count": 11,
+        "columns": [
+          "user_id",
+          "email",
+          "name",
+          "role"
+        ],
+        "null_counts": {
+          "user_id": 0,
+          "email": 0,
+          "name": 0,
+          "role": 0
+        }
+      },
+      "submissions": {
+        "file_size_bytes": 732807,
+        "row_count": 4245,
+        "columns": [
+          "submission_id",
+          "member_id",
+          "destination",
+          "carrier",
+          "tracking_number",
+          "status",
+          "quoted_total",
+          "approved_total",
+          "created_at",
+          "shipped_at",
+          "received_at",
+          "inspected_at",
+          "paid_at"
+        ],
+        "null_counts": {
+          "submission_id": 0,
+          "member_id": 0,
+          "destination": 0,
+          "carrier": 0,
+          "tracking_number": 214,
+          "status": 0,
+          "quoted_total": 0,
+          "approved_total": 523,
+          "created_at": 0,
+          "shipped_at": 214,
+          "received_at": 454,
+          "inspected_at": 523,
+          "paid_at": 689
+        }
+      },
+      "submission_items": {
+        "file_size_bytes": 379976,
+        "row_count": 8414,
+        "columns": [
+          "item_id",
+          "submission_id",
+          "seller_sku",
+          "qty",
+          "quoted_unit_price",
+          "qty_accepted",
+          "line_status"
+        ],
+        "null_counts": {
+          "item_id": 0,
+          "submission_id": 0,
+          "seller_sku": 0,
+          "qty": 0,
+          "quoted_unit_price": 0,
+          "qty_accepted": 1068,
+          "line_status": 0
+        }
+      },
+      "support_tickets": {
+        "file_size_bytes": 242691,
+        "row_count": 1110,
+        "columns": [
+          "ticket_id",
+          "member_id",
+          "discord_channel_id",
+          "category",
+          "subject",
+          "body",
+          "status",
+          "priority",
+          "assigned_to",
+          "opened_at",
+          "closed_at"
+        ],
+        "null_counts": {
+          "ticket_id": 0,
+          "member_id": 0,
+          "discord_channel_id": 0,
+          "category": 0,
+          "subject": 0,
+          "body": 0,
+          "status": 0,
+          "priority": 0,
+          "assigned_to": 0,
+          "opened_at": 0,
+          "closed_at": 171
+        }
+      },
+      "wallet_ledger": {
+        "file_size_bytes": 46103,
+        "row_count": 671,
+        "columns": [
+          "entry_id",
+          "member_id",
+          "created_at",
+          "entry_type",
+          "amount",
+          "balance_after",
+          "reference"
+        ],
+        "null_counts": {
+          "entry_id": 0,
+          "member_id": 0,
+          "created_at": 0,
+          "entry_type": 0,
+          "amount": 0,
+          "balance_after": 0,
+          "reference": 0
+        }
+      }
+    }
+  },
+  "wms_db": {
+    "sql_tables": {
+      "warehouses": {
+        "columns": [
+          {
+            "name": "warehouse_id",
+            "type": "integer",
+            "nullable": false
+          },
+          {
+            "name": "code",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "name",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "timezone",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "address",
+            "type": "text",
+            "nullable": true
+          }
+        ],
+        "primary_keys": [],
+        "foreign_keys": []
+      },
+      "wms_items": {
+        "columns": [
+          {
+            "name": "item_id",
+            "type": "text",
+            "nullable": false
+          },
+          {
+            "name": "upc",
+            "type": "character(12)",
+            "nullable": true
+          },
+          {
+            "name": "description",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "category",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "avg_paid_180d",
+            "type": "numeric(10,2)",
+            "nullable": true
+          },
+          {
+            "name": "avg_paid_refreshed_at",
+            "type": "timestamp with time zone",
+            "nullable": true
+          },
+          {
+            "name": "active",
+            "type": "boolean",
+            "nullable": true
+          },
+          {
+            "name": "created_at",
+            "type": "timestamp with time zone",
+            "nullable": true
+          }
+        ],
+        "primary_keys": [],
+        "foreign_keys": []
+      },
+      "bins": {
+        "columns": [
+          {
+            "name": "bin_id",
+            "type": "text",
+            "nullable": false
+          },
+          {
+            "name": "warehouse_id",
+            "type": "integer",
+            "nullable": true
+          },
+          {
+            "name": "zone",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "aisle",
+            "type": "integer",
+            "nullable": true
+          },
+          {
+            "name": "shelf",
+            "type": "integer",
+            "nullable": true
+          }
+        ],
+        "primary_keys": [],
+        "foreign_keys": []
+      },
+      "inbound_packages": {
+        "columns": [
+          {
+            "name": "package_id",
+            "type": "integer",
+            "nullable": false
+          },
+          {
+            "name": "warehouse_id",
+            "type": "integer",
+            "nullable": true
+          },
+          {
+            "name": "carrier",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "tracking_number",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "sender_name",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "ref_note",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "received_at",
+            "type": "timestamp with time zone",
+            "nullable": false
+          },
+          {
+            "name": "received_by",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "status",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "checked_in_at",
+            "type": "timestamp with time zone",
+            "nullable": true
+          }
+        ],
+        "primary_keys": [],
+        "foreign_keys": []
+      },
+      "package_lines": {
+        "columns": [
+          {
+            "name": "line_id",
+            "type": "integer",
+            "nullable": false
+          },
+          {
+            "name": "package_id",
+            "type": "integer",
+            "nullable": true
+          },
+          {
+            "name": "item_id",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "qty_expected",
+            "type": "integer",
+            "nullable": true
+          },
+          {
+            "name": "qty_received",
+            "type": "integer",
+            "nullable": true
+          },
+          {
+            "name": "qty_passed",
+            "type": "integer",
+            "nullable": true
+          },
+          {
+            "name": "qty_failed",
+            "type": "integer",
+            "nullable": true
+          },
+          {
+            "name": "fail_reason",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "inspected_by",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "inspected_at",
+            "type": "timestamp with time zone",
+            "nullable": true
+          }
+        ],
+        "primary_keys": [],
+        "foreign_keys": []
+      },
+      "stock_levels": {
+        "columns": [
+          {
+            "name": "item_id",
+            "type": "text",
+            "nullable": false
+          },
+          {
+            "name": "warehouse_id",
+            "type": "integer",
+            "nullable": false
+          },
+          {
+            "name": "bin_id",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "qty_on_hand",
+            "type": "integer",
+            "nullable": true
+          },
+          {
+            "name": "qty_reserved",
+            "type": "integer",
+            "nullable": true
+          },
+          {
+            "name": "qty_damaged",
+            "type": "integer",
+            "nullable": true
+          },
+          {
+            "name": "updated_at",
+            "type": "timestamp with time zone",
+            "nullable": true
+          }
+        ],
+        "primary_keys": [],
+        "foreign_keys": []
+      },
+      "outbound_shipments": {
+        "columns": [
+          {
+            "name": "shipment_id",
+            "type": "text",
+            "nullable": false
+          },
+          {
+            "name": "warehouse_id",
+            "type": "integer",
+            "nullable": true
+          },
+          {
+            "name": "order_ref",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "carrier",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "tracking_number",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "ship_to_name",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "ship_to_state",
+            "type": "character(2)",
+            "nullable": true
+          },
+          {
+            "name": "packed_by",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "shipped_at",
+            "type": "timestamp with time zone",
+            "nullable": true
+          },
+          {
+            "name": "status",
+            "type": "text",
+            "nullable": true
+          }
+        ],
+        "primary_keys": [],
+        "foreign_keys": []
+      },
+      "outbound_lines": {
+        "columns": [
+          {
+            "name": "shipment_id",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "item_id",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "qty",
+            "type": "integer",
+            "nullable": true
+          }
+        ],
+        "primary_keys": [],
+        "foreign_keys": []
+      },
+      "wms_users": {
+        "columns": [
+          {
+            "name": "username",
+            "type": "text",
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "role",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "warehouse_id",
+            "type": "integer",
+            "nullable": true
+          }
+        ],
+        "primary_keys": [],
+        "foreign_keys": []
+      }
+    },
+    "csv_stats": {
+      "bins": {
+        "file_size_bytes": 6838,
+        "row_count": 400,
+        "columns": [
+          "bin_id",
+          "warehouse_id",
+          "zone",
+          "aisle",
+          "shelf"
+        ],
+        "null_counts": {
+          "bin_id": 0,
+          "warehouse_id": 0,
+          "zone": 0,
+          "aisle": 0,
+          "shelf": 0
+        }
+      },
+      "inbound_packages": {
+        "file_size_bytes": 496534,
+        "row_count": 4148,
+        "columns": [
+          "package_id",
+          "warehouse_id",
+          "carrier",
+          "tracking_number",
+          "sender_name",
+          "ref_note",
+          "received_at",
+          "received_by",
+          "status",
+          "checked_in_at"
+        ],
+        "null_counts": {
+          "package_id": 0,
+          "warehouse_id": 0,
+          "carrier": 0,
+          "tracking_number": 55,
+          "sender_name": 0,
+          "ref_note": 653,
+          "received_at": 0,
+          "received_by": 0,
+          "status": 0,
+          "checked_in_at": 74
+        }
+      },
+      "outbound_lines": {
+        "file_size_bytes": 60832,
+        "row_count": 2859,
+        "columns": [
+          "shipment_id",
+          "item_id",
+          "qty"
+        ],
+        "null_counts": {
+          "shipment_id": 0,
+          "item_id": 0,
+          "qty": 0
+        }
+      },
+      "outbound_shipments": {
+        "file_size_bytes": 155213,
+        "row_count": 1441,
+        "columns": [
+          "shipment_id",
+          "warehouse_id",
+          "order_ref",
+          "carrier",
+          "tracking_number",
+          "ship_to_name",
+          "ship_to_state",
+          "packed_by",
+          "shipped_at",
+          "status"
+        ],
+        "null_counts": {
+          "shipment_id": 0,
+          "warehouse_id": 0,
+          "order_ref": 0,
+          "carrier": 0,
+          "tracking_number": 0,
+          "ship_to_name": 0,
+          "ship_to_state": 0,
+          "packed_by": 0,
+          "shipped_at": 0,
+          "status": 0
+        }
+      },
+      "package_lines": {
+        "file_size_bytes": 448114,
+        "row_count": 7483,
+        "columns": [
+          "line_id",
+          "package_id",
+          "item_id",
+          "qty_expected",
+          "qty_received",
+          "qty_passed",
+          "qty_failed",
+          "fail_reason",
+          "inspected_by",
+          "inspected_at"
+        ],
+        "null_counts": {
+          "line_id": 0,
+          "package_id": 0,
+          "item_id": 0,
+          "qty_expected": 0,
+          "qty_received": 0,
+          "qty_passed": 133,
+          "qty_failed": 133,
+          "fail_reason": 6702,
+          "inspected_by": 133,
+          "inspected_at": 133
+        }
+      },
+      "stock_levels": {
+        "file_size_bytes": 54971,
+        "row_count": 1130,
+        "columns": [
+          "item_id",
+          "warehouse_id",
+          "bin_id",
+          "qty_on_hand",
+          "qty_reserved",
+          "qty_damaged",
+          "updated_at"
+        ],
+        "null_counts": {
+          "item_id": 0,
+          "warehouse_id": 0,
+          "bin_id": 0,
+          "qty_on_hand": 0,
+          "qty_reserved": 0,
+          "qty_damaged": 0,
+          "updated_at": 0
+        }
+      },
+      "warehouses": {
+        "file_size_bytes": 213,
+        "row_count": 2,
+        "columns": [
+          "warehouse_id",
+          "code",
+          "name",
+          "timezone",
+          "address"
+        ],
+        "null_counts": {
+          "warehouse_id": 0,
+          "code": 0,
+          "name": 0,
+          "timezone": 0,
+          "address": 0
+        }
+      },
+      "wms_items": {
+        "file_size_bytes": 78229,
+        "row_count": 600,
+        "columns": [
+          "item_id",
+          "upc",
+          "description",
+          "category",
+          "avg_paid_180d",
+          "avg_paid_refreshed_at",
+          "active",
+          "created_at"
+        ],
+        "null_counts": {
+          "item_id": 0,
+          "upc": 0,
+          "description": 0,
+          "category": 0,
+          "avg_paid_180d": 0,
+          "avg_paid_refreshed_at": 0,
+          "active": 0,
+          "created_at": 0
+        }
+      },
+      "wms_users": {
+        "file_size_bytes": 348,
+        "row_count": 11,
+        "columns": [
+          "username",
+          "name",
+          "role",
+          "warehouse_id"
+        ],
+        "null_counts": {
+          "username": 0,
+          "name": 0,
+          "role": 0,
+          "warehouse_id": 2
+        }
+      }
+    }
+  },
+  "portal_db": {
+    "sql_tables": {
+      "brands": {
+        "columns": [
+          {
+            "name": "brand_id",
+            "type": "integer",
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "category",
+            "type": "text",
+            "nullable": true
+          }
+        ],
+        "primary_keys": [],
+        "foreign_keys": []
+      },
+      "sets": {
+        "columns": [
+          {
+            "name": "set_id",
+            "type": "integer",
+            "nullable": false
+          },
+          {
+            "name": "brand_id",
+            "type": "integer",
+            "nullable": true
+          },
+          {
+            "name": "name",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "release_date",
+            "type": "date",
+            "nullable": true
+          }
+        ],
+        "primary_keys": [],
+        "foreign_keys": []
+      },
+      "catalog_products": {
+        "columns": [
+          {
+            "name": "product_id",
+            "type": "text",
+            "nullable": false
+          },
+          {
+            "name": "set_id",
+            "type": "integer",
+            "nullable": true
+          },
+          {
+            "name": "name",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "mfr_code",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "list_price",
+            "type": "numeric(10,2)",
+            "nullable": true
+          },
+          {
+            "name": "status",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "created_at",
+            "type": "timestamp with time zone",
+            "nullable": true
+          }
+        ],
+        "primary_keys": [],
+        "foreign_keys": []
+      },
+      "listed_stock": {
+        "columns": [
+          {
+            "name": "product_id",
+            "type": "text",
+            "nullable": false
+          },
+          {
+            "name": "available_qty",
+            "type": "integer",
+            "nullable": true
+          },
+          {
+            "name": "last_synced_at",
+            "type": "timestamp with time zone",
+            "nullable": true
+          },
+          {
+            "name": "manual_override",
+            "type": "boolean",
+            "nullable": true
+          },
+          {
+            "name": "override_by",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "override_note",
+            "type": "text",
+            "nullable": true
+          }
+        ],
+        "primary_keys": [],
+        "foreign_keys": []
+      },
+      "partners": {
+        "columns": [
+          {
+            "name": "partner_id",
+            "type": "integer",
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "partner_type",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "state",
+            "type": "character(2)",
+            "nullable": true
+          },
+          {
+            "name": "payment_terms",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "credit_limit",
+            "type": "numeric(12,2)",
+            "nullable": true
+          },
+          {
+            "name": "tier",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "account_manager",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "status",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "created_at",
+            "type": "timestamp with time zone",
+            "nullable": true
+          }
+        ],
+        "primary_keys": [],
+        "foreign_keys": []
+      },
+      "partner_users": {
+        "columns": [
+          {
+            "name": "user_id",
+            "type": "integer",
+            "nullable": false
+          },
+          {
+            "name": "partner_id",
+            "type": "integer",
+            "nullable": true
+          },
+          {
+            "name": "name",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "email",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "role",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "last_login_at",
+            "type": "timestamp with time zone",
+            "nullable": true
+          }
+        ],
+        "primary_keys": [],
+        "foreign_keys": []
+      },
+      "quotes": {
+        "columns": [
+          {
+            "name": "quote_id",
+            "type": "text",
+            "nullable": false
+          },
+          {
+            "name": "partner_id",
+            "type": "integer",
+            "nullable": true
+          },
+          {
+            "name": "status",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "created_by",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "created_at",
+            "type": "timestamp with time zone",
+            "nullable": true
+          },
+          {
+            "name": "valid_until",
+            "type": "timestamp with time zone",
+            "nullable": true
+          }
+        ],
+        "primary_keys": [],
+        "foreign_keys": []
+      },
+      "quote_items": {
+        "columns": [
+          {
+            "name": "quote_item_id",
+            "type": "integer",
+            "nullable": false
+          },
+          {
+            "name": "quote_id",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "product_id",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "qty",
+            "type": "integer",
+            "nullable": true
+          },
+          {
+            "name": "unit_price",
+            "type": "numeric(10,2)",
+            "nullable": true
+          }
+        ],
+        "primary_keys": [],
+        "foreign_keys": []
+      },
+      "orders": {
+        "columns": [
+          {
+            "name": "order_id",
+            "type": "text",
+            "nullable": false
+          },
+          {
+            "name": "partner_id",
+            "type": "integer",
+            "nullable": true
+          },
+          {
+            "name": "quote_id",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "status",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "fulfillment_warehouse",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "created_at",
+            "type": "timestamp with time zone",
+            "nullable": true
+          },
+          {
+            "name": "shipped_at",
+            "type": "timestamp with time zone",
+            "nullable": true
+          }
+        ],
+        "primary_keys": [],
+        "foreign_keys": []
+      },
+      "order_items": {
+        "columns": [
+          {
+            "name": "order_item_id",
+            "type": "integer",
+            "nullable": false
+          },
+          {
+            "name": "order_id",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "product_id",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "qty",
+            "type": "integer",
+            "nullable": true
+          },
+          {
+            "name": "unit_price",
+            "type": "numeric(10,2)",
+            "nullable": true
+          }
+        ],
+        "primary_keys": [],
+        "foreign_keys": []
+      },
+      "invoices": {
+        "columns": [
+          {
+            "name": "invoice_id",
+            "type": "text",
+            "nullable": false
+          },
+          {
+            "name": "order_id",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "partner_id",
+            "type": "integer",
+            "nullable": true
+          },
+          {
+            "name": "issued_at",
+            "type": "timestamp with time zone",
+            "nullable": true
+          },
+          {
+            "name": "due_date",
+            "type": "date",
+            "nullable": true
+          },
+          {
+            "name": "amount",
+            "type": "numeric(12,2)",
+            "nullable": true
+          },
+          {
+            "name": "status",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "amount_paid",
+            "type": "numeric(12,2)",
+            "nullable": true
+          }
+        ],
+        "primary_keys": [],
+        "foreign_keys": []
+      },
+      "payments": {
+        "columns": [
+          {
+            "name": "payment_id",
+            "type": "text",
+            "nullable": false
+          },
+          {
+            "name": "invoice_id",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "partner_id",
+            "type": "integer",
+            "nullable": true
+          },
+          {
+            "name": "amount",
+            "type": "numeric(12,2)",
+            "nullable": true
+          },
+          {
+            "name": "method",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "received_at",
+            "type": "timestamp with time zone",
+            "nullable": true
+          }
+        ],
+        "primary_keys": [],
+        "foreign_keys": []
+      },
+      "partner_messages": {
+        "columns": [
+          {
+            "name": "message_id",
+            "type": "integer",
+            "nullable": false
+          },
+          {
+            "name": "partner_id",
+            "type": "integer",
+            "nullable": true
+          },
+          {
+            "name": "author_email",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "thread_ref",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "direction",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "body",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "created_at",
+            "type": "timestamp with time zone",
+            "nullable": true
+          }
+        ],
+        "primary_keys": [],
+        "foreign_keys": []
+      },
+      "market_prices": {
+        "columns": [
+          {
+            "name": "set_id",
+            "type": "integer",
+            "nullable": true
+          },
+          {
+            "name": "price_date",
+            "type": "date",
+            "nullable": true
+          },
+          {
+            "name": "median_box_price",
+            "type": "numeric(10,2)",
+            "nullable": true
+          },
+          {
+            "name": "active_listings",
+            "type": "integer",
+            "nullable": true
+          },
+          {
+            "name": "sold_7d",
+            "type": "integer",
+            "nullable": true
+          }
+        ],
+        "primary_keys": [],
+        "foreign_keys": []
+      },
+      "price_index": {
+        "columns": [
+          {
+            "name": "index_date",
+            "type": "date",
+            "nullable": true
+          },
+          {
+            "name": "msc_sealed_index",
+            "type": "numeric(8,2)",
+            "nullable": true
+          },
+          {
+            "name": "tcg_index",
+            "type": "numeric(8,2)",
+            "nullable": true
+          },
+          {
+            "name": "sports_index",
+            "type": "numeric(8,2)",
+            "nullable": true
+          },
+          {
+            "name": "bullion_index",
+            "type": "numeric(8,2)",
+            "nullable": true
+          }
+        ],
+        "primary_keys": [],
+        "foreign_keys": []
+      },
+      "staff_users": {
+        "columns": [
+          {
+            "name": "user_id",
+            "type": "integer",
+            "nullable": false
+          },
+          {
+            "name": "email",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "name",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "role",
+            "type": "text",
+            "nullable": true
+          }
+        ],
+        "primary_keys": [],
+        "foreign_keys": []
+      }
+    },
+    "csv_stats": {
+      "brands": {
+        "file_size_bytes": 258,
+        "row_count": 10,
+        "columns": [
+          "brand_id",
+          "name",
+          "category"
+        ],
+        "null_counts": {
+          "brand_id": 0,
+          "name": 0,
+          "category": 0
+        }
+      },
+      "catalog_products": {
+        "file_size_bytes": 71022,
+        "row_count": 604,
+        "columns": [
+          "product_id",
+          "set_id",
+          "name",
+          "mfr_code",
+          "list_price",
+          "status",
+          "created_at"
+        ],
+        "null_counts": {
+          "product_id": 0,
+          "set_id": 0,
+          "name": 0,
+          "mfr_code": 288,
+          "list_price": 0,
+          "status": 0,
+          "created_at": 0
+        }
+      },
+      "invoices": {
+        "file_size_bytes": 89979,
+        "row_count": 1147,
+        "columns": [
+          "invoice_id",
+          "order_id",
+          "partner_id",
+          "issued_at",
+          "due_date",
+          "amount",
+          "status",
+          "amount_paid"
+        ],
+        "null_counts": {
+          "invoice_id": 0,
+          "order_id": 0,
+          "partner_id": 0,
+          "issued_at": 0,
+          "due_date": 0,
+          "amount": 0,
+          "status": 0,
+          "amount_paid": 0
+        }
+      },
+      "listed_stock": {
+        "file_size_bytes": 26905,
+        "row_count": 604,
+        "columns": [
+          "product_id",
+          "available_qty",
+          "last_synced_at",
+          "manual_override",
+          "override_by",
+          "override_note"
+        ],
+        "null_counts": {
+          "product_id": 0,
+          "available_qty": 0,
+          "last_synced_at": 0,
+          "manual_override": 0,
+          "override_by": 598,
+          "override_note": 598
+        }
+      },
+      "market_prices": {
+        "file_size_bytes": 161386,
+        "row_count": 5374,
+        "columns": [
+          "set_id",
+          "price_date",
+          "median_box_price",
+          "active_listings",
+          "sold_7d"
+        ],
+        "null_counts": {
+          "set_id": 0,
+          "price_date": 0,
+          "median_box_price": 0,
+          "active_listings": 0,
+          "sold_7d": 0
+        }
+      },
+      "orders": {
+        "file_size_bytes": 92666,
+        "row_count": 1168,
+        "columns": [
+          "order_id",
+          "partner_id",
+          "quote_id",
+          "status",
+          "fulfillment_warehouse",
+          "created_at",
+          "shipped_at"
+        ],
+        "null_counts": {
+          "order_id": 0,
+          "partner_id": 0,
+          "quote_id": 1,
+          "status": 0,
+          "fulfillment_warehouse": 0,
+          "created_at": 0,
+          "shipped_at": 20
+        }
+      },
+      "order_items": {
+        "file_size_bytes": 96238,
+        "row_count": 2629,
+        "columns": [
+          "order_item_id",
+          "order_id",
+          "product_id",
+          "qty",
+          "unit_price"
+        ],
+        "null_counts": {
+          "order_item_id": 0,
+          "order_id": 0,
+          "product_id": 0,
+          "qty": 0,
+          "unit_price": 0
+        }
+      },
+      "partners": {
+        "file_size_bytes": 45438,
+        "row_count": 400,
+        "columns": [
+          "partner_id",
+          "name",
+          "partner_type",
+          "state",
+          "payment_terms",
+          "credit_limit",
+          "tier",
+          "account_manager",
+          "status",
+          "created_at"
+        ],
+        "null_counts": {
+          "partner_id": 0,
+          "name": 0,
+          "partner_type": 0,
+          "state": 0,
+          "payment_terms": 0,
+          "credit_limit": 0,
+          "tier": 0,
+          "account_manager": 0,
+          "status": 0,
+          "created_at": 0
+        }
+      },
+      "partner_messages": {
+        "file_size_bytes": 128138,
+        "row_count": 857,
+        "columns": [
+          "message_id",
+          "partner_id",
+          "author_email",
+          "thread_ref",
+          "direction",
+          "body",
+          "created_at"
+        ],
+        "null_counts": {
+          "message_id": 0,
+          "partner_id": 0,
+          "author_email": 0,
+          "thread_ref": 0,
+          "direction": 0,
+          "body": 0,
+          "created_at": 0
+        }
+      },
+      "partner_users": {
+        "file_size_bytes": 58456,
+        "row_count": 711,
+        "columns": [
+          "user_id",
+          "partner_id",
+          "name",
+          "email",
+          "role",
+          "last_login_at"
+        ],
+        "null_counts": {
+          "user_id": 0,
+          "partner_id": 0,
+          "name": 0,
+          "email": 0,
+          "role": 0,
+          "last_login_at": 0
+        }
+      },
+      "payments": {
+        "file_size_bytes": 50062,
+        "row_count": 824,
+        "columns": [
+          "payment_id",
+          "invoice_id",
+          "partner_id",
+          "amount",
+          "method",
+          "received_at"
+        ],
+        "null_counts": {
+          "payment_id": 0,
+          "invoice_id": 0,
+          "partner_id": 0,
+          "amount": 0,
+          "method": 0,
+          "received_at": 0
+        }
+      },
+      "price_index": {
+        "file_size_bytes": 3700,
+        "row_count": 91,
+        "columns": [
+          "index_date",
+          "msc_sealed_index",
+          "tcg_index",
+          "sports_index",
+          "bullion_index"
+        ],
+        "null_counts": {
+          "index_date": 0,
+          "msc_sealed_index": 0,
+          "tcg_index": 0,
+          "sports_index": 0,
+          "bullion_index": 0
+        }
+      },
+      "quotes": {
+        "file_size_bytes": 161290,
+        "row_count": 1817,
+        "columns": [
+          "quote_id",
+          "partner_id",
+          "status",
+          "created_by",
+          "created_at",
+          "valid_until"
+        ],
+        "null_counts": {
+          "quote_id": 0,
+          "partner_id": 0,
+          "status": 0,
+          "created_by": 0,
+          "created_at": 0,
+          "valid_until": 0
+        }
+      },
+      "quote_items": {
+        "file_size_bytes": 152435,
+        "row_count": 4248,
+        "columns": [
+          "quote_item_id",
+          "quote_id",
+          "product_id",
+          "qty",
+          "unit_price"
+        ],
+        "null_counts": {
+          "quote_item_id": 0,
+          "quote_id": 0,
+          "product_id": 0,
+          "qty": 0,
+          "unit_price": 0
+        }
+      },
+      "sets": {
+        "file_size_bytes": 2009,
+        "row_count": 60,
+        "columns": [
+          "set_id",
+          "brand_id",
+          "name",
+          "release_date"
+        ],
+        "null_counts": {
+          "set_id": 0,
+          "brand_id": 0,
+          "name": 0,
+          "release_date": 0
+        }
+      },
+      "staff_users": {
+        "file_size_bytes": 1079,
+        "row_count": 25,
+        "columns": [
+          "user_id",
+          "email",
+          "name",
+          "role"
+        ],
+        "null_counts": {
+          "user_id": 0,
+          "email": 0,
+          "name": 0,
+          "role": 0
+        }
+      }
+    }
+  }
+}

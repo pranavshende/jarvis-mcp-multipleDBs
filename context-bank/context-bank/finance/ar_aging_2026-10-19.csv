@@ -1,0 +1,324 @@
+partner,invoice,issued,due,open_amount,days_past_due,bucket
+Northgate Hobby Distributors,INV-22139,2026-07-30,2026-08-29,13371.60,51,31-60
+Northgate Hobby Distributors,INV-22165,2026-07-31,2026-08-30,2157.60,50,31-60
+Northgate Hobby Distributors,INV-22196,2026-08-03,2026-09-02,4541.28,47,31-60
+Northgate Hobby Distributors,INV-22252,2026-08-04,2026-09-03,6405.46,46,31-60
+Northgate Hobby Distributors,INV-22331,2026-08-09,2026-09-08,26666.14,41,31-60
+Northgate Hobby Distributors,INV-22460,2026-08-15,2026-09-14,29976.94,35,31-60
+Granite Cards Inc.,INV-22795,2026-09-02,2026-09-17,1922.27,32,31-60
+Northgate Hobby Distributors,INV-22511,2026-08-19,2026-09-18,13198.74,31,31-60
+Northgate Hobby Distributors,INV-22532,2026-08-19,2026-09-18,15297.31,31,31-60
+Falcon Card Shop Co.,INV-22872,2026-09-05,2026-09-20,1628.80,29,1-30
+Northgate Hobby Distributors,INV-22616,2026-08-22,2026-09-21,4920.72,28,1-30
+Granite Cards Inc.,INV-23009,2026-09-11,2026-09-26,9258.84,23,1-30
+Iron Hobby,INV-22691,2026-08-28,2026-09-27,3862.53,22,1-30
+Keystone Trading Post & Co.,INV-22725,2026-08-28,2026-09-27,2779.83,22,1-30
+Northgate Hobby Distributors,INV-22708,2026-08-29,2026-09-28,28429.80,21,1-30
+Bayou Trading Post Co.,INV-22785,2026-08-31,2026-09-30,868.50,19,1-30
+Northgate Hobby Distributors,INV-22787,2026-08-31,2026-09-30,18135.32,19,1-30
+Canyon Collectibles Group,INV-23094,2026-09-17,2026-10-02,6242.46,17,1-30
+Keystone Trading Post & Co.,INV-22832,2026-09-03,2026-10-03,1277.06,16,1-30
+Cardinal Bullion,INV-22848,2026-09-05,2026-10-05,3504.56,14,1-30
+Falcon Card Shop Co.,INV-23168,2026-09-20,2026-10-05,3637.59,14,1-30
+Iron Vault Inc.,INV-22867,2026-09-06,2026-10-06,3925.31,13,1-30
+Northgate Hobby Distributors,INV-22894,2026-09-06,2026-10-06,6604.62,13,1-30
+Canyon Collectibles Group,INV-23185,2026-09-21,2026-10-06,5867.56,13,1-30
+Northgate Hobby Distributors,INV-22882,2026-09-07,2026-10-07,2213.40,12,1-30
+Maple Bullion Group,INV-23236,2026-09-24,2026-10-09,4079.40,10,1-30
+Northgate Hobby Distributors,INV-22949,2026-09-10,2026-10-10,7592.60,9,1-30
+Bayou Trading Post Co.,INV-22970,2026-09-11,2026-10-11,4121.72,8,1-30
+Cardinal Bullion,INV-22972,2026-09-12,2026-10-12,1944.20,7,1-30
+Crescent Card Shop Inc.,INV-22986,2026-09-12,2026-10-12,2379.84,7,1-30
+Bayou Trading Post Co.,INV-23024,2026-09-13,2026-10-13,1093.49,6,1-30
+Crescent TCG Inc.,INV-23023,2026-09-14,2026-10-14,3587.32,5,1-30
+Silver Sports Cards & Co.,INV-23047,2026-09-14,2026-10-14,2543.80,5,1-30
+Keystone Bullion Distributors,INV-23055,2026-09-15,2026-10-15,8592.56,4,1-30
+Iron Vault Inc.,INV-23071,2026-09-16,2026-10-16,6322.16,3,1-30
+Crescent Collectibles LLC,INV-23076,2026-09-16,2026-10-16,1987.44,3,1-30
+Bayou Trading Post Co.,INV-23084,2026-09-16,2026-10-16,90.61,3,1-30
+Harbor Collectibles Wholesale,INV-23091,2026-09-16,2026-10-16,4481.82,3,1-30
+Blue Ridge Card Club,INV-23379,2026-10-01,2026-10-16,2561.82,3,1-30
+Silver Card Shop LLC,INV-23096,2026-09-18,2026-10-18,3863.10,1,1-30
+Northgate Hobby Distributors,INV-23106,2026-09-18,2026-10-18,2392.12,1,1-30
+Cardinal Bullion,INV-23110,2026-09-18,2026-10-18,30773.28,1,1-30
+Highland Vault Group,INV-23127,2026-09-18,2026-10-18,5618.74,1,1-30
+Pioneer Breaks Wholesale,INV-23135,2026-09-18,2026-10-18,1294.40,1,1-30
+Crescent Card Shop Inc.,INV-23140,2026-09-19,2026-10-19,2901.56,0,current
+Falcon Comics & Cards Inc.,INV-23144,2026-09-19,2026-10-19,332.71,0,current
+Liberty TCG LLC,INV-23149,2026-09-19,2026-10-19,2249.46,0,current
+Sunset Games Wholesale,INV-23152,2026-09-19,2026-10-19,13135.73,0,current
+Northgate Hobby Distributors,INV-23161,2026-09-19,2026-10-19,3646.38,0,current
+Liberty Cards,INV-23183,2026-09-19,2026-10-19,1865.23,0,current
+Pioneer Games Inc.,INV-23434,2026-10-04,2026-10-19,3501.32,0,current
+Canyon Collectibles Group,INV-23436,2026-10-04,2026-10-19,5031.83,0,current
+Liberty Hobby Group,INV-23451,2026-10-04,2026-10-19,1407.72,0,current
+Lakeside Collectibles Wholesale,INV-23143,2026-09-20,2026-10-20,627.84,0,current
+Prairie Card Shop Co.,INV-23150,2026-09-20,2026-10-20,3333.60,0,current
+Bayou Trading Post Co.,INV-23163,2026-09-20,2026-10-20,15995.64,0,current
+Riverbend Bullion Inc.,INV-23182,2026-09-20,2026-10-20,260.08,0,current
+Atlas TCG Inc.,INV-23164,2026-09-21,2026-10-21,4733.22,0,current
+Bayou Coin & Card Inc.,INV-23186,2026-09-21,2026-10-21,1409.70,0,current
+Prairie Comics & Cards,INV-23189,2026-09-21,2026-10-21,5928.28,0,current
+Liberty Hobby Group,INV-23456,2026-10-06,2026-10-21,742.09,0,current
+Liberty Comics & Cards & Co.,INV-23193,2026-09-23,2026-10-23,754.20,0,current
+Prairie Card Club Group,INV-23197,2026-09-23,2026-10-23,26846.10,0,current
+Pioneer Breaks,INV-23202,2026-09-23,2026-10-23,206.92,0,current
+Bayou Trading Post Co.,INV-23204,2026-09-23,2026-10-23,2014.70,0,current
+Maple Trading Post Distributors,INV-23207,2026-09-23,2026-10-23,2832.80,0,current
+Prairie Games & Co.,INV-23208,2026-09-23,2026-10-23,508.00,0,current
+Bayou Vault & Co.,INV-23219,2026-09-23,2026-10-23,3910.97,0,current
+Riverbend Bullion Distributors,INV-23230,2026-09-23,2026-10-23,2041.60,0,current
+Blue Ridge Card Club,INV-23517,2026-10-08,2026-10-23,29751.74,0,current
+Pioneer Gaming Distributors,INV-23522,2026-10-08,2026-10-23,2904.99,0,current
+Bayou Coin & Card Inc.,INV-23209,2026-09-24,2026-10-24,2368.12,0,current
+Bayou Trading Post Co.,INV-23216,2026-09-24,2026-10-24,926.80,0,current
+Crescent Games Distributors,INV-23223,2026-09-24,2026-10-24,221.88,0,current
+Cardinal Sports Cards Co.,INV-23243,2026-09-24,2026-10-24,5005.21,0,current
+Sunset Collectibles Co.,INV-23256,2026-09-24,2026-10-24,2101.97,0,current
+Highland Sports Cards Inc.,INV-23257,2026-09-24,2026-10-24,25553.04,0,current
+Granite Coin & Card,INV-23259,2026-09-24,2026-10-24,1081.26,0,current
+Cardinal Bullion,INV-23262,2026-09-24,2026-10-24,1931.04,0,current
+Maple Vault Distributors,INV-23274,2026-09-24,2026-10-24,8019.76,0,current
+Harbor Sports Cards & Co.,INV-23559,2026-10-09,2026-10-24,6566.47,0,current
+Blue Ridge TCG,INV-23226,2026-09-25,2026-10-25,11704.35,0,current
+Falcon Sports Cards Distributors,INV-23237,2026-09-25,2026-10-25,11186.90,0,current
+Riverbend Cards Distributors,INV-23246,2026-09-25,2026-10-25,6000.89,0,current
+Northgate Hobby Distributors,INV-23254,2026-09-25,2026-10-25,11566.32,0,current
+Blue Ridge Trading Post Group,INV-23255,2026-09-25,2026-10-25,6441.66,0,current
+Highland Sports Cards Inc.,INV-23280,2026-09-25,2026-10-25,2233.24,0,current
+Crescent Collectibles LLC,INV-23283,2026-09-25,2026-10-25,680.80,0,current
+Cardinal Sports Cards Co.,INV-23290,2026-09-25,2026-10-25,1679.80,0,current
+Golden Vault Co.,INV-23502,2026-10-10,2026-10-25,384.67,0,current
+Lone Star Hobby Group,INV-23264,2026-09-26,2026-10-26,2318.04,0,current
+Crescent Card Shop Inc.,INV-23268,2026-09-26,2026-10-26,3006.05,0,current
+Harbor Cards,INV-23288,2026-09-26,2026-10-26,4541.89,0,current
+Liberty TCG LLC,INV-23292,2026-09-26,2026-10-26,1797.64,0,current
+Cardinal Sports Cards Co.,INV-23293,2026-09-26,2026-10-26,4252.95,0,current
+Silver Sports Cards & Co.,INV-23296,2026-09-26,2026-10-26,402.60,0,current
+Union Hobby LLC,INV-23297,2026-09-26,2026-10-26,14701.20,0,current
+Granite Card Shop Co.,INV-23298,2026-09-26,2026-10-26,10659.12,0,current
+Northgate Hobby Distributors,INV-23300,2026-09-26,2026-10-26,4469.69,0,current
+Prairie Sports Cards Co.,INV-23303,2026-09-26,2026-10-26,2898.90,0,current
+Lone Star Gaming,INV-23544,2026-10-11,2026-10-26,1327.19,0,current
+Maple Bullion Group,INV-23575,2026-10-11,2026-10-26,1790.63,0,current
+Harbor Collectibles Wholesale,INV-23302,2026-09-27,2026-10-27,1531.20,0,current
+Highland Card Club Co.,INV-23304,2026-09-27,2026-10-27,3011.21,0,current
+Falcon Sports Cards LLC,INV-23313,2026-09-27,2026-10-27,966.64,0,current
+Falcon Sports Cards LLC,INV-23322,2026-09-27,2026-10-27,1127.76,0,current
+Prairie Comics & Cards,INV-23326,2026-09-27,2026-10-27,5391.86,0,current
+Prairie Comics & Cards,INV-23330,2026-09-27,2026-10-27,111417.66,0,current
+Crescent Gaming Group,INV-23599,2026-10-12,2026-10-27,4769.23,0,current
+Blue Ridge Games Distributors,INV-23601,2026-10-12,2026-10-27,9875.64,0,current
+Liberty Coin & Card Group,INV-23315,2026-09-28,2026-10-28,377.97,0,current
+Liberty Breaks Group,INV-23321,2026-09-28,2026-10-28,2294.28,0,current
+Union Hobby LLC,INV-23323,2026-09-28,2026-10-28,3343.39,0,current
+Prairie Comics & Cards,INV-23334,2026-09-29,2026-10-29,5380.90,0,current
+Golden Comics & Cards,INV-23653,2026-10-14,2026-10-29,3946.08,0,current
+Bayou Coin & Card Inc.,INV-23337,2026-09-30,2026-10-30,10646.87,0,current
+Silver Comics & Cards,INV-23338,2026-09-30,2026-10-30,2259.74,0,current
+Northgate Hobby Distributors,INV-23345,2026-09-30,2026-10-30,25069.54,0,current
+Lakeside Games & Co.,INV-23346,2026-09-30,2026-10-30,1489.56,0,current
+Lakeside Card Shop Inc.,INV-23349,2026-09-30,2026-10-30,8903.27,0,current
+Liberty Cards LLC,INV-23351,2026-09-30,2026-10-30,4229.45,0,current
+Atlas Wholesale Group,INV-23354,2026-09-30,2026-10-30,1276.58,0,current
+Harbor Cards,INV-23361,2026-09-30,2026-10-30,578.92,0,current
+Coastline Collectibles,INV-23340,2026-10-01,2026-10-31,799.24,0,current
+Canyon Collectibles Inc.,INV-23343,2026-10-01,2026-10-31,3715.90,0,current
+Evergreen Trading Post Inc.,INV-23356,2026-10-01,2026-10-31,16582.32,0,current
+Atlas TCG Inc.,INV-23372,2026-10-01,2026-10-31,17642.96,0,current
+Pioneer Card Shop Distributors,INV-23376,2026-10-01,2026-10-31,10188.10,0,current
+Frontier Hobby Supply Group,INV-23378,2026-10-01,2026-10-31,7242.67,0,current
+Union Hobby LLC,INV-23387,2026-10-01,2026-10-31,8491.36,0,current
+Blue Ridge Card Club,INV-23640,2026-10-16,2026-10-31,4631.34,0,current
+Lakeside Hobby Distributors,INV-23645,2026-10-16,2026-10-31,6505.80,0,current
+Frontier Vault Distributors,INV-23661,2026-10-16,2026-10-31,9420.29,0,current
+Falcon Card Shop Distributors,INV-23668,2026-10-16,2026-10-31,405.44,0,current
+Pioneer Games Inc.,INV-23695,2026-10-16,2026-10-31,706.64,0,current
+Riverbend Bullion Distributors,INV-23359,2026-10-02,2026-11-01,36507.38,0,current
+Crescent Games Distributors,INV-23362,2026-10-02,2026-11-01,8778.40,0,current
+Silver Coin & Card Co.,INV-23366,2026-10-02,2026-11-01,778.73,0,current
+Silver Gaming & Co.,INV-23368,2026-10-02,2026-11-01,1052.24,0,current
+Falcon Sports Cards Distributors,INV-23370,2026-10-02,2026-11-01,1318.32,0,current
+Golden Vault,INV-23374,2026-10-02,2026-11-01,6241.40,0,current
+Lakeside Games Co.,INV-23377,2026-10-02,2026-11-01,11748.76,0,current
+Harbor Cards,INV-23380,2026-10-02,2026-11-01,3358.70,0,current
+Crescent Collectibles LLC,INV-23389,2026-10-02,2026-11-01,790.88,0,current
+Blue Ridge Games Distributors,INV-23710,2026-10-17,2026-11-01,13009.47,0,current
+Canyon Trading Post,INV-23382,2026-10-03,2026-11-02,1536.22,0,current
+Crescent Games Distributors,INV-23386,2026-10-03,2026-11-02,6325.28,0,current
+Crescent Collectibles LLC,INV-23388,2026-10-03,2026-11-02,7407.68,0,current
+Lone Star Hobby Wholesale,INV-23393,2026-10-03,2026-11-02,3495.23,0,current
+Riverbend Comics & Cards LLC,INV-23395,2026-10-03,2026-11-02,4256.96,0,current
+Golden Sports Cards,INV-23396,2026-10-03,2026-11-02,3476.90,0,current
+Falcon Comics & Cards Inc.,INV-23403,2026-10-03,2026-11-02,1823.24,0,current
+Cardinal Sports Cards Co.,INV-23406,2026-10-03,2026-11-02,9064.95,0,current
+Golden Vault,INV-23408,2026-10-03,2026-11-02,2294.12,0,current
+Prairie Comics & Cards,INV-23415,2026-10-03,2026-11-02,23695.34,0,current
+Maple Card Shop & Co.,INV-23417,2026-10-03,2026-11-02,1638.55,0,current
+Highland Card Shop Distributors,INV-23423,2026-10-03,2026-11-02,1978.63,0,current
+Canyon Collectibles Group,INV-23697,2026-10-18,2026-11-02,406.68,0,current
+Liberty Hobby Group,INV-23721,2026-10-18,2026-11-02,6204.34,0,current
+Summit Breaks Live,INV-23724,2026-10-18,2026-11-02,4721.60,0,current
+Riverbend Comics & Cards LLC,INV-23399,2026-10-04,2026-11-03,1303.59,0,current
+Cardinal Bullion,INV-23401,2026-10-04,2026-11-03,8429.42,0,current
+Keystone Hobby & Co.,INV-23405,2026-10-04,2026-11-03,759.86,0,current
+Granite Hobby,INV-23412,2026-10-04,2026-11-03,2903.58,0,current
+Harbor Trading Post & Co.,INV-23418,2026-10-04,2026-11-03,824.05,0,current
+Crescent Games Distributors,INV-23425,2026-10-04,2026-11-03,1320.62,0,current
+Lone Star Gaming Group,INV-23428,2026-10-04,2026-11-03,456.90,0,current
+Canyon Trading Post,INV-23432,2026-10-04,2026-11-03,927.64,0,current
+Bayou Vault & Co.,INV-23435,2026-10-04,2026-11-03,184.32,0,current
+Iron Vault Inc.,INV-23441,2026-10-04,2026-11-03,10071.03,0,current
+Prairie Bullion,INV-23444,2026-10-04,2026-11-03,434.91,0,current
+Pioneer Trading Post LLC,INV-23445,2026-10-04,2026-11-03,113.92,0,current
+Highland Sports Cards Inc.,INV-23449,2026-10-04,2026-11-03,1972.44,0,current
+Union Hobby LLC,INV-23420,2026-10-05,2026-11-04,3213.97,0,current
+Granite Comics & Cards,INV-23426,2026-10-05,2026-11-04,4736.21,0,current
+Frontier Bullion Group,INV-23430,2026-10-05,2026-11-04,1981.92,0,current
+Iron Hobby LLC,INV-23433,2026-10-05,2026-11-04,725.55,0,current
+Crescent Games Distributors,INV-23443,2026-10-05,2026-11-04,4980.11,0,current
+Prairie Collectibles Wholesale,INV-23450,2026-10-05,2026-11-04,2847.88,0,current
+Crescent TCG & Co.,INV-23452,2026-10-06,2026-11-05,419.60,0,current
+Prairie Comics & Cards,INV-23457,2026-10-06,2026-11-05,7061.18,0,current
+Pioneer Breaks Wholesale,INV-23462,2026-10-06,2026-11-05,193.71,0,current
+Maple Card Shop & Co.,INV-23484,2026-10-06,2026-11-05,1058.20,0,current
+Silver Breaks Wholesale,INV-23454,2026-10-07,2026-11-06,3686.28,0,current
+Union Sports Cards Wholesale,INV-23461,2026-10-07,2026-11-06,1052.79,0,current
+Prairie Comics & Cards,INV-23469,2026-10-07,2026-11-06,676.84,0,current
+Blue Ridge Card Club Distributors,INV-23471,2026-10-07,2026-11-06,5258.49,0,current
+Atlas Hobby Group,INV-23475,2026-10-07,2026-11-06,838.08,0,current
+Northgate Hobby Distributors,INV-23480,2026-10-07,2026-11-06,403.60,0,current
+Atlas TCG Inc.,INV-23481,2026-10-07,2026-11-06,2770.48,0,current
+Lone Star Coin & Card Group,INV-23482,2026-10-07,2026-11-06,10027.88,0,current
+Lone Star Hobby Supply & Co.,INV-23494,2026-10-07,2026-11-06,16608.41,0,current
+Prairie Comics & Cards,INV-23497,2026-10-07,2026-11-06,352.24,0,current
+Granite Trading Post,INV-23504,2026-10-07,2026-11-06,865.44,0,current
+Northgate Hobby Distributors,INV-23505,2026-10-07,2026-11-06,25116.88,0,current
+Blue Ridge Card Club Co.,INV-23506,2026-10-07,2026-11-06,1043.15,0,current
+Metro Bullion Co.,INV-23466,2026-10-08,2026-11-07,1475.32,0,current
+Falcon Collectibles Co.,INV-23467,2026-10-08,2026-11-07,1584.45,0,current
+Sunset Card Shop,INV-23474,2026-10-08,2026-11-07,2457.12,0,current
+Union Hobby LLC,INV-23476,2026-10-08,2026-11-07,5640.68,0,current
+Keystone Gaming Group,INV-23478,2026-10-08,2026-11-07,948.33,0,current
+Evergreen TCG & Co.,INV-23486,2026-10-08,2026-11-07,6574.84,0,current
+Atlas Wholesale Group,INV-23490,2026-10-08,2026-11-07,460.64,0,current
+Maple Card Shop & Co.,INV-23491,2026-10-08,2026-11-07,5109.81,0,current
+Lone Star Gaming Group,INV-23493,2026-10-08,2026-11-07,917.58,0,current
+Prairie Card Shop Co.,INV-23496,2026-10-08,2026-11-07,1232.44,0,current
+Crescent Collectibles LLC,INV-23499,2026-10-08,2026-11-07,4842.10,0,current
+Sunset Collectibles Co.,INV-23501,2026-10-08,2026-11-07,5878.92,0,current
+Sunset Games Wholesale,INV-23514,2026-10-08,2026-11-07,2810.54,0,current
+Canyon Comics & Cards Wholesale,INV-23531,2026-10-08,2026-11-07,1607.49,0,current
+Sunset Collectibles Co.,INV-23537,2026-10-08,2026-11-07,3998.38,0,current
+Harbor Vault,INV-23508,2026-10-09,2026-11-08,359.64,0,current
+Maple Trading Post Distributors,INV-23511,2026-10-09,2026-11-08,3443.40,0,current
+Maple Coin & Card Co.,INV-23512,2026-10-09,2026-11-08,621.44,0,current
+Iron Vault Group,INV-23515,2026-10-09,2026-11-08,1095.38,0,current
+Metro Collectibles,INV-23519,2026-10-09,2026-11-08,898.02,0,current
+Silver Comics & Cards,INV-23523,2026-10-09,2026-11-08,371.42,0,current
+Metro Collectibles,INV-23527,2026-10-09,2026-11-08,3316.04,0,current
+Falcon Sports Cards Distributors,INV-23529,2026-10-09,2026-11-08,2737.54,0,current
+Northgate Hobby Distributors,INV-23532,2026-10-09,2026-11-08,6495.95,0,current
+Harbor Collectibles,INV-23540,2026-10-09,2026-11-08,821.30,0,current
+Crescent Vault Distributors,INV-23549,2026-10-09,2026-11-08,666.68,0,current
+Silver Comics & Cards,INV-23555,2026-10-09,2026-11-08,4590.80,0,current
+Canyon Cards & Co.,INV-23568,2026-10-09,2026-11-08,1868.21,0,current
+Crescent Collectibles LLC,INV-23525,2026-10-10,2026-11-09,10252.32,0,current
+Lakeside Card Shop Inc.,INV-23542,2026-10-10,2026-11-09,282.90,0,current
+Harbor Collectibles Wholesale,INV-23553,2026-10-10,2026-11-09,11218.06,0,current
+Blue Ridge Card Club Distributors,INV-23557,2026-10-10,2026-11-09,1405.00,0,current
+Pioneer Hobby Supply Inc.,INV-23558,2026-10-10,2026-11-09,1387.95,0,current
+Pioneer Hobby Supply Inc.,INV-23561,2026-10-10,2026-11-09,2121.51,0,current
+Union Hobby LLC,INV-23563,2026-10-10,2026-11-09,1431.69,0,current
+Maple Trading Post Distributors,INV-23565,2026-10-10,2026-11-09,5085.53,0,current
+Bayou Cards Inc.,INV-23541,2026-10-11,2026-11-10,6630.26,0,current
+Sunset Games Wholesale,INV-23546,2026-10-11,2026-11-10,17398.56,0,current
+Liberty Cards LLC,INV-23547,2026-10-11,2026-11-10,1681.77,0,current
+Evergreen Trading Post Inc.,INV-23548,2026-10-11,2026-11-10,3237.92,0,current
+Maple Card Shop & Co.,INV-23550,2026-10-11,2026-11-10,2224.32,0,current
+Union Hobby LLC,INV-23551,2026-10-11,2026-11-10,6855.86,0,current
+Golden Vault,INV-23566,2026-10-11,2026-11-10,2643.60,0,current
+Northgate Hobby Distributors,INV-23570,2026-10-11,2026-11-10,2362.92,0,current
+Liberty Coin & Card Group,INV-23572,2026-10-11,2026-11-10,2995.97,0,current
+Evergreen Games Distributors,INV-23573,2026-10-11,2026-11-10,7468.33,0,current
+Union Comics & Cards,INV-23577,2026-10-11,2026-11-10,8109.31,0,current
+Keystone Breaks & Co.,INV-23580,2026-10-11,2026-11-10,592.80,0,current
+Riverbend Bullion Distributors,INV-23584,2026-10-11,2026-11-10,2116.64,0,current
+Northgate Hobby Distributors,INV-23586,2026-10-11,2026-11-10,10281.80,0,current
+Liberty Hobby Co.,INV-23587,2026-10-11,2026-11-10,701.27,0,current
+Crescent Cards,INV-23589,2026-10-11,2026-11-10,8213.08,0,current
+Crescent Cards,INV-23594,2026-10-11,2026-11-10,3022.28,0,current
+Harbor Collectibles Wholesale,INV-23596,2026-10-11,2026-11-10,10135.82,0,current
+Harbor Collectibles Wholesale,INV-23579,2026-10-12,2026-11-11,6105.98,0,current
+Canyon Hobby Inc.,INV-23582,2026-10-12,2026-11-11,18587.10,0,current
+Canyon Trading Post,INV-23591,2026-10-12,2026-11-11,2501.97,0,current
+Canyon Cards & Co.,INV-23593,2026-10-12,2026-11-11,801.00,0,current
+Prairie Hobby Supply Group,INV-23597,2026-10-12,2026-11-11,155.16,0,current
+Crescent Vault Distributors,INV-23608,2026-10-13,2026-11-12,628.08,0,current
+Highland Vault Group,INV-23623,2026-10-13,2026-11-12,3354.44,0,current
+Prairie Comics & Cards,INV-23603,2026-10-14,2026-11-13,7746.72,0,current
+Frontier Bullion Group,INV-23605,2026-10-14,2026-11-13,6983.92,0,current
+Sunset Collectibles Co.,INV-23610,2026-10-14,2026-11-13,438.80,0,current
+Iron Vault Inc.,INV-23611,2026-10-14,2026-11-13,5487.22,0,current
+Falcon Comics & Cards & Co.,INV-23612,2026-10-14,2026-11-13,1417.16,0,current
+Union Sports Cards Wholesale,INV-23617,2026-10-14,2026-11-13,12900.07,0,current
+Atlas Wholesale Group,INV-23625,2026-10-14,2026-11-13,3885.54,0,current
+Pioneer Breaks,INV-23627,2026-10-14,2026-11-13,1203.97,0,current
+Atlas Wholesale Group,INV-23632,2026-10-14,2026-11-13,2157.47,0,current
+Harbor Trading Post Distributors,INV-23613,2026-10-15,2026-11-14,493.68,0,current
+Prairie Collectibles Wholesale,INV-23615,2026-10-15,2026-11-14,35237.52,0,current
+Granite Coin & Card,INV-23619,2026-10-15,2026-11-14,230.04,0,current
+Highland Card Shop & Co.,INV-23628,2026-10-15,2026-11-14,6957.54,0,current
+Prairie Bullion,INV-23629,2026-10-15,2026-11-14,69.36,0,current
+Prairie Comics & Cards,INV-23631,2026-10-15,2026-11-14,100.34,0,current
+Metro Breaks Group,INV-23633,2026-10-15,2026-11-14,1108.56,0,current
+Riverbend Vault Group,INV-23634,2026-10-15,2026-11-14,1655.36,0,current
+Northgate Hobby Distributors,INV-23638,2026-10-15,2026-11-14,1609.80,0,current
+Lakeside Games Co.,INV-23642,2026-10-15,2026-11-14,8666.12,0,current
+Atlas Comics & Cards Co.,INV-23643,2026-10-15,2026-11-14,1013.84,0,current
+Pioneer Card Club & Co.,INV-23647,2026-10-15,2026-11-14,970.46,0,current
+Liberty Cards LLC,INV-23650,2026-10-15,2026-11-14,365.04,0,current
+Prairie Collectibles Wholesale,INV-23684,2026-10-15,2026-11-14,26279.08,0,current
+Crescent Vault Distributors,INV-23630,2026-10-16,2026-11-15,4625.88,0,current
+Sunset Breaks,INV-23641,2026-10-16,2026-11-15,439.76,0,current
+Lakeside Comics & Cards Inc.,INV-23648,2026-10-16,2026-11-15,292.00,0,current
+Union Hobby LLC,INV-23651,2026-10-16,2026-11-15,2197.32,0,current
+Riverbend Cards Distributors,INV-23656,2026-10-16,2026-11-15,3243.84,0,current
+Silver Coin & Card Co.,INV-23666,2026-10-16,2026-11-15,4442.19,0,current
+Canyon Cards Wholesale,INV-23671,2026-10-16,2026-11-15,2049.36,0,current
+Union Sports Cards Wholesale,INV-23674,2026-10-16,2026-11-15,1288.86,0,current
+Liberty Card Shop & Co.,INV-23675,2026-10-16,2026-11-15,3458.49,0,current
+Liberty Breaks Group,INV-23680,2026-10-16,2026-11-15,57.54,0,current
+Highland Cards LLC,INV-23681,2026-10-16,2026-11-15,3778.79,0,current
+Northgate Hobby Distributors,INV-23683,2026-10-16,2026-11-15,11352.84,0,current
+Union Sports Cards Wholesale,INV-23702,2026-10-16,2026-11-15,2385.76,0,current
+Metro Bullion Co.,INV-23654,2026-10-17,2026-11-16,1457.08,0,current
+Evergreen Trading Post Inc.,INV-23657,2026-10-17,2026-11-16,1444.96,0,current
+Riverbend Breaks Group,INV-23663,2026-10-17,2026-11-16,1289.44,0,current
+Canyon Hobby Inc.,INV-23665,2026-10-17,2026-11-16,2377.33,0,current
+Silver Gaming & Co.,INV-23669,2026-10-17,2026-11-16,1215.43,0,current
+Highland Vault Group,INV-23670,2026-10-17,2026-11-16,4940.30,0,current
+Highland Sports Cards Inc.,INV-23673,2026-10-17,2026-11-16,5867.84,0,current
+Prairie Comics & Cards,INV-23677,2026-10-17,2026-11-16,6172.16,0,current
+Pioneer Trading Post LLC,INV-23679,2026-10-17,2026-11-16,1720.76,0,current
+Lone Star Hobby Group,INV-23689,2026-10-17,2026-11-16,1877.52,0,current
+Granite Comics & Cards,INV-23698,2026-10-17,2026-11-16,3119.76,0,current
+Bayou Vault & Co.,INV-23699,2026-10-17,2026-11-16,3915.15,0,current
+Maple Card Club,INV-23704,2026-10-17,2026-11-16,2240.28,0,current
+Evergreen TCG & Co.,INV-23706,2026-10-17,2026-11-16,763.16,0,current
+Granite Hobby,INV-23708,2026-10-17,2026-11-16,583.20,0,current
+Pioneer Breaks Wholesale,INV-23712,2026-10-17,2026-11-16,205.70,0,current
+Silver Comics & Cards,INV-23728,2026-10-17,2026-11-16,574.00,0,current
+Frontier Bullion Group,INV-23686,2026-10-18,2026-11-17,7609.52,0,current
+Pioneer Trading Post LLC,INV-23687,2026-10-18,2026-11-17,1626.84,0,current
+Keystone Coin & Card,INV-23691,2026-10-18,2026-11-17,2011.02,0,current
+Canyon Trading Post,INV-23693,2026-10-18,2026-11-17,1304.51,0,current
+Atlas Cards Distributors,INV-23713,2026-10-18,2026-11-17,9237.75,0,current
+Iron Hobby,INV-23715,2026-10-18,2026-11-17,4008.97,0,current
+Pioneer Hobby Supply Inc.,INV-23718,2026-10-18,2026-11-17,1869.92,0,current
+Golden Sports Cards,INV-23720,2026-10-18,2026-11-17,709.57,0,current
+Granite Coin & Card,INV-23733,2026-10-18,2026-11-17,7980.88,0,current
+Granite Hobby,INV-23716,2026-10-19,2026-11-18,15824.78,0,current
+Riverbend Comics & Cards LLC,INV-23723,2026-10-19,2026-11-18,461.61,0,current
+Atlas Hobby,INV-23731,2026-10-19,2026-11-18,2512.53,0,current
+Cardinal Bullion,INV-23735,2026-10-19,2026-11-18,1885.39,0,current

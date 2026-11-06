@@ -1,0 +1,15 @@
+{
+  "target_date": "2026-10-19",
+  "utc_counts": {
+    "east_ewr1": 56,
+    "west_ont1": 40,
+    "network_total": 96
+  },
+  "local_counts": {
+    "east_ewr1": 59,
+    "west_ont1": 44,
+    "network_total": 103,
+    "total_units": 556
+  },
+  "variance_explanation": "Dock scanners log UTC timestamps. West (ONT1) operates until 19:00 PDT (02:00 UTC next day). 4 packages scanned between 17:00-19:00 PDT on Monday were incorrectly shifted into Tuesday in UTC grouping. East (EWR1) had 3 packages scanned after 20:00 EDT (00:00 UTC) similarly shifted into Tuesday UTC. True physical intake on Monday was 103 packages (59 East, 44 West)."
+}

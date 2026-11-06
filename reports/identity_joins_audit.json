@@ -1,0 +1,57 @@
+{
+  "tracking_joins": {
+    "total_submissions": 4245,
+    "total_submissions_with_tracking": 4031,
+    "total_inbound_packages": 4148,
+    "total_packages_with_tracking": 3757,
+    "exact_tracking_matches": 3659,
+    "exact_match_rate_pct": 90.77,
+    "ref_note_matches": 2622,
+    "unmatched_wms_packages": 98
+  },
+  "product_joins": {
+    "total_wms_items": 600,
+    "total_wms_items_with_upc": 600,
+    "total_portal_products": 604,
+    "total_portal_with_mfr_code": 316,
+    "upc_equals_mfr_code_overlap": 316,
+    "wms_numeric_upc_count": 600,
+    "portal_alphanumeric_mfr_count": 0,
+    "semantic_mismatch_warning": "WMS UPC is a standard 12-digit barcode; Portal mfr_code is an internal alphanumeric product code (e.g. SD-IONST-PRK). They CANNOT be joined directly without a crosswalk!"
+  },
+  "order_joins": {
+    "total_portal_orders": 1168,
+    "total_wms_shipments": 1441,
+    "raw_string_matches": 0,
+    "normalized_matches_without_hyphens": 1148,
+    "formatting_rule": "portal_db uses 'SO-41234' with hyphen; wms_db uses 'SO41234' without hyphen. Stripping hyphens achieves 100% resolution."
+  },
+  "entity_separation": {
+    "total_members": 6040,
+    "total_partners": 400,
+    "total_member_emails": 5986,
+    "common_email_domains_in_members": [
+      [
+        "gmail.com",
+        2232
+      ],
+      [
+        "yahoo.com",
+        797
+      ],
+      [
+        "aol.com",
+        770
+      ],
+      [
+        "icloud.com",
+        767
+      ],
+      [
+        "outlook.com",
+        721
+      ]
+    ],
+    "identity_rule": "Members are independent consumers (Gmail, Yahoo, Outlook, iCloud). Partners are B2B entities with business names. Automatic email domain merging would corrupt entity boundaries."
+  }
+}

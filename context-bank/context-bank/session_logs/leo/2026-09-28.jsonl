@@ -1,0 +1,3 @@
+{"ts": "2026-09-28T07:24:15Z", "session_id": "cur_0928_d1f50279", "user": "leo@meridiansc.com", "tool": "cursor", "model": "auto", "event": "user_prompt", "content": "pandas: weekly fail rate by warehouse from package_lines"}
+{"ts": "2026-09-28T07:25:56Z", "session_id": "cur_0928_d1f50279", "user": "leo@meridiansc.com", "tool": "cursor", "model": "auto", "event": "assistant", "content": "groupby([warehouse, week]).agg(failed=sum, inspected=sum) …", "tokens_in": 1823, "tokens_out": 60}
+{"ts": "2026-09-28T07:26:26Z", "session_id": "cur_0928_d1f50279", "user": "leo@meridiansc.com", "tool": "cursor", "model": "auto", "event": "session_end", "tokens_in_total": 1823, "tokens_out_total": 60, "est_cost_usd": 0.0042}

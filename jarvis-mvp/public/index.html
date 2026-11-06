@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jarvis v1 — Meridian Supply Chain Intelligence</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+              900: '#312e81'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+    .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+    .custom-scroll::-webkit-scrollbar-track { background: #18181b; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 3px; }
+  </style>
+</head>
+<body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col antialiased">
+
+  <!-- TOP APP BAR -->
+  <header class="border-b border-zinc-800 bg-zinc-900/90 backdrop-blur sticky top-0 z-40 px-6 py-3 flex items-center justify-between">
+    <div class="flex items-center space-x-4">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-purple-500 flex items-center justify-center font-bold text-white shadow-lg shadow-indigo-500/20 text-lg tracking-wider">
+        J
+      </div>
+      <div>
+        <div class="flex items-center space-x-2">
+          <h1 class="font-bold text-lg text-white tracking-tight">Jarvis <span class="text-xs px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-400 font-semibold border border-indigo-500/30">v1 MVP</span></h1>
+          <span class="text-xs text-zinc-400">· Meridian Supply Chain (MSC)</span>
+        </div>
+        <p class="text-xs text-zinc-400 flex items-center space-x-2">
+          <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>Zero-Cost Local Architecture · Supabase EU + Local Fastify · Snapshot: 20 Oct 2026</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Active User & Role Pill -->
+    <div class="flex items-center space-x-3">
+      <div class="text-right">
+        <div class="text-xs font-semibold text-zinc-200">Sam Okafor</div>
+        <div class="text-[11px] text-indigo-400 font-mono">ROLE_FOUNDER · sam@meridiansc.com</div>
+      </div>
+      <div class="w-9 h-9 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center text-xs font-bold text-indigo-300">
+        SO
+      </div>
+    </div>
+  </header>
+
+  <!-- NAVIGATION TABS -->
+  <nav class="bg-zinc-900 border-b border-zinc-800 px-6 flex space-x-1">
+    <button onclick="switchTab('dashboard')" id="tab-dashboard" class="tab-btn px-4 py-3 text-sm font-medium border-b-2 border-indigo-500 text-white flex items-center space-x-2 transition">
+      <i class="fa-solid fa-chart-line text-indigo-400"></i>
+      <span>Executive BI</span>
+    </button>
+    <button onclick="switchTab('chat')" id="tab-chat" class="tab-btn px-4 py-3 text-sm font-medium border-b-2 border-transparent text-zinc-400 hover:text-zinc-200 flex items-center space-x-2 transition">
+      <i class="fa-solid fa-robot text-purple-400"></i>
+      <span>Jarvis AI Chat</span>
+    </button>
+    <button onclick="switchTab('alerts')" id="tab-alerts" class="tab-btn px-4 py-3 text-sm font-medium border-b-2 border-transparent text-zinc-400 hover:text-zinc-200 flex items-center space-x-2 transition">
+      <i class="fa-solid fa-triangle-exclamation text-amber-400"></i>
+      <span>Proactive Alert Center</span>
+      <span id="badge-alert-count" class="px-1.5 py-0.2 text-[10px] bg-rose-500/20 text-rose-400 font-bold rounded-full border border-rose-500/30">3</span>
+    </button>
+    <button onclick="switchTab('knowledge')" id="tab-knowledge" class="tab-btn px-4 py-3 text-sm font-medium border-b-2 border-transparent text-zinc-400 hover:text-zinc-200 flex items-center space-x-2 transition">
+      <i class="fa-solid fa-book-open text-sky-400"></i>
+      <span>Company Knowledge (RAG)</span>
+    </button>
+    <button onclick="switchTab('admin')" id="tab-admin" class="tab-btn px-4 py-3 text-sm font-medium border-b-2 border-transparent text-zinc-400 hover:text-zinc-200 flex items-center space-x-2 transition">
+      <i class="fa-solid fa-shield-halved text-emerald-400"></i>
+      <span>Admin & Governance</span>
+    </button>
+  </nav>
+
+  <!-- MAIN VIEWPORT CONTAINER -->
+  <main class="flex-1 p-6 max-w-7xl w-full mx-auto">
+
+    <!-- ==================== TAB 1: EXECUTIVE BI DASHBOARD ==================== -->
+    <div id="view-dashboard" class="space-y-6">
+      <!-- High Level KPI Cards Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+        <!-- Revenue Card -->
+        <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-4 shadow-sm relative overflow-hidden">
+          <div class="text-xs font-medium text-zinc-400 uppercase tracking-wider mb-1">Monthly Gross Revenue</div>
+          <div class="text-2xl font-bold text-white tracking-tight" id="kpi-revenue">$1,852,586</div>
+          <div class="text-xs text-emerald-400 flex items-center mt-1 space-x-1">
+            <i class="fa-solid fa-circle-check"></i>
+            <span>Sept Closed GAAP · Oct MTD: $1.20M</span>
+          </div>
+          <div class="absolute -right-2 -bottom-2 opacity-5 text-indigo-400 text-6xl">
+            <i class="fa-solid fa-dollar-sign"></i>
+          </div>
+        </div>
+
+        <!-- Net Profit Card -->
+        <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-4 shadow-sm relative overflow-hidden">
+          <div class="text-xs font-medium text-zinc-400 uppercase tracking-wider mb-1">GAAP Net Profit</div>
+          <div class="text-2xl font-bold text-amber-400 tracking-tight" id="kpi-net-profit">$7,301</div>
+          <div class="text-xs text-zinc-400 flex items-center mt-1 space-x-1">
+            <span>0.39% Net Margin (Opex: $292k)</span>
+          </div>
+          <div class="absolute -right-2 -bottom-2 opacity-5 text-amber-400 text-6xl">
+            <i class="fa-solid fa-chart-pie"></i>
+          </div>
+        </div>
+
+        <!-- FIFO Gross Margin Card -->
+        <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-4 shadow-sm relative overflow-hidden">
+          <div class="text-xs font-medium text-zinc-400 uppercase tracking-wider mb-1">FIFO Gross Margin</div>
+          <div class="text-2xl font-bold text-indigo-400 tracking-tight" id="kpi-gross-margin">16.1%</div>
+          <div class="text-xs text-zinc-400 flex items-center mt-1 space-x-1">
+            <span>Card Ops: ~20% · Bullion: ~10%</span>
+          </div>
+          <div class="absolute -right-2 -bottom-2 opacity-5 text-indigo-400 text-6xl">
+            <i class="fa-solid fa-percent"></i>
+          </div>
+        </div>
+
+        <!-- Blocked Payouts Card -->
+        <div class="bg-zinc-900 border border-rose-900/40 rounded-xl p-4 shadow-sm relative overflow-hidden bg-rose-950/10">
+          <div class="text-xs font-medium text-rose-300 uppercase tracking-wider mb-1">Blocked Member Payouts</div>
+          <div class="text-2xl font-bold text-rose-400 tracking-tight" id="kpi-blocked-payouts">$173,340</div>
+          <div class="text-xs text-rose-400 flex items-center mt-1 space-x-1">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span>77 ACH Payouts Held (R01 Error)</span>
+          </div>
+          <div class="absolute -right-2 -bottom-2 opacity-5 text-rose-400 text-6xl">
+            <i class="fa-solid fa-hand-holding-dollar"></i>
+          </div>
+        </div>
+
+        <!-- Overdue AR Card -->
+        <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-4 shadow-sm relative overflow-hidden">
+          <div class="text-xs font-medium text-zinc-400 uppercase tracking-wider mb-1">Outstanding AR Book</div>
+          <div class="text-2xl font-bold text-white tracking-tight" id="kpi-open-ar">$1,688,673</div>
+          <div class="text-xs text-amber-400 flex items-center mt-1 space-x-1">
+            <i class="fa-solid fa-clock"></i>
+            <span>Northgate Overdue: $185.5k</span>
+          </div>
+          <div class="absolute -right-2 -bottom-2 opacity-5 text-indigo-400 text-6xl">
+            <i class="fa-solid fa-file-invoice-dollar"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Two Column Layout: Receiving & AR Breakdown -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Yesterday Receiving Breakdown -->
+        <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-5 shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center space-x-2">
+              <i class="fa-solid fa-boxes-packing text-indigo-400"></i>
+              <h3 class="font-semibold text-white">Dock Intake: Monday, Oct 19, 2026</h3>
+            </div>
+            <span class="text-xs bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded font-mono">103 True Local Pkgs</span>
+          </div>
+          <p class="text-xs text-zinc-400 mb-4">
+            Resolves legacy timezone discrepancy where West (ONT1) scans past 17:00 PDT rolled past midnight into Tuesday UTC.
+          </p>
+
+          <div class="space-y-3">
+            <div class="bg-zinc-950 p-3 rounded-lg border border-zinc-800 flex justify-between items-center">
+              <div>
+                <div class="font-medium text-sm text-zinc-200">East Warehouse (EWR1 · Edison, NJ)</div>
+                <div class="text-xs text-zinc-400">Shift: 09:00 - 21:00 EDT (America/New_York)</div>
+              </div>
+              <div class="text-right">
+                <div class="font-bold text-indigo-400 text-lg">59 pkgs</div>
+                <div class="text-[11px] text-zinc-500">UTC Dash: 56 pkgs (+3 variance)</div>
+              </div>
+            </div>
+
+            <div class="bg-zinc-950 p-3 rounded-lg border border-zinc-800 flex justify-between items-center">
+              <div>
+                <div class="font-medium text-sm text-zinc-200">West Warehouse (ONT1 · Ontario, CA)</div>
+                <div class="text-xs text-zinc-400">Shift: 07:00 - 19:00 PDT (America/Los_Angeles)</div>
+              </div>
+              <div class="text-right">
+                <div class="font-bold text-indigo-400 text-lg">44 pkgs</div>
+                <div class="text-[11px] text-zinc-500">UTC Dash: 40 pkgs (+4 variance)</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 pt-3 border-t border-zinc-800 flex justify-between items-center text-xs text-zinc-400">
+            <span>Total Product Units Received: <strong class="text-white font-mono">4,812 units</strong></span>
+            <span>Inspection Backlog: <strong class="text-amber-400 font-mono">118 pkgs</strong> (West: 74 pkgs)</span>
+          </div>
+        </div>
+
+        <!-- Accounts Receivable Concentration & Aging -->
+        <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-5 shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center space-x-2">
+              <i class="fa-solid fa-scale-unbalanced text-amber-400"></i>
+              <h3 class="font-semibold text-white">AR Aging & Debtor Concentration</h3>
+            </div>
+            <span class="text-xs bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded font-mono">$1.69M Total</span>
+          </div>
+
+          <!-- Northgate Concentration Callout -->
+          <div class="bg-amber-950/20 border border-amber-900/50 p-3 rounded-lg mb-4">
+            <div class="flex justify-between items-start">
+              <div>
+                <div class="font-bold text-sm text-amber-300">Northgate Hobby Distributors (Gold Tier)</div>
+                <div class="text-xs text-amber-400/80">Account Manager: Sofia Lindqvist · State: NJ</div>
+              </div>
+              <div class="text-right">
+                <div class="text-xs font-bold text-rose-400">$284,279.37 Total AR</div>
+                <div class="text-[10px] text-zinc-400">Credit Limit: $250,000.00</div>
+              </div>
+            </div>
+            <div class="mt-2 text-xs text-zinc-300">
+              Breached limit by <strong>$34,279.37</strong>. Past-due balance is <strong>$185,550.00</strong> across 16 overdue invoices (oldest is 51 days late).
+            </div>
+            <div class="mt-3 flex space-x-2">
+              <button onclick="triggerCreditHoldAction('301')" class="px-2.5 py-1 text-xs font-semibold bg-rose-600 hover:bg-rose-500 text-white rounded transition flex items-center space-x-1">
+                <i class="fa-solid fa-ban"></i>
+                <span>Enforce Credit Hold</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Aging buckets progress bar -->
+          <div class="space-y-2">
+            <div class="flex justify-between text-xs text-zinc-400">
+              <span>Current (< 30 days): $982,041 (58%)</span>
+              <span>1-30 Days Past: $421,082 (25%)</span>
+              <span>31-60 Days: $285,550 (17%)</span>
+            </div>
+            <div class="w-full bg-zinc-800 rounded-full h-3 flex overflow-hidden">
+              <div class="bg-emerald-500 h-3" style="width: 58%"></div>
+              <div class="bg-amber-500 h-3" style="width: 25%"></div>
+              <div class="bg-rose-500 h-3" style="width: 17%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== TAB 2: JARVIS AI CHAT INTERFACE ==================== -->
+    <div id="view-chat" class="hidden space-y-4">
+      <!-- One Click Quick Prompts Header -->
+      <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
+        <div class="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2 flex items-center space-x-2">
+          <i class="fa-solid fa-bolt text-indigo-400"></i>
+          <span>Founder Ground-Truth Scenario Prompts (Zero Hallucination Guaranteed)</span>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <button onclick="sendQuickPrompt('How many packages did the warehouse receive yesterday?')" class="text-xs bg-zinc-800 hover:bg-indigo-900/40 hover:border-indigo-500/50 border border-zinc-700 text-zinc-200 px-3 py-1.5 rounded-lg transition text-left flex items-center space-x-1.5">
+            <i class="fa-solid fa-boxes-stacked text-indigo-400"></i>
+            <span>"How many packages did we receive yesterday?"</span>
+          </button>
+          <button onclick="sendQuickPrompt('Am I really making money right now?')" class="text-xs bg-zinc-800 hover:bg-indigo-900/40 hover:border-indigo-500/50 border border-zinc-700 text-zinc-200 px-3 py-1.5 rounded-lg transition text-left flex items-center space-x-1.5">
+            <i class="fa-solid fa-chart-line text-amber-400"></i>
+            <span>"Am I really making money right now?"</span>
+          </button>
+          <button onclick="sendQuickPrompt('What should I worry about today?')" class="text-xs bg-zinc-800 hover:bg-indigo-900/40 hover:border-indigo-500/50 border border-zinc-700 text-zinc-200 px-3 py-1.5 rounded-lg transition text-left flex items-center space-x-1.5">
+            <i class="fa-solid fa-shield-virus text-rose-400"></i>
+            <span>"What should I worry about today?"</span>
+          </button>
+          <button onclick="sendQuickPrompt('Which partner has exceeded their credit limit?')" class="text-xs bg-zinc-800 hover:bg-indigo-900/40 hover:border-indigo-500/50 border border-zinc-700 text-zinc-200 px-3 py-1.5 rounded-lg transition text-left flex items-center space-x-1.5">
+            <i class="fa-solid fa-hand-holding-dollar text-purple-400"></i>
+            <span>"Which partner has exceeded their credit limit?"</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Chat Log Container -->
+      <div id="chat-messages" class="bg-zinc-900 border border-zinc-800 rounded-xl p-5 min-h-[480px] max-h-[560px] overflow-y-auto space-y-4 custom-scroll">
+        <!-- Initial Welcome Message -->
+        <div class="flex items-start space-x-3">
+          <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-xs font-bold text-white shrink-0">
+            J
+          </div>
+          <div class="bg-zinc-800/80 border border-zinc-700/60 rounded-xl p-4 text-sm text-zinc-200 max-w-3xl leading-relaxed">
+            <p class="font-semibold text-white mb-1">Hello Sam. I am Jarvis v1, your Unified Intelligence Platform for Meridian Supply Chain.</p>
+            <p class="text-zinc-300 text-xs mb-3">All numbers are compiled deterministically via pre-approved SQL from live system replicas. Vector memory stores zero numbers.</p>
+            <div class="text-xs text-zinc-400 space-y-1">
+              <div>• <strong>Operational Metrics</strong>: Dock receiving counts, local time shift reconciliation, and backlog queues.</div>
+              <div>• <strong>Financial Intelligence</strong>: GAAP closed P&L reconciliations, FIFO margins vs. 180-day operational spreads.</div>
+              <div>• <strong>Proactive Alerts</strong>: Bank ACH failures, partner credit breaches, and reprint inventory risks.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Prompt Input Box -->
+      <form onsubmit="handleChatSubmit(event)" class="flex space-x-3">
+        <input type="text" id="chat-input" placeholder="Ask Jarvis anything about Meridian (e.g. packages, profits, Northgate AR, ACH batch)..." class="flex-1 bg-zinc-900 border border-zinc-700 rounded-xl px-4 py-3 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-indigo-500 transition shadow-inner">
+        <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-6 py-3 rounded-xl transition flex items-center space-x-2 text-sm shadow-lg shadow-indigo-600/30">
+          <span>Ask Jarvis</span>
+          <i class="fa-solid fa-paper-plane text-xs"></i>
+        </button>
+      </form>
+    </div>
+
+    <!-- ==================== TAB 3: PROACTIVE ALERT CENTER ==================== -->
+    <div id="view-alerts" class="hidden space-y-4">
+      <div class="flex items-center justify-between mb-2">
+        <div>
+          <h2 class="text-lg font-bold text-white">Live Operational Alert Center</h2>
+          <p class="text-xs text-zinc-400">Deterministic business threshold monitors evaluated continuously via BullMQ on Redis.</p>
+        </div>
+        <span class="text-xs text-zinc-500 font-mono">Sync Interval: 15 minutes</span>
+      </div>
+
+      <!-- Alerts Container List -->
+      <div id="alerts-list" class="space-y-4">
+        <!-- Rendered dynamically via JavaScript -->
+      </div>
+    </div>
+
+    <!-- ==================== TAB 4: COMPANY KNOWLEDGE (RAG) ==================== -->
+    <div id="view-knowledge" class="hidden space-y-4">
+      <div class="flex items-center justify-between mb-2">
+        <div>
+          <h2 class="text-lg font-bold text-white">Company Knowledge Base & SOP Registry</h2>
+          <p class="text-xs text-zinc-400">Indexed markdown documents from the MSC context bank using pgvector hybrid search (dense embeddings + BM25).</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="documents-grid">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+
+    <!-- ==================== TAB 5: ADMIN & GOVERNANCE ==================== -->
+    <div id="view-admin" class="hidden space-y-6">
+      <!-- Staged Memory Candidates Section -->
+      <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-5 shadow-sm">
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center space-x-2">
+            <i class="fa-solid fa-brain text-purple-400"></i>
+            <h3 class="font-semibold text-white">AI Session Knowledge Staging & Memory Promotion Gate</h3>
+          </div>
+          <span class="text-xs text-zinc-400">Protects global memory from hallucinations (e.g. net-90 incident)</span>
+        </div>
+        
+        <div id="memory-candidates-list" class="space-y-3">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+
+      <!-- Team Roster & Roles Table -->
+      <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-5 shadow-sm">
+        <h3 class="font-semibold text-white mb-3 flex items-center space-x-2">
+          <i class="fa-solid fa-users-gear text-indigo-400"></i>
+          <span>Meridian Team Roster & RBAC Tiers (25 Members)</span>
+        </h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-zinc-300">
+            <thead class="bg-zinc-950 text-zinc-400 uppercase tracking-wider border-b border-zinc-800 font-mono">
+              <tr>
+                <th class="p-2.5">Name</th>
+                <th class="p-2.5">Title</th>
+                <th class="p-2.5">Department</th>
+                <th class="p-2.5">Type</th>
+                <th class="p-2.5">Assigned RBAC Role</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-zinc-800/60 font-mono">
+              <tr><td class="p-2.5 font-bold text-white">Sam Okafor</td><td class="p-2.5">Founder & CEO</td><td class="p-2.5">Leadership</td><td class="p-2.5">Staff</td><td class="p-2.5 text-indigo-400">ROLE_FOUNDER</td></tr>
+              <tr><td class="p-2.5 font-bold text-white">Priya Raman</td><td class="p-2.5">Head of Operations</td><td class="p-2.5">Operations</td><td class="p-2.5">Staff</td><td class="p-2.5 text-sky-400">ROLE_OPS</td></tr>
+              <tr><td class="p-2.5 font-bold text-white">Kenji Watanabe</td><td class="p-2.5">Finance Manager</td><td class="p-2.5">Finance</td><td class="p-2.5">Staff</td><td class="p-2.5 text-emerald-400">ROLE_FINANCE</td></tr>
+              <tr><td class="p-2.5 font-bold text-white">Sofia Lindqvist</td><td class="p-2.5">Partner Sales Lead</td><td class="p-2.5">Sales</td><td class="p-2.5">Staff</td><td class="p-2.5 text-amber-400">ROLE_SALES</td></tr>
+              <tr><td class="p-2.5 font-bold text-white">Marcus Bell</td><td class="p-2.5">East Warehouse Mgr</td><td class="p-2.5">Warehouse</td><td class="p-2.5">Staff</td><td class="p-2.5 text-zinc-400">ROLE_WHSE</td></tr>
+              <tr><td class="p-2.5 font-bold text-white">Dana Ortiz</td><td class="p-2.5">West Warehouse Lead</td><td class="p-2.5">Warehouse</td><td class="p-2.5">Staff</td><td class="p-2.5 text-zinc-400">ROLE_WHSE</td></tr>
+              <tr><td class="p-2.5 font-bold text-white">Hannah Cole</td><td class="p-2.5">Member Support & Payouts</td><td class="p-2.5">Support</td><td class="p-2.5">Staff</td><td class="p-2.5 text-purple-400">ROLE_SUPPORT</td></tr>
+              <tr><td class="p-2.5 font-bold text-white">Arjun Mehta</td><td class="p-2.5">Senior Backend Engineer</td><td class="p-2.5">Engineering</td><td class="p-2.5">Staff</td><td class="p-2.5 text-rose-400">ROLE_ENG</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Action Audit Log Ledger -->
+      <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-5 shadow-sm">
+        <h3 class="font-semibold text-white mb-3 flex items-center space-x-2">
+          <i class="fa-solid fa-list-check text-emerald-400"></i>
+          <span>Immutable Action Audit Ledger</span>
+        </h3>
+        <div id="audit-log-container" class="space-y-2 max-h-60 overflow-y-auto custom-scroll font-mono text-xs">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- CONFIRMATION ACTION MODAL -->
+  <div id="action-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-zinc-900 border border-zinc-700 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center space-x-3 text-amber-400">
+        <i class="fa-solid fa-triangle-exclamation text-2xl"></i>
+        <h3 class="font-bold text-lg text-white" id="modal-title">Confirm Restricted Business Action</h3>
+      </div>
+      <p class="text-xs text-zinc-300 leading-relaxed" id="modal-desc">
+        Are you sure you want to execute this action?
+      </p>
+      <div class="bg-zinc-950 p-3 rounded-lg border border-zinc-800 font-mono text-[11px] text-zinc-400 space-y-1">
+        <div><strong>Initiator:</strong> <span id="modal-initiator">sam@meridiansc.com</span></div>
+        <div><strong>Idempotency Key:</strong> <span id="modal-idemp" class="text-indigo-400">idemp_credit_hold_301</span></div>
+        <div><strong>Security Scope:</strong> <span class="text-emerald-400">ACTION_RESTRICTED_EXECUTE</span></div>
+      </div>
+      <div class="flex justify-end space-x-3 pt-2">
+        <button onclick="closeActionModal()" class="px-4 py-2 text-xs font-semibold bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg transition">
+          Cancel
+        </button>
+        <button id="modal-confirm-btn" onclick="executeConfirmedAction()" class="px-4 py-2 text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg transition flex items-center space-x-1">
+          <i class="fa-solid fa-check"></i>
+          <span>Confirm & Execute</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT APPLICATION LOGIC -->
+  <script>
+    let activePendingAction = null;
+
+    function switchTab(tabId) {
+      ['dashboard', 'chat', 'alerts', 'knowledge', 'admin'].forEach(t => {
+        const view = document.getElementById('view-' + t);
+        const btn = document.getElementById('tab-' + t);
+        if (t === tabId) {
+          view.classList.remove('hidden');
+          btn.classList.add('border-indigo-500', 'text-white');
+          btn.classList.remove('border-transparent', 'text-zinc-400');
+        } else {
+          view.classList.add('hidden');
+          btn.classList.remove('border-indigo-500', 'text-white');
+          btn.classList.add('border-transparent', 'text-zinc-400');
+        }
+      });
+      if (tabId === 'alerts') loadAlerts();
+      if (tabId === 'knowledge') loadKnowledge();
+      if (tabId === 'admin') loadAdmin();
+    }
+
+    async function loadAlerts() {
+      const res = await fetch('/api/alerts');
+      const data = await res.json();
+      const container = document.getElementById('alerts-list');
+      container.innerHTML = '';
+
+      data.alerts.forEach(alert => {
+        const isResolved = alert.status.includes('RESOLVED') || alert.status.includes('REBATCH');
+        const card = document.createElement('div');
+        card.className = `p-4 rounded-xl border transition shadow-sm ${
+          alert.severity === 'P0' ? 'bg-rose-950/20 border-rose-900/50' :
+          alert.severity === 'P1' ? 'bg-amber-950/20 border-amber-900/50' : 'bg-zinc-900 border-zinc-800'
+        }`;
+
+        card.innerHTML = `
+          <div class="flex items-start justify-between">
+            <div class="flex items-center space-x-2">
+              <span class="px-2 py-0.5 text-xs font-bold rounded ${
+                alert.severity === 'P0' ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30' :
+                alert.severity === 'P1' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' :
+                'bg-indigo-500/20 text-indigo-400 border border-indigo-500/30'
+              }">${alert.severity}</span>
+              <h3 class="font-bold text-white text-sm">${alert.title}</h3>
+            </div>
+            <span class="text-[11px] font-mono px-2 py-0.5 rounded ${isResolved ? 'bg-emerald-500/20 text-emerald-300' : 'bg-zinc-800 text-zinc-400'}">${alert.status}</span>
+          </div>
+          <p class="text-xs text-zinc-300 mt-2 leading-relaxed">${alert.description}</p>
+          <div class="mt-3 text-xs text-zinc-400 flex items-center justify-between border-t border-zinc-800/80 pt-2">
+            <div><i class="fa-solid fa-user-tag text-zinc-500 mr-1"></i> Owner: <strong class="text-zinc-200">${alert.owner}</strong></div>
+            ${!isResolved ? `
+              <div class="flex space-x-2">
+                <button onclick="triggerActionModal('${alert.actionType}', '${alert.id}', '${alert.actionLabel}')" class="px-3 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded font-medium text-xs transition flex items-center space-x-1">
+                  <i class="fa-solid fa-play text-[10px]"></i>
+                  <span>${alert.actionLabel}</span>
+                </button>
+              </div>
+            ` : '<span class="text-xs text-emerald-400 font-semibold"><i class="fa-solid fa-check mr-1"></i> Action Completed</span>'}
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    async function loadKnowledge() {
+      const res = await fetch('/api/knowledge/documents');
+      const data = await res.json();
+      const container = document.getElementById('documents-grid');
+      container.innerHTML = '';
+
+      data.documents.forEach(doc => {
+        const card = document.createElement('div');
+        card.className = "bg-zinc-900 border border-zinc-800 rounded-xl p-4 shadow-sm hover:border-zinc-700 transition";
+        card.innerHTML = `
+          <div class="flex justify-between items-start mb-2">
+            <span class="text-xs px-2 py-0.5 rounded bg-sky-500/20 text-sky-400 font-mono">${doc.category}</span>
+            <span class="text-[10px] text-zinc-500 font-mono">${doc.version}</span>
+          </div>
+          <h3 class="font-bold text-white text-sm mb-1">${doc.title}</h3>
+          <p class="text-xs text-zinc-400 leading-relaxed mb-3">${doc.summary}</p>
+          <div class="text-[11px] font-mono text-zinc-500 bg-zinc-950 p-2 rounded border border-zinc-800 flex items-center space-x-1">
+            <i class="fa-solid fa-file-lines text-indigo-400"></i>
+            <span class="truncate">${doc.path}</span>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    async function loadAdmin() {
+      // Memory candidates
+      const resMem = await fetch('/api/admin/memory-candidates');
+      const dataMem = await resMem.json();
+      const memList = document.getElementById('memory-candidates-list');
+      memList.innerHTML = '';
+
+      dataMem.candidates.forEach(cand => {
+        const card = document.createElement('div');
+        card.className = "bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-xs";
+        card.innerHTML = `
+          <div class="flex justify-between items-start mb-1">
+            <strong class="text-white">${cand.topic}</strong>
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${
+              cand.status === 'PROMOTED' ? 'bg-emerald-500/20 text-emerald-400' :
+              cand.status === 'CONTRADICTED' ? 'bg-rose-500/20 text-rose-400' : 'bg-amber-500/20 text-amber-400'
+            }">${cand.status}</span>
+          </div>
+          <div class="text-zinc-300 italic mb-2">"${cand.extractedStatement}"</div>
+          <div class="text-[11px] text-zinc-400 mb-2"><strong>Reason:</strong> ${cand.reason}</div>
+          <div class="flex justify-between items-center text-[10px] text-zinc-500 pt-1 border-t border-zinc-850">
+            <span>Source: ${cand.sourceUser} (${cand.sessionDate})</span>
+            ${cand.status === 'PENDING_APPROVAL' ? `
+              <div class="flex space-x-2">
+                <button onclick="reviewCandidate('${cand.id}', 'APPROVE')" class="px-2 py-0.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded font-medium">Approve</button>
+                <button onclick="reviewCandidate('${cand.id}', 'REJECT')" class="px-2 py-0.5 bg-rose-600 hover:bg-rose-500 text-white rounded font-medium">Reject</button>
+              </div>
+            ` : ''}
+          </div>
+        `;
+        memList.appendChild(card);
+      });
+
+      // Audit logs
+      const resAudit = await fetch('/api/admin/audit-logs');
+      const dataAudit = await resAudit.json();
+      const auditContainer = document.getElementById('audit-log-container');
+      auditContainer.innerHTML = '';
+      dataAudit.logs.forEach(l => {
+        const row = document.createElement('div');
+        row.className = "p-2 rounded bg-zinc-950 border border-zinc-850 flex justify-between items-center";
+        row.innerHTML = `
+          <div>
+            <span class="text-zinc-500">[${l.timestamp.substring(11, 19)}]</span>
+            <strong class="text-indigo-300 mx-1">${l.action}</strong>
+            <span class="text-zinc-400">by ${l.user} (${l.role})</span>
+          </div>
+          <span class="text-[10px] text-emerald-400 font-bold">${l.status}</span>
+        `;
+        auditContainer.appendChild(row);
+      });
+    }
+
+    async function reviewCandidate(id, decision) {
+      await fetch('/api/admin/memory-candidate/review', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ candidateId: id, decision, reviewerEmail: 'sam@meridiansc.com' })
+      });
+      loadAdmin();
+    }
+
+    function triggerActionModal(actionType, targetId, label) {
+      activePendingAction = {
+        actionType,
+        targetId,
+        idempotencyKey: 'idemp_' + Math.random().toString(36).substring(2, 10)
+      };
+      document.getElementById('modal-title').textContent = label;
+      document.getElementById('modal-desc').textContent = `Please confirm execution of ${label} on target entity ${targetId}. This operation will invoke the restricted business API and log to the audit ledger.`;
+      document.getElementById('modal-idemp').textContent = activePendingAction.idempotencyKey;
+      document.getElementById('action-modal').classList.remove('hidden');
+    }
+
+    function triggerCreditHoldAction(partnerId) {
+      triggerActionModal('PLACE_CREDIT_HOLD', partnerId, 'Enforce Partner Credit Hold');
+    }
+
+    function closeActionModal() {
+      document.getElementById('action-modal').classList.add('hidden');
+      activePendingAction = null;
+    }
+
+    async function executeConfirmedAction() {
+      if (!activePendingAction) return;
+      const res = await fetch('/api/actions/execute', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          actionType: activePendingAction.actionType,
+          targetId: activePendingAction.targetId,
+          idempotencyKey: activePendingAction.idempotencyKey,
+          userEmail: 'sam@meridiansc.com',
+          userRole: 'ROLE_FOUNDER'
+        })
+      });
+      const data = await res.json();
+      closeActionModal();
+      alert(data.message);
+      loadAlerts();
+    }
+
+    function sendQuickPrompt(text) {
+      switchTab('chat');
+      document.getElementById('chat-input').value = text;
+      handleChatSubmit();
+    }
+
+    async function handleChatSubmit(e) {
+      if (e) e.preventDefault();
+      const input = document.getElementById('chat-input');
+      const msg = input.value.trim();
+      if (!msg) return;
+
+      const container = document.getElementById('chat-messages');
+
+      // Append User message
+      const userDiv = document.createElement('div');
+      userDiv.className = "flex items-start justify-end space-x-3";
+      userDiv.innerHTML = `
+        <div class="bg-indigo-600 text-white rounded-xl p-3 text-sm max-w-xl">
+          ${msg}
+        </div>
+        <div class="w-8 h-8 rounded-lg bg-zinc-800 flex items-center justify-center text-xs font-bold text-zinc-300 shrink-0">
+          SO
+        </div>
+      `;
+      container.appendChild(userDiv);
+      input.value = '';
+      container.scrollTop = container.scrollHeight;
+
+      // Append Thinking bubble
+      const thinkingDiv = document.createElement('div');
+      thinkingDiv.id = "thinking-bubble";
+      thinkingDiv.className = "flex items-start space-x-3";
+      thinkingDiv.innerHTML = `
+        <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-xs font-bold text-white shrink-0">J</div>
+        <div class="bg-zinc-800/80 rounded-xl p-3 text-xs text-zinc-400 flex items-center space-x-2">
+          <i class="fa-solid fa-spinner fa-spin text-indigo-400"></i>
+          <span>Querying Supabase Metrics Registry & checking IANA timezones...</span>
+        </div>
+      `;
+      container.appendChild(thinkingDiv);
+      container.scrollTop = container.scrollHeight;
+
+      // API call
+      try {
+        const res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: msg, userRole: "ROLE_FOUNDER", userEmail: "sam@meridiansc.com" })
+        });
+        const data = await res.json();
+        thinkingDiv.remove();
+
+        const botDiv = document.createElement('div');
+        botDiv.className = "flex items-start space-x-3";
+
+        let citationsHtml = '';
+        if (data.citations && data.citations.length > 0) {
+          citationsHtml = `
+            <div class="mt-3 pt-2 border-t border-zinc-700/60 flex flex-wrap gap-2 text-xs">
+              <span class="text-zinc-500 font-semibold">Citations:</span>
+              ${data.citations.map(c => `
+                <span class="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-700 text-indigo-300 font-mono text-[11px]">
+                  <i class="fa-solid fa-link mr-1"></i>${c.title} (${c.lines})
+                </span>
+              `).join('')}
+            </div>
+          `;
+        }
+
+        let sqlHtml = '';
+        if (data.sqlExecuted) {
+          sqlHtml = `
+            <details class="mt-3 bg-zinc-950 p-2.5 rounded-lg border border-zinc-800 text-xs">
+              <summary class="font-mono text-zinc-400 cursor-pointer hover:text-indigo-300 flex items-center space-x-1">
+                <i class="fa-solid fa-database text-[10px] text-indigo-400"></i>
+                <span>Pre-Approved SQL Executed (Supabase Analytics Schema)</span>
+              </summary>
+              <pre class="mt-2 text-[11px] text-zinc-300 overflow-x-auto p-2 bg-zinc-900 rounded font-mono">${data.sqlExecuted}</pre>
+            </details>
+          `;
+        }
+
+        let actionHtml = '';
+        if (data.suggestedAction) {
+          actionHtml = `
+            <div class="mt-3 bg-indigo-950/40 border border-indigo-500/40 p-3 rounded-lg flex items-center justify-between">
+              <div class="text-xs text-indigo-200">
+                <i class="fa-solid fa-hand-point-right mr-1 text-indigo-400"></i>
+                <span>Suggested Action: <strong>${data.suggestedAction.actionLabel}</strong></span>
+              </div>
+              <button onclick="triggerActionModal('${data.suggestedAction.actionType}', '${data.suggestedAction.targetId}', '${data.suggestedAction.actionLabel}')" class="px-3 py-1 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded transition shadow">
+                Execute Action
+              </button>
+            </div>
+          `;
+        }
+
+        // Simple markdown parsing for bold & headings
+        let formattedAnswer = data.answer
+          .replace(/### (.*?)\n/g, '<h4 class="font-bold text-white text-base mt-2 mb-1">$1</h4>')
+          .replace(/#### (.*?)\n/g, '<h5 class="font-bold text-indigo-300 text-sm mt-2 mb-1">$1</h5>')
+          .replace(/\*\*(.*?)\*\*/g, '<strong class="text-white">$1</strong>')
+          .replace(/\n\n/g, '<br><br>');
+
+        botDiv.innerHTML = `
+          <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-xs font-bold text-white shrink-0">J</div>
+          <div class="bg-zinc-800/80 border border-zinc-700/60 rounded-xl p-4 text-sm text-zinc-200 max-w-3xl leading-relaxed">
+            <div>${formattedAnswer}</div>
+            ${sqlHtml}
+            ${citationsHtml}
+            ${actionHtml}
+          </div>
+        `;
+        container.appendChild(botDiv);
+        container.scrollTop = container.scrollHeight;
+      } catch (err) {
+        if (thinkingDiv) thinkingDiv.remove();
+        console.error(err);
+      }
+    }
+  </script>
+</body>
+</html>

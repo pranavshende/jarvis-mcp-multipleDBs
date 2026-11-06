@@ -1,0 +1,291 @@
+openapi: 3.0.3
+info:
+  title: MSC Seller API
+  version: 2.3.1
+  description: |
+    Internal API for the seller site. Used by ops-scripts and integrations.
+    Auth: send the integration key in the X-MSC-Key header. Keys carry scopes (see eng/api-keys.md).
+    Example key format: mscsk_live_<32 hex>. Test keys: mscsk_test_<32 hex>.
+servers:
+  - url: https://seller.meridiansc.com/api/v2
+security:
+  - ApiKeyAuth: []
+paths:
+  /members:
+    get:
+      summary: List members
+      x-required-scope: members:read
+      parameters:
+        - name: updated_since
+          in: query
+          schema: {type: string, format: date-time}
+        - name: limit
+          in: query
+          schema: {type: integer, default: 100, maximum: 1000}
+      responses:
+        '200': {description: OK}
+        '401': {description: Missing or invalid key}
+        '403': {description: Key lacks scope}
+  /members/{member_id}:
+    get:
+      summary: Get member
+      x-required-scope: members:read
+      parameters:
+        - name: member_id
+          in: path
+          required: true
+          schema: {type: string}
+      responses:
+        '200': {description: OK}
+        '401': {description: Missing or invalid key}
+        '403': {description: Key lacks scope}
+    patch:
+      summary: Update member (status, tier, payout notes)
+      x-required-scope: members:write
+      parameters:
+        - name: member_id
+          in: path
+          required: true
+          schema: {type: string}
+      requestBody:
+        content:
+          application/json:
+            schema: {type: object}
+      responses:
+        '200': {description: OK}
+        '401': {description: Missing or invalid key}
+        '403': {description: Key lacks scope}
+  /members/{member_id}/payout-methods:
+    get:
+      summary: Payout methods (masked)
+      x-required-scope: members:read
+      parameters:
+        - name: member_id
+          in: path
+          required: true
+          schema: {type: string}
+        - name: updated_since
+          in: query
+          schema: {type: string, format: date-time}
+        - name: limit
+          in: query
+          schema: {type: integer, default: 100, maximum: 1000}
+      responses:
+        '200': {description: OK}
+        '401': {description: Missing or invalid key}
+        '403': {description: Key lacks scope}
+  /buylist:
+    get:
+      summary: Current buy list
+      x-required-scope: buylist:read
+      parameters:
+        - name: updated_since
+          in: query
+          schema: {type: string, format: date-time}
+        - name: limit
+          in: query
+          schema: {type: integer, default: 100, maximum: 1000}
+      responses:
+        '200': {description: OK}
+        '401': {description: Missing or invalid key}
+        '403': {description: Key lacks scope}
+  /buylist/{seller_sku}:
+    put:
+      summary: Set buy price
+      x-required-scope: buylist:write
+      parameters:
+        - name: seller_sku
+          in: path
+          required: true
+          schema: {type: string}
+      requestBody:
+        content:
+          application/json:
+            schema: {type: object}
+      responses:
+        '200': {description: OK}
+        '401': {description: Missing or invalid key}
+        '403': {description: Key lacks scope}
+  /buylist/import:
+    post:
+      summary: Bulk import buy list CSV
+      x-required-scope: buylist:write
+      parameters:
+      requestBody:
+        content:
+          application/json:
+            schema: {type: object}
+      responses:
+        '200': {description: OK}
+        '401': {description: Missing or invalid key}
+        '403': {description: Key lacks scope}
+  /submissions:
+    get:
+      summary: List submissions
+      x-required-scope: submissions:read
+      parameters:
+        - name: updated_since
+          in: query
+          schema: {type: string, format: date-time}
+        - name: limit
+          in: query
+          schema: {type: integer, default: 100, maximum: 1000}
+      responses:
+        '200': {description: OK}
+        '401': {description: Missing or invalid key}
+        '403': {description: Key lacks scope}
+  /submissions/{submission_id}:
+    get:
+      summary: Get submission
+      x-required-scope: submissions:read
+      parameters:
+        - name: submission_id
+          in: path
+          required: true
+          schema: {type: string}
+      responses:
+        '200': {description: OK}
+        '401': {description: Missing or invalid key}
+        '403': {description: Key lacks scope}
+  /submissions/{submission_id}/approve:
+    post:
+      summary: Approve inspected submission (creates payout)
+      x-required-scope: submissions:write
+      parameters:
+        - name: submission_id
+          in: path
+          required: true
+          schema: {type: string}
+      requestBody:
+        content:
+          application/json:
+            schema: {type: object}
+      responses:
+        '200': {description: OK}
+        '401': {description: Missing or invalid key}
+        '403': {description: Key lacks scope}
+  /submissions/{submission_id}/cancel:
+    post:
+      summary: Cancel submission
+      x-required-scope: submissions:write
+      parameters:
+        - name: submission_id
+          in: path
+          required: true
+          schema: {type: string}
+      requestBody:
+        content:
+          application/json:
+            schema: {type: object}
+      responses:
+        '200': {description: OK}
+        '401': {description: Missing or invalid key}
+        '403': {description: Key lacks scope}
+  /payouts:
+    get:
+      summary: List payouts
+      x-required-scope: payouts:read
+      parameters:
+        - name: updated_since
+          in: query
+          schema: {type: string, format: date-time}
+        - name: limit
+          in: query
+          schema: {type: integer, default: 100, maximum: 1000}
+      responses:
+        '200': {description: OK}
+        '401': {description: Missing or invalid key}
+        '403': {description: Key lacks scope}
+  /payouts/{payout_id}/release:
+    post:
+      summary: Release held payout
+      x-required-scope: payouts:write
+      parameters:
+        - name: payout_id
+          in: path
+          required: true
+          schema: {type: string}
+      requestBody:
+        content:
+          application/json:
+            schema: {type: object}
+      responses:
+        '200': {description: OK}
+        '401': {description: Missing or invalid key}
+        '403': {description: Key lacks scope}
+  /payouts/{payout_id}/retry:
+    post:
+      summary: Retry failed payout
+      x-required-scope: payouts:write
+      parameters:
+        - name: payout_id
+          in: path
+          required: true
+          schema: {type: string}
+      requestBody:
+        content:
+          application/json:
+            schema: {type: object}
+      responses:
+        '200': {description: OK}
+        '401': {description: Missing or invalid key}
+        '403': {description: Key lacks scope}
+  /wallet/{member_id}/adjust:
+    post:
+      summary: Credit/debit wallet
+      x-required-scope: payouts:write
+      parameters:
+        - name: member_id
+          in: path
+          required: true
+          schema: {type: string}
+      requestBody:
+        content:
+          application/json:
+            schema: {type: object}
+      responses:
+        '200': {description: OK}
+        '401': {description: Missing or invalid key}
+        '403': {description: Key lacks scope}
+  /tickets:
+    get:
+      summary: List support tickets
+      x-required-scope: tickets:read
+      parameters:
+        - name: updated_since
+          in: query
+          schema: {type: string, format: date-time}
+        - name: limit
+          in: query
+          schema: {type: integer, default: 100, maximum: 1000}
+      responses:
+        '200': {description: OK}
+        '401': {description: Missing or invalid key}
+        '403': {description: Key lacks scope}
+  /tickets/{ticket_id}/reply:
+    post:
+      summary: Reply to ticket (posts to Discord)
+      x-required-scope: tickets:write
+      parameters:
+        - name: ticket_id
+          in: path
+          required: true
+          schema: {type: string}
+      requestBody:
+        content:
+          application/json:
+            schema: {type: object}
+      responses:
+        '200': {description: OK}
+        '401': {description: Missing or invalid key}
+        '403': {description: Key lacks scope}
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-MSC-Key
+      description: |
+        Integration keys. The production integration key (seller-integration-prod) has scopes
+        members:read members:write submissions:read submissions:write buylist:read buylist:write
+        payouts:read payouts:write tickets:read tickets:write.
