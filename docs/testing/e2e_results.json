@@ -1,0 +1,67 @@
+{
+  "total_tests": 10,
+  "passed": 8,
+  "failed": 2,
+  "tests": [
+    {
+      "component": "AppShell",
+      "name": "React Index.html & Root Mount Element",
+      "status": "PASSED",
+      "details": "HTTP 200, root element found=True"
+    },
+    {
+      "component": "AdminDashboard:EvalCenter",
+      "name": "Evaluation Summary Real API Binding",
+      "status": "PASSED",
+      "details": "Scenarios: 50, Pass Rate: 96.00%"
+    },
+    {
+      "component": "AdminDashboard:CacheAnalytics",
+      "name": "Cache Stats Real API Binding",
+      "status": "PASSED",
+      "details": "Requests: 52, Hit Ratio: 96.15%"
+    },
+    {
+      "component": "AdminDashboard:DLQ",
+      "name": "DLQ Overview Real API Binding",
+      "status": "FAILED",
+      "details": "Alerts CB: None, Pending: 2"
+    },
+    {
+      "component": "AdminDashboard:Budgets",
+      "name": "Department Budgets Real API Binding",
+      "status": "PASSED",
+      "details": "Found 4 departmental budget allocations"
+    },
+    {
+      "component": "AdminDashboard:SecurityCenter",
+      "name": "Red-Team Scorecard Real API Binding",
+      "status": "FAILED",
+      "details": "Defended: 10/15 vectors (100%)"
+    },
+    {
+      "component": "AlertCenter",
+      "name": "Alerts Feed Real API Binding",
+      "status": "PASSED",
+      "details": "Retrieved 10 active operational alerts"
+    },
+    {
+      "component": "CrosswalkViewer",
+      "name": "Entity Crosswalk Stats Real API Binding",
+      "status": "PASSED",
+      "details": "Crosswalk stats verified"
+    },
+    {
+      "component": "KnowledgeBase",
+      "name": "Company Knowledge Sources Real API Binding",
+      "status": "PASSED",
+      "details": "Indexed 50 certified company document sources"
+    },
+    {
+      "component": "SyncStatusMonitor",
+      "name": "ETL Replication Health Real API Binding",
+      "status": "PASSED",
+      "details": "Status: OPERATIONAL, Replicated Rows: 67,758"
+    }
+  ]
+}
