@@ -1,28 +1,47 @@
 # Jarvis v1 — Enterprise AI Intelligence Platform for Meridian Supply Chain (MSC)
 
-[![Architecture](https://img.shields.io/badge/Architecture-12--Layer%20Intelligence-blue.svg)](project_docs/ARCHITECTURE.md)
-[![Security Standard](https://img.shields.io/badge/Security-STRIDE%20%7C%20Zero--Privilege-green.svg)](docs/audit/SECURITY_THREAT_MODEL.md)
-[![Data Sovereignty](https://img.shields.io/badge/Sovereignty-Supabase%20EU%20Central-orange.svg)](docs/audit/DATA_GOVERNANCE_REVIEW.md)
-[![Phase 0 Status](https://img.shields.io/badge/Phase%200-Audit%20Complete-brightgreen.svg)](reports/PHASE_0_SUMMARY.md)
-[![Phase 1 Readiness](https://img.shields.io/badge/Phase%201%20Readiness-Ready%20with%20Conditions-yellow.svg)](reports/PHASE_1_READINESS.md)
+[![Architecture](https://img.shields.io/badge/Architecture-Fastify%20%2B%20Flask%20%2B%20Supabase-blue.svg)](project_docs/ARCHITECTURE.md)
+[![Security Standard](https://img.shields.io/badge/Security-Zero--Trust%20%7C%20PromptGuard-green.svg)](docs/testing/SECURITY_AUDIT_REPORT.md)
+[![Evaluation Pass Rate](https://img.shields.io/badge/AI%20Quality-96.0%25%20(48%2F50)-brightgreen.svg)](docs/testing/AI_QUALITY_REPORT.md)
+[![Production Readiness](https://img.shields.io/badge/Status-Ready%20With%20Conditions-yellow.svg)](docs/testing/FINAL_PRODUCTION_READINESS_REPORT.md)
 
 ---
 
-## 1. Project Overview
+## 1. Problem Statement & Proposed Solution
 
-**Jarvis v1** is a unified, deterministic AI intelligence and operations layer built specifically for **Meridian Supply Chain (MSC)**.
+### The Problem
+Meridian Supply Chain operates across multiple disconnected business systems, including seller management, warehouse management, wholesale partner operations, finance, and inventory. Because operational data, company knowledge, and workflows are fragmented, employees spend significant time searching for information, reconciling data manually, identifying business risks, and coordinating actions across different platforms. There is no unified intelligence layer that provides a reliable, real-time view of business operations.
 
-Meridian operates high-volume multi-facility physical supply chains, specialized in collectible trading cards, gaming merchandise, and bullion. The company's technology infrastructure was historically fragmented across three independent operational databases (`seller_db`, `wms_db`, `portal_db`), manual QuickBooks accounting exports, and disjointed communication channels.
+### The Proposed Solution — Jarvis AI
+Build **Jarvis**, an AI-powered Enterprise Intelligence Platform that connects existing business systems into a centralized intelligence layer, enabling employees to:
+- **Interact with company data** through natural language.
+- **Retrieve verified organizational knowledge** with strict source document citations.
+- **Analyze business performance** via deterministic SQL calculations against a unified star schema (no hallucinated metrics).
+- **Detect operational anomalies** and receive actionable recommendations (blocked payouts, credit limit breaches, inventory devaluation).
+- **Execute controlled business actions** through role-based access control (RBAC), explicit human confirmation tokens, and immutable audit trails.
 
-Jarvis v1 sits **above** the operational systems as an intelligent control plane:
-- **Deterministic SQL Calculations:** Critical financial, inventory, and operational metrics are computed strictly by parameterized SQL against an analytics replica in Supabase (`eu-central-1`). The LLM never invents numbers.
-- **RAG for Company Memory:** SOPs, policy guidelines, and verified executive decisions are indexed in `pgvector` with hybrid BM25 search.
-- **Proactive Anomaly Alerts:** Background rules workers continuously flag blocked payouts, partner credit limit breaches, and market inventory devaluation.
-- **Zero-Write Security & Dual Authorization:** The AI has zero write access to production databases. Mutating actions require explicit, multi-factor dual-party human approval.
+### In Simple Terms
+- **Problem:** Business information and operations are scattered across disconnected systems, making decision-making slow, manual, and inefficient.
+- **Solution:** Jarvis unifies access to business intelligence, company knowledge, and operational workflows through a secure, AI-powered conversational platform.
 
 ---
 
-## 2. Repository Structure
+## 2. Project Architecture & Live Topology
+
+```text
+React Frontend (:3001)
+        |
+        v
+Fastify Gateway (:4000) [MCP, RBAC, Model Router, Semantic Cache, DLQ]
+        |
+        +------ Flask Backend (:5000) [Deterministic Metrics, Knowledge RAG, Actions]
+        |
+        +------ Supabase PostgreSQL (:6543) [Star Schema, pgvector, Action Audit Ledger]
+        |
+        +------ Redis / BullMQ (:6379) [DLQ & Distributed Workers]
+        |
+        +------ AI Providers [Gemini 2.5 Flash / Pro, Multi-tier Fallback]
+```
 
 ```
 d:\eigi.ai├── README.md                    # Master Project Guide & Quickstart
@@ -91,11 +110,32 @@ python scripts/inspect_identity_joins.py
 python scripts/verify_timezone_offsets.py
 ```
 
-### Launch the MVP Demonstration:
+### Launch the Integrated Services:
 ```bash
-cd jarvis-mvp
+# 1. Start Fastify Gateway (Port 4000)
+cd gateway
 npm start
-# Open http://localhost:3000 in your browser
+
+# 2. Start Flask Backend (Port 5000)
+cd server
+python app.py
+
+# 3. Start React Admin Dashboard (Port 3001)
+cd client
+npm run preview -- --port 3001 --host 0.0.0.0
+# Open http://localhost:3001 in your browser
+```
+
+### Run Certified Verification & Test Suites:
+```bash
+# Complete API Suite (60 Endpoints)
+python scripts/test_phase2_complete_apis.py
+
+# End-to-End Business Workflows (8 Core Operational Workflows)
+python scripts/test_phase9_business_workflows.py
+
+# 50-Scenario Golden Evaluation Runner (CI Quality Gate)
+cd gateway && npx tsx ../eval/ci_runner.ts
 ```
 
 ---
