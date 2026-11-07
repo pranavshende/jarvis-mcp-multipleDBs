@@ -78,6 +78,16 @@ export async function adminRoutes(fastify: FastifyInstance) {
     reply.send({ message: `Token '${id}' has been permanently revoked.` });
   });
 
+  fastify.delete('/api/admin/tokens/:id', async (req, reply) => {
+    const { id } = req.params as { id: string };
+    const success = await TokenService.deleteToken(id);
+    if (!success) {
+      reply.status(404).send({ error: 'NOT_FOUND', message: `Token '${id}' not found.` });
+      return;
+    }
+    reply.send({ message: `Token '${id}' permanently deleted.` });
+  });
+
   fastify.post('/api/admin/tokens/:id/rotate', async (req, reply) => {
     const { id } = req.params as { id: string };
     const rotated = await TokenService.rotateToken(id);

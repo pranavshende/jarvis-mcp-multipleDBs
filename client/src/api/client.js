@@ -424,6 +424,14 @@ export async function revokeAdminToken(tokenId) {
   return safeJson(res, 'Failed to revoke token');
 }
 
+export async function deleteAdminToken(tokenId) {
+  const res = await fetch(`${GATEWAY_BASE}/api/admin/tokens/${tokenId}`, {
+    method: 'DELETE',
+    headers: getAdminHeaders()
+  });
+  return safeJson(res, 'Failed to delete token');
+}
+
 export async function rotateAdminToken(tokenId) {
   const res = await fetch(`${GATEWAY_BASE}/api/admin/tokens/${tokenId}/rotate`, {
     method: 'POST',

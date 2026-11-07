@@ -152,6 +152,18 @@ export class TokenService {
     return false;
   }
 
+  public static async deleteToken(tokenId: string): Promise<boolean> {
+    const res = await pool.query(
+      'DELETE FROM jarvis_system.api_tokens WHERE id = $1 RETURNING token_hash as "tokenHash"',
+      [tokenId]
+    );
+    if (res.rows.length > 0) {
+      this.tokenCache.delete(res.rows[0].tokenHash);
+      return true;
+    }
+    return false;
+  }
+
   public static async rotateToken(tokenId: string): Promise<{ newRecord: TokenRecord; rawToken: string } | null> {
     // 1. Fetch current token
     const fetchRes = await pool.query(

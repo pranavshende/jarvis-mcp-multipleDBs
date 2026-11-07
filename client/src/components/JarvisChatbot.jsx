@@ -1583,7 +1583,7 @@ export default function JarvisChatbot() {
         {/* SUBVIEW CONTAINER (If activeView !== 'chat')                          */}
         {/* ===================================================================== */}
         {activeView !== 'chat' ? (
-          <div style={{ flex: 1, overflowY: 'auto', padding: isMobile ? '12px' : '16px', zIndex: 1 }}>
+          <div style={{ flex: 1, overflowY: 'auto', overflowX: 'auto', padding: isMobile ? '8px' : '16px', zIndex: 1, width: '100%', boxSizing: 'border-box', minWidth: 0 }}>
             {activeView === 'founder' && <FounderDashboard />}
             {activeView === 'knowledge' && <KnowledgeBase />}
             {activeView === 'alerts' && <AlertCenter />}

@@ -5,6 +5,7 @@ import {
   createAdminToken,
   revokeAdminToken,
   rotateAdminToken,
+  deleteAdminToken,
   fetchAdminModels,
   fetchAdminSpend,
   fetchAdminHealth,
@@ -168,6 +169,17 @@ export default function AdminDashboard() {
     }
   }
 
+  async function handleDeleteToken(tokenId) {
+    if (!confirm('Are you sure you want to permanently delete this MCP token?')) return;
+    try {
+      await deleteAdminToken(tokenId);
+      const t = await fetchAdminTokens();
+      if (t.tokens) setTokens(t.tokens);
+    } catch (err) {
+      alert(`Error deleting token: ${err.message}`);
+    }
+  }
+
   async function handleRotateToken(tokenId) {
     try {
       const res = await rotateAdminToken(tokenId);
@@ -271,7 +283,7 @@ export default function AdminDashboard() {
   });
 
   return (
-    <div style={{ maxWidth: '1440px', margin: '0 auto', padding: '24px', color: '#1a1c19' }}>
+    <div style={{ width: '100%', maxWidth: '1440px', margin: '0 auto', padding: '16px 8px', boxSizing: 'border-box', color: '#1a1c19' }}>
       <PagePurposeBanner
         pageTitle="Jarvis Control Plane & Model Context Protocol (MCP) Governance"
         tagline="Streaming MCP tool transports, RBAC security tokens, continuous evaluation, and semantic cache"
@@ -659,34 +671,34 @@ export default function AdminDashboard() {
             </div>
           )}
 
-          <div style={{ background: '#ffffff', border: '1px solid #e5e5e0', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.03)' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px', textAlign: 'left' }}>
+          <div style={{ background: '#ffffff', border: '1px solid #e5e5e0', borderRadius: '12px', overflowX: 'auto', WebkitOverflowScrolling: 'touch', width: '100%', boxSizing: 'border-box', boxShadow: '0 1px 3px rgba(0,0,0,0.03)' }}>
+            <table style={{ width: '100%', minWidth: '950px', borderCollapse: 'collapse', fontSize: '13px', textAlign: 'left' }}>
               <thead>
                 <tr style={{ borderBottom: '1px solid #e5e5e0', background: '#f8f7f4', color: '#4b5563' }}>
-                  <th style={{ padding: '12px 16px' }}>Token Name</th>
-                  <th style={{ padding: '12px 16px' }}>User ID</th>
-                  <th style={{ padding: '12px 16px' }}>Email</th>
-                  <th style={{ padding: '12px 16px' }}>Role</th>
-                  <th style={{ padding: '12px 16px' }}>Department</th>
-                  <th style={{ padding: '12px 16px' }}>Prefix</th>
-                  <th style={{ padding: '12px 16px' }}>Status</th>
-                  <th style={{ padding: '12px 16px' }}>Actions</th>
+                  <th style={{ padding: '12px 14px', whiteSpace: 'nowrap' }}>Token Name</th>
+                  <th style={{ padding: '12px 14px', whiteSpace: 'nowrap' }}>User ID</th>
+                  <th style={{ padding: '12px 14px', whiteSpace: 'nowrap' }}>Email</th>
+                  <th style={{ padding: '12px 14px', whiteSpace: 'nowrap' }}>Role</th>
+                  <th style={{ padding: '12px 14px', whiteSpace: 'nowrap' }}>Department</th>
+                  <th style={{ padding: '12px 14px', whiteSpace: 'nowrap' }}>Prefix</th>
+                  <th style={{ padding: '12px 14px', whiteSpace: 'nowrap' }}>Status</th>
+                  <th style={{ padding: '12px 14px', minWidth: '190px', textAlign: 'right', whiteSpace: 'nowrap' }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {tokens.map((t) => (
                   <tr key={t.id} style={{ borderBottom: '1px solid #f3f4f6' }}>
-                    <td style={{ padding: '12px 16px', fontWeight: '500', color: '#111827' }}>{t.tokenName || t.token_name}</td>
-                    <td style={{ padding: '12px 16px', color: '#4b5563' }}>{t.userId || t.user_id}</td>
-                    <td style={{ padding: '12px 16px', color: '#4b5563' }}>{t.corporateEmail || t.corporate_email}</td>
-                    <td style={{ padding: '12px 16px' }}>
+                    <td style={{ padding: '12px 14px', fontWeight: '500', color: '#111827' }}>{t.tokenName || t.token_name}</td>
+                    <td style={{ padding: '12px 14px', color: '#4b5563', whiteSpace: 'nowrap' }}>{t.userId || t.user_id}</td>
+                    <td style={{ padding: '12px 14px', color: '#4b5563' }}>{t.corporateEmail || t.corporate_email}</td>
+                    <td style={{ padding: '12px 14px', whiteSpace: 'nowrap' }}>
                       <span style={{ fontSize: '11px', background: '#eff6ff', color: '#1e40af', padding: '3px 8px', borderRadius: '4px', border: '1px solid #bfdbfe', fontWeight: '500' }}>
                         {t.role}
                       </span>
                     </td>
-                    <td style={{ padding: '12px 16px', color: '#6b7280' }}>{t.department}</td>
-                    <td style={{ padding: '12px 16px', fontFamily: 'monospace', color: '#6b7280' }}>{t.tokenPrefix || t.token_prefix}...</td>
-                    <td style={{ padding: '12px 16px' }}>
+                    <td style={{ padding: '12px 14px', color: '#6b7280', whiteSpace: 'nowrap' }}>{t.department}</td>
+                    <td style={{ padding: '12px 14px', fontFamily: 'monospace', color: '#6b7280', whiteSpace: 'nowrap' }}>{t.tokenPrefix || t.token_prefix}...</td>
+                    <td style={{ padding: '12px 14px', whiteSpace: 'nowrap' }}>
                       <span style={{
                         padding: '3px 8px',
                         borderRadius: '4px',
@@ -699,22 +711,31 @@ export default function AdminDashboard() {
                         {t.status}
                       </span>
                     </td>
-                    <td style={{ padding: '12px 16px' }}>
-                      <div style={{ display: 'flex', gap: '8px' }}>
+                    <td style={{ padding: '12px 14px', textAlign: 'right' }}>
+                      <div style={{ display: 'inline-flex', gap: '6px', alignItems: 'center', justifyContent: 'flex-end', flexWrap: 'nowrap' }}>
                         <button
                           onClick={() => handleRotateToken(t.id)}
-                          style={{ padding: '4px 8px', background: '#ffffff', color: '#374151', border: '1px solid #ded9d2', borderRadius: '4px', cursor: 'pointer', fontSize: '11px' }}
+                          title="Generate replacement key"
+                          style={{ padding: '4px 8px', background: '#ffffff', color: '#374151', border: '1px solid #ded9d2', borderRadius: '4px', cursor: 'pointer', fontSize: '11px', whiteSpace: 'nowrap' }}
                         >
                           Rotate
                         </button>
                         {t.status === 'ACTIVE' && (
                           <button
                             onClick={() => handleRevokeToken(t.id)}
-                            style={{ padding: '4px 8px', background: '#fee2e2', color: '#dc2626', border: '1px solid #fecaca', borderRadius: '4px', cursor: 'pointer', fontSize: '11px', fontWeight: '500' }}
+                            title="Revoke access"
+                            style={{ padding: '4px 8px', background: '#fff1f2', color: '#e11d48', border: '1px solid #fecdd3', borderRadius: '4px', cursor: 'pointer', fontSize: '11px', fontWeight: '500', whiteSpace: 'nowrap' }}
                           >
                             Revoke
                           </button>
                         )}
+                        <button
+                          onClick={() => handleDeleteToken(t.id)}
+                          title="Permanently remove token"
+                          style={{ padding: '4px 8px', background: '#fee2e2', color: '#dc2626', border: '1px solid #fca5a5', borderRadius: '4px', cursor: 'pointer', fontSize: '11px', fontWeight: '600', whiteSpace: 'nowrap' }}
+                        >
+                          Delete
+                        </button>
                       </div>
                     </td>
                   </tr>
