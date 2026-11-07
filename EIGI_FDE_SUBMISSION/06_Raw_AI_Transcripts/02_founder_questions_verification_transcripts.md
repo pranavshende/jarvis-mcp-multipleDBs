@@ -88,3 +88,4 @@ GROUP BY w.facility_code, w.facility_name;
 >    - Ember Throne (SKU-ET-001) spot price dropped 31.25% ($88 vs $128 cost).
 >    - Nebula Rising (SKU-NR-004) spot price dropped 30.23% ($150 vs $215 cost).
 >    - Members are dumping underwater boxes onto MSC at obsolete buy list prices.
+

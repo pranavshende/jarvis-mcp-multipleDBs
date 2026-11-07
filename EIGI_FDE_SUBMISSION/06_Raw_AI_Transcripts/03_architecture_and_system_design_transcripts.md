@@ -52,3 +52,4 @@
 >    - L1 Redis Exact Hash Cache: SHA-256 matches return instantly (<1ms).
 >    - L2 Authorization-Aware Semantic Cache: pgvector cosine similarity (>0.96) returns cached responses for identical intent within 15 minutes.
 >    - Achieved Cache Hit Ratio: 38.4%, reducing aggregate monthly API expenditure to <$350.00.
+

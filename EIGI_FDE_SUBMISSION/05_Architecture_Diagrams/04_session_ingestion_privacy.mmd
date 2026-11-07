@@ -26,3 +26,4 @@ flowchart TD
     IngestEndpoint --> Queue
     Queue --> RegexScrubber --> GustoFilter --> PrivateClassifier
     PrivateClassifier --> Chunker --> EmbedEngine --> PgvectorTable
+

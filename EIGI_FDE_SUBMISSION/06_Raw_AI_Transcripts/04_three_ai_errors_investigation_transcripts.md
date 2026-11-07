@@ -61,3 +61,4 @@
 > 1. Regex sanitizers to scrub SSNs, tax EINs, and bank routing numbers.
 > 2. Gusto payroll filters to redact salary amounts and compensation tables.
 > 3. An ABAC classification tagger that marks founder notes with `access_level = 'FOUNDER_ONLY'`, preventing general employees from ever querying them in pgvector."
+
