@@ -71,7 +71,12 @@ export default function JarvisChatbot() {
   const [inputQuery, setInputQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [liveStreamEvents, setLiveStreamEvents] = useState([]);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth >= 768;
+    }
+    return true;
+  });
   const [isDeepThink, setIsDeepThink] = useState(false);
   const [showWorkflowPanel, setShowWorkflowPanel] = useState(false);
   const [activeCitation, setActiveCitation] = useState(null);
@@ -1230,16 +1235,39 @@ export default function JarvisChatbot() {
               style={{
                 flex: 1,
                 overflowY: 'auto',
-                padding: isMobile ? '16px 12px 100px 12px' : '24px 24px 120px 32px',
+                padding: isMobile ? '16px 12px 110px 12px' : '28px 24px 130px 24px',
                 display: 'flex',
-                flexDirection: 'column'
+                flexDirection: 'column',
+                alignItems: 'center',
+                width: '100%'
               }}
             >
-              <div style={{ width: '100%', maxWidth: '820px', display: 'flex', flexDirection: 'column', gap: isMobile ? '18px' : '24px' }}>
+              <div
+                style={{
+                  width: '100%',
+                  maxWidth: '820px',
+                  margin: '0 auto',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: isMobile ? '18px' : '24px'
+                }}
+              >
                 
                 {/* Zero State Hero Screen when no active conversation */}
                 {messages.length === 0 ? (
-                  <div style={{ margin: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', maxWidth: '720px', padding: isMobile ? '30px 10px' : '60px 20px', textAlign: 'center' }}>
+                  <div
+                    style={{
+                      margin: 'auto',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '100%',
+                      maxWidth: '720px',
+                      padding: isMobile ? '30px 10px 60px 10px' : '60px 20px 60px 20px',
+                      textAlign: 'center'
+                    }}
+                  >
                     <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: '#0e372d', color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px', boxShadow: '0 4px 14px rgba(14, 55, 45, 0.25)' }}>
                       <svg width="22" height="22" viewBox="0 0 24 24" fill="#ffffff">
                         <path d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.3 1.34.3C19 20 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5s1.75 3.75 1.75 3.75C7 8 17 8 17 8z"/>
@@ -1253,7 +1281,16 @@ export default function JarvisChatbot() {
                     </p>
 
                     {/* Prompt suggestion chips */}
-                    <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)', gap: '10px', width: '100%' }}>
+                    <div
+                      style={{
+                        display: 'grid',
+                        gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)',
+                        gap: '12px',
+                        width: '100%',
+                        maxWidth: '720px',
+                        margin: '0 auto'
+                      }}
+                    >
                       {samplePrompts.map((promptText, pIdx) => (
                         <button
                           key={pIdx}
@@ -1442,7 +1479,7 @@ export default function JarvisChatbot() {
               bottom: isMobile ? '12px' : '24px',
               left: '50%',
               transform: 'translateX(-50%)',
-              width: isMobile ? 'calc(100% - 24px)' : 'min(760px, calc(100% - 48px))',
+              width: isMobile ? 'calc(100% - 24px)' : 'min(820px, calc(100% - 48px))',
               zIndex: 35
             }}
           >
