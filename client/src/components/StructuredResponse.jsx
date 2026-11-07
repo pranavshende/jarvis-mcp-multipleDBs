@@ -491,3 +491,4 @@ export default function StructuredResponse({ content, citations = [], onOpenCita
     </div>
   );
 }
+
