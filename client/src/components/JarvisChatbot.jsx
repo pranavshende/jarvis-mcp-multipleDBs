@@ -66,41 +66,29 @@ export default function JarvisChatbot() {
   const [editingTitle, setEditingTitle] = useState('');
   const [sessionToDelete, setSessionToDelete] = useState(null);
 
-  // Dynamic Projects (persisted in localStorage)
-  const [projects, setProjects] = useState(() => {
+  // Dynamic Saved Prompts (persisted in localStorage)
+  const [prompts, setPrompts] = useState(() => {
     try {
-      const saved = localStorage.getItem('msc_jarvis_projects');
+      const saved = localStorage.getItem('msc_jarvis_prompts');
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) {
-          const cleaned = parsed
-            .map((p, idx) => (typeof p === 'string' ? { id: `proj-${idx}`, name: p } : p))
-            .filter((p) => {
-              const n = (p.name || '').toLowerCase();
-              return (
-                !n.includes('cctv') &&
-                !n.includes('sampark') &&
-                !n.includes('lumpy') &&
-                !n.includes('solar industries')
-              );
-            });
-          if (cleaned.length > 0) return cleaned;
-        }
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
       }
     } catch {
       // fallback
     }
     return [
-      { id: 'proj-1', name: 'Partner Credit & AR Aging' },
-      { id: 'proj-2', name: 'Warehouse Intake SLA (EWR1/ONT1)' },
-      { id: 'proj-3', name: 'FIFO Inventory Costing' },
-      { id: 'proj-4', name: 'Inspection & Grading Governance' }
+      { id: 'p-1', name: 'Partner 301 Credit Hold', query: 'Why is Partner 301 on credit hold and what is their exposure?' },
+      { id: 'p-2', name: 'Gold Partner Terms', query: 'What are the Gold partner credit terms and payment policies?' },
+      { id: 'p-3', name: 'Warehouse Intake SLA', query: 'How many packages were received yesterday at EWR1 vs ONT1?' },
+      { id: 'p-4', name: 'Return Grading SOP', query: 'What are the SOP inspection rules for return grading?' },
+      { id: 'p-5', name: 'WMS Stock-Sync Status', query: 'What is the current status of the WMS stock-sync system?' }
     ];
   });
-  const [isAddingProject, setIsAddingProject] = useState(false);
-  const [newProjectName, setNewProjectName] = useState('');
-  const [editingProjectId, setEditingProjectId] = useState(null);
-  const [editingProjectName, setEditingProjectName] = useState('');
+  const [isAddingPrompt, setIsAddingPrompt] = useState(false);
+  const [newPromptName, setNewPromptName] = useState('');
+  const [editingPromptId, setEditingPromptId] = useState(null);
+  const [editingPromptName, setEditingPromptName] = useState('');
 
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
@@ -114,41 +102,41 @@ export default function JarvisChatbot() {
     }
   }, [chatSessions]);
 
-  // Save projects to localStorage
+  // Save prompts to localStorage
   useEffect(() => {
     try {
-      localStorage.setItem('msc_jarvis_projects', JSON.stringify(projects));
+      localStorage.setItem('msc_jarvis_prompts', JSON.stringify(prompts));
     } catch {
       // ignore
     }
-  }, [projects]);
+  }, [prompts]);
 
-  const handleAddProject = () => {
-    const trimmed = newProjectName.trim();
+  const handleAddPrompt = () => {
+    const trimmed = newPromptName.trim();
     if (!trimmed) {
-      setIsAddingProject(false);
+      setIsAddingPrompt(false);
       return;
     }
-    const newProj = { id: `proj-${Date.now()}`, name: trimmed };
-    setProjects((prev) => [...prev, newProj]);
-    setNewProjectName('');
-    setIsAddingProject(false);
+    const newP = { id: `prompt-${Date.now()}`, name: trimmed, query: trimmed };
+    setPrompts((prev) => [...prev, newP]);
+    setNewPromptName('');
+    setIsAddingPrompt(false);
   };
 
-  const handleRenameProject = (id, newName) => {
+  const handleRenamePrompt = (id, newName) => {
     if (!newName.trim()) {
-      setEditingProjectId(null);
+      setEditingPromptId(null);
       return;
     }
-    setProjects((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, name: newName.trim() } : p))
+    setPrompts((prev) =>
+      prev.map((p) => (p.id === id ? { ...p, name: newName.trim(), query: p.query === p.name ? newName.trim() : p.query } : p))
     );
-    setEditingProjectId(null);
+    setEditingPromptId(null);
   };
 
-  const handleDeleteProject = (id, e) => {
+  const handleDeletePrompt = (id, e) => {
     if (e) e.stopPropagation();
-    setProjects((prev) => prev.filter((p) => p.id !== id));
+    setPrompts((prev) => prev.filter((p) => p.id !== id));
   };
 
   // Scroll to bottom on new messages
@@ -520,9 +508,9 @@ export default function JarvisChatbot() {
           ))}
         </div>
 
-        {/* Scrollable Projects & Recents */}
+        {/* Scrollable Prompts & Recents */}
         <div style={{ flex: 1, overflowY: 'auto', padding: '12px 8px' }}>
-          {/* Projects */}
+          {/* Prompts */}
           <div
             style={{
               display: 'flex',
@@ -540,11 +528,11 @@ export default function JarvisChatbot() {
                 letterSpacing: '0.04em'
               }}
             >
-              Projects
+              Prompts
             </span>
             <button
-              onClick={() => setIsAddingProject(true)}
-              title="Create new project workspace"
+              onClick={() => setIsAddingPrompt(true)}
+              title="Add new prompt"
               style={{
                 background: 'transparent',
                 border: 'none',
@@ -568,22 +556,22 @@ export default function JarvisChatbot() {
             </button>
           </div>
 
-          {/* New Project Input */}
-          {isAddingProject && (
+          {/* New Prompt Input */}
+          {isAddingPrompt && (
             <div style={{ padding: '0 8px 8px' }}>
               <input
                 type="text"
-                value={newProjectName}
-                onChange={(e) => setNewProjectName(e.target.value)}
-                onBlur={handleAddProject}
+                value={newPromptName}
+                onChange={(e) => setNewPromptName(e.target.value)}
+                onBlur={handleAddPrompt}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter') handleAddProject();
+                  if (e.key === 'Enter') handleAddPrompt();
                   if (e.key === 'Escape') {
-                    setIsAddingProject(false);
-                    setNewProjectName('');
+                    setIsAddingPrompt(false);
+                    setNewPromptName('');
                   }
                 }}
-                placeholder="New project..."
+                placeholder="Enter prompt..."
                 autoFocus
                 style={{
                   width: '100%',
@@ -601,16 +589,18 @@ export default function JarvisChatbot() {
           )}
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginBottom: '14px' }}>
-            {projects.map((p) => {
-              const isEditing = editingProjectId === p.id;
+            {prompts.map((p) => {
+              const isEditing = editingPromptId === p.id;
               return (
                 <div
                   key={p.id}
                   onClick={() => {
                     if (isEditing) return;
                     setActiveView('chat');
-                    setInputQuery(`Provide an executive briefing on ${p.name}`);
+                    setInputQuery(p.query || p.name);
+                    if (inputRef.current) inputRef.current.focus();
                   }}
+                  title={p.query || p.name}
                   style={{
                     display: 'flex',
                     alignItems: 'center',
@@ -625,18 +615,18 @@ export default function JarvisChatbot() {
                   onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0, flex: 1 }}>
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ flexShrink: 0, opacity: 0.8 }}>
-                      <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ flexShrink: 0, opacity: 0.85, color: '#38bdf8' }}>
+                      <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
                     </svg>
                     {isEditing ? (
                       <input
                         type="text"
-                        value={editingProjectName}
-                        onChange={(e) => setEditingProjectName(e.target.value)}
-                        onBlur={() => handleRenameProject(p.id, editingProjectName)}
+                        value={editingPromptName}
+                        onChange={(e) => setEditingPromptName(e.target.value)}
+                        onBlur={() => handleRenamePrompt(p.id, editingPromptName)}
                         onKeyDown={(e) => {
-                          if (e.key === 'Enter') handleRenameProject(p.id, editingProjectName);
-                          if (e.key === 'Escape') setEditingProjectId(null);
+                          if (e.key === 'Enter') handleRenamePrompt(p.id, editingPromptName);
+                          if (e.key === 'Escape') setEditingPromptId(null);
                         }}
                         autoFocus
                         onClick={(e) => e.stopPropagation()}
@@ -661,10 +651,10 @@ export default function JarvisChatbot() {
                   {!isEditing && (
                     <div style={{ display: 'flex', alignItems: 'center', gap: '4px', opacity: 0.7 }} onClick={(e) => e.stopPropagation()}>
                       <button
-                        title="Rename"
+                        title="Rename prompt"
                         onClick={() => {
-                          setEditingProjectId(p.id);
-                          setEditingProjectName(p.name);
+                          setEditingPromptId(p.id);
+                          setEditingPromptName(p.name);
                         }}
                         style={{ background: 'transparent', border: 'none', color: '#9ca3af', cursor: 'pointer', padding: '1px 3px', fontSize: '11px' }}
                         onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
@@ -673,8 +663,8 @@ export default function JarvisChatbot() {
                         ✎
                       </button>
                       <button
-                        title="Delete"
-                        onClick={(e) => handleDeleteProject(p.id, e)}
+                        title="Delete prompt"
+                        onClick={(e) => handleDeletePrompt(p.id, e)}
                         style={{ background: 'transparent', border: 'none', color: '#9ca3af', cursor: 'pointer', padding: '1px 3px', fontSize: '11px' }}
                         onMouseEnter={(e) => (e.currentTarget.style.color = '#ef4444')}
                         onMouseLeave={(e) => (e.currentTarget.style.color = '#9ca3af')}
