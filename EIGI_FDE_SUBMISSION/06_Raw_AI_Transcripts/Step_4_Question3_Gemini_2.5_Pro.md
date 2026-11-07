@@ -62,3 +62,4 @@
 > 1. PII Regex scrubber (tax EINs, SSNs, bank routing numbers).
 > 2. Gusto payroll filter to redact salaries and compensation.
 > 3. ABAC isolation tagging: founder journals tagged `access_level = 'RESTRICTED_FOUNDER'` so general employees can never query them.
+

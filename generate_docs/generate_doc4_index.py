@@ -88,3 +88,4 @@ def build_transcripts_index_docx(output_path):
 if __name__ == "__main__":
     out_file = os.path.join(os.path.dirname(__file__), "..", "EIGI_FDE_SUBMISSION", "04_Raw_AI_Transcripts_Index.docx")
     build_transcripts_index_docx(out_file)
+

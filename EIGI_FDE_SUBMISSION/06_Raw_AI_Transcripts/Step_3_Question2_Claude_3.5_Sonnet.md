@@ -37,3 +37,4 @@
 >    - Insurance, Legal & Compliance: $29,658.33
 > 4. **September Closed Net Income:** Gross Profit ($299,066.44) − Total Opex ($291,765.58) = **+$7,300.86 Net Operating Income** (**0.39% net margin**). The business is operating virtually at breakeven.
 > 5. **October Deficit:** For October 1–19, gross profit of $179,923.99 is exceeded by booked opex ($168.9k) and second-half payroll accrual ($80.9k). An unbooked lower-of-cost-or-market write-down of $62,830 on reprinted card sets leaves the business operating at an economic deficit of **-$132,742.23**.
+

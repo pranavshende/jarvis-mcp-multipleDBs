@@ -28,3 +28,4 @@
 > Recommendation: Avoid live postgres_fdw queries against production operational databases for user-facing analytics. 
 > 1. FDW distributed queries lack pushdown optimization for complex aggregations and will degrade warehouse scanning throughput during peak shifts.
 > 2. Instead, deploy an asynchronous Change Data Capture (CDC) worker that replicates tables every 15 minutes into a dedicated analytics read-replica with a star schema (`analytics.fact_dock_receipts`, `analytics.dim_product_crosswalk`).
+

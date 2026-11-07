@@ -44,3 +44,4 @@
 > - Exact reconciled position **before** write-down is **-$69,912.23** (a minor $3.34 rounding adjustment).
 > - Exact reconciled position **after** lower-of-cost-or-market write-down on Ember Throne and Nebula Rising is **-$132,742.23**.
 > - Both figures and the exact mathematical bridge have been updated across Deliverable 1 and Deliverable 3.
+

@@ -27,3 +27,4 @@
 > 5. **Two-Man Rule Restricted Action Gateway:** Two-phase commit protocol generating tamper-evident cryptographic confirmation tokens before any database mutation (e.g. Credit Hold).
 > 
 > *Total Monthly Infrastructure Cost:* **€112.40 / month** (Comfortably inside the €120/mo budget).
+

@@ -35,3 +35,4 @@
 * **Local Workspace Paths:** All transcript files are permanently stored in `D:\eigi.ai\EIGI_FDE_SUBMISSION\06_Raw_AI_Transcripts\`.
 * **Repository:** Hosted on GitHub main branch at `https://github.com/pranavshende/jarvis-mcp-multipleDBs/tree/main/EIGI_FDE_SUBMISSION/06_Raw_AI_Transcripts/`.
 * **Google Drive / Cloud Share Instructions:** When uploading this folder or linked transcripts to Google Drive, set permissions to **"Anyone with the link can view"** as specified in the candidate brief.
+
