@@ -103,6 +103,22 @@ export default function ExecutionWorkflow({
   const isRagActive = ragState.status === 'running' || ragState.status === 'completed';
   const isCacheHit = orchestratorState.metadata?.fromCache || false;
 
+  const isPipelineComplete = citationState.status === 'completed' || (!isStreaming && hasAnyEvents);
+
+  // Check route string and event stage history to determine which databases participated:
+  const routeStr = (route || '').toUpperCase();
+  const isKnowledgeRoute = routeStr.includes('KNOWLEDGE') || routeStr.includes('RAG') || routeStr.includes('DUAL');
+  const isSqlRoute = routeStr.includes('SQL') || routeStr.includes('DATA') || routeStr.includes('METRIC') || routeStr.includes('DUAL');
+
+  // Node execution success status flags (turns boxes green upon successful execution)
+  const isClientSuccess = isPipelineComplete || hasAnyEvents;
+  const isGatewaySuccess = isPipelineComplete || orchestratorState.status === 'completed' || intentState.status === 'completed' || queryState.status === 'completed';
+  const isSqlSuccess = sqlState.status === 'completed' || (isPipelineComplete && (isSqlRoute || isSqlActive));
+  const isRagSuccess = ragState.status === 'completed' || (isPipelineComplete && (isKnowledgeRoute || isRagActive));
+  const isCacheSuccess = isCacheHit || orchestratorState.metadata?.fromCache || false;
+  const isGeminiSuccess = isPipelineComplete || geminiState.status === 'completed';
+  const isStreamerSuccess = isPipelineComplete || citationState.status === 'completed';
+
   // Determine current active location of query
   const getQueryLocation = () => {
     if (!hasAnyEvents && !isStreaming) {
@@ -357,8 +373,8 @@ export default function ExecutionWorkflow({
           display: 'flex',
           alignItems: 'center',
           gap: '6px',
-          background: isStreaming ? '#ecfdf5' : '#f8f7f4',
-          border: isStreaming ? '1px solid #a7f3d0' : '1px solid #e5e5e0',
+          background: isPipelineComplete ? '#ecfdf5' : isStreaming ? '#ecfdf5' : '#f8f7f4',
+          border: isPipelineComplete ? '1px solid #86efac' : isStreaming ? '1px solid #a7f3d0' : '1px solid #e5e5e0',
           borderRadius: '6px',
           padding: '4px 8px',
           marginBottom: '3px'
@@ -369,14 +385,14 @@ export default function ExecutionWorkflow({
             width: '8px',
             height: '8px',
             borderRadius: '50%',
-            background: isStreaming ? '#10b981' : '#0e372d',
-            boxShadow: isStreaming ? '0 0 8px #10b981' : 'none',
+            background: isPipelineComplete ? '#10b981' : isStreaming ? '#10b981' : '#0e372d',
+            boxShadow: isStreaming || isPipelineComplete ? '0 0 8px #10b981' : 'none',
             display: 'inline-block',
             animation: isStreaming ? 'pulse 1.2s infinite' : 'none',
             flexShrink: 0
           }}
         />
-        <span style={{ fontSize: '10px', fontWeight: '700', color: isStreaming ? '#065f46' : '#374151', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+        <span style={{ fontSize: '10px', fontWeight: '700', color: isPipelineComplete ? '#047857' : isStreaming ? '#065f46' : '#374151', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
           {currentLocation.label}
         </span>
       </div>
@@ -385,40 +401,48 @@ export default function ExecutionWorkflow({
       <div
         className={currentLocation.node === 'client' ? 'active-node-box' : ''}
         style={{
-          background: '#ffffff',
-          border: currentLocation.node === 'client' ? '1.5px solid #10b981' : '1px solid #e5e5e0',
+          background: isClientSuccess ? '#f0fdf4' : '#ffffff',
+          border: isClientSuccess ? '1.5px solid #10b981' : currentLocation.node === 'client' ? '1.5px solid #10b981' : '1px solid #e5e5e0',
           borderRadius: '7px',
           padding: '6px 10px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          transition: 'all 0.2s ease',
-          boxShadow: '0 1px 2px rgba(0,0,0,0.03)'
+          transition: 'all 0.25s ease',
+          boxShadow: isClientSuccess ? '0 1px 4px rgba(16,185,129,0.12)' : '0 1px 2px rgba(0,0,0,0.03)'
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '7px' }}>
           <span style={{ fontSize: '13px' }}>💻</span>
           <div>
-            <div style={{ fontSize: '11px', fontWeight: '700', color: '#111827' }}>
+            <div style={{ fontSize: '11px', fontWeight: '700', color: isClientSuccess ? '#065f46' : '#111827' }}>
               Client UI (Web &amp; Mobile)
             </div>
-            <div style={{ fontSize: '9px', color: '#6b7280' }}>
+            <div style={{ fontSize: '9px', color: isClientSuccess ? '#047857' : '#6b7280' }}>
               Query Dispatch • HTTPS SSE Stream
             </div>
           </div>
         </div>
-        <span style={{ fontSize: '9px', fontWeight: '700', color: '#0e372d', background: '#e8f5ec', padding: '1px 5px', borderRadius: '4px' }}>
-          SOURCE
+        <span style={{
+          fontSize: '9px',
+          fontWeight: '700',
+          color: isClientSuccess ? '#047857' : '#0e372d',
+          background: isClientSuccess ? '#dcfce7' : '#e8f5ec',
+          border: isClientSuccess ? '1px solid #86efac' : 'none',
+          padding: '1px 5px',
+          borderRadius: '4px'
+        }}>
+          {isClientSuccess ? 'DISPATCHED ✓' : 'SOURCE'}
         </span>
       </div>
 
       {/* CONNECTOR 1: Animated Query Packet moving to Gateway */}
       <div className="connector-track">
         <svg width="100%" height="20" style={{ display: 'block' }}>
-          <line x1="50%" y1="0" x2="50%" y2="20" stroke="#0e372d" strokeWidth="1.5" strokeDasharray="3 3" className="animated-dash-line" />
+          <line x1="50%" y1="0" x2="50%" y2="20" stroke={isClientSuccess ? '#10b981' : '#0e372d'} strokeWidth="1.5" strokeDasharray="3 3" className="animated-dash-line" />
         </svg>
-        <div className="moving-packet" style={{ background: '#0e372d' }} />
-        <span style={{ position: 'absolute', right: '10px', top: '2px', fontSize: '8.5px', color: '#6b7280', fontWeight: '600' }}>
+        <div className="moving-packet" style={{ background: isClientSuccess ? '#10b981' : '#0e372d' }} />
+        <span style={{ position: 'absolute', right: '10px', top: '2px', fontSize: '8.5px', color: isClientSuccess ? '#047857' : '#6b7280', fontWeight: '600' }}>
           `POST /api/query/stream`
         </span>
       </div>
@@ -427,31 +451,47 @@ export default function ExecutionWorkflow({
       <div
         className={currentLocation.node === 'gateway' ? 'active-node-box' : ''}
         style={{
-          background: '#ffffff',
-          border: currentLocation.node === 'gateway' ? '2px solid #0e372d' : '1px solid #0e372d80',
+          background: isGatewaySuccess ? '#f0fdf4' : '#ffffff',
+          border: isGatewaySuccess ? '1.5px solid #10b981' : currentLocation.node === 'gateway' ? '2px solid #0e372d' : '1px solid #0e372d80',
           borderRadius: '7px',
           padding: '7px 10px',
-          boxShadow: currentLocation.node === 'gateway' ? '0 0 12px rgba(14,55,45,0.2)' : '0 1px 3px rgba(0,0,0,0.03)',
-          transition: 'all 0.2s ease'
+          boxShadow: isGatewaySuccess ? '0 1px 4px rgba(16,185,129,0.15)' : currentLocation.node === 'gateway' ? '0 0 12px rgba(14,55,45,0.2)' : '0 1px 3px rgba(0,0,0,0.03)',
+          transition: 'all 0.25s ease'
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <span style={{ fontSize: '12px' }}>⚡</span>
-            <span style={{ fontSize: '11.5px', fontWeight: '700', color: '#0e372d' }}>
+            <span style={{ fontSize: '11.5px', fontWeight: '700', color: isGatewaySuccess ? '#065f46' : '#0e372d' }}>
               Fastify Intelligence Gateway (:4000)
             </span>
           </div>
-          <span style={{ fontSize: '9px', background: '#0e372d', color: '#ffffff', padding: '1px 5px', borderRadius: '4px', fontWeight: '700' }}>
-            ORCHESTRATOR
+          <span style={{
+            fontSize: '9px',
+            background: isGatewaySuccess ? '#dcfce7' : '#0e372d',
+            color: isGatewaySuccess ? '#047857' : '#ffffff',
+            border: isGatewaySuccess ? '1px solid #86efac' : 'none',
+            padding: '1px 5px',
+            borderRadius: '4px',
+            fontWeight: '700'
+          }}>
+            {isGatewaySuccess ? 'ORCHESTRATED ✓' : 'ORCHESTRATOR'}
           </span>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '4px' }}>
-          <span style={{ fontSize: '9px', color: '#4b5563' }}>
+          <span style={{ fontSize: '9px', color: isGatewaySuccess ? '#047857' : '#4b5563' }}>
             Gemini NLU Intent Router • RBAC Policy Guard
           </span>
-          <span style={{ fontSize: '9px', fontWeight: '700', color: '#0e372d', background: '#f0fdf4', border: '1px solid #bbf7d0', padding: '1px 5px', borderRadius: '4px' }}>
+          <span style={{
+            fontSize: '9px',
+            fontWeight: '700',
+            color: isGatewaySuccess ? '#047857' : '#0e372d',
+            background: isGatewaySuccess ? '#dcfce7' : '#f0fdf4',
+            border: isGatewaySuccess ? '1px solid #86efac' : '1px solid #bbf7d0',
+            padding: '1px 5px',
+            borderRadius: '4px'
+          }}>
             Route: {route}
           </span>
         </div>
@@ -461,19 +501,19 @@ export default function ExecutionWorkflow({
       <div className="connector-track">
         <svg width="100%" height="22" style={{ display: 'block' }}>
           {/* Main vertical line down */}
-          <line x1="50%" y1="0" x2="50%" y2="10" stroke="#3b82f6" strokeWidth="1.5" strokeDasharray="3 3" className="animated-dash-line" />
+          <line x1="50%" y1="0" x2="50%" y2="10" stroke={isGatewaySuccess ? '#10b981' : '#3b82f6'} strokeWidth="1.5" strokeDasharray="3 3" className="animated-dash-line" />
           {/* Horizontal split bar */}
-          <line x1="20%" y1="10" x2="80%" y2="10" stroke="#3b82f6" strokeWidth="1.5" />
+          <line x1="20%" y1="10" x2="80%" y2="10" stroke={isGatewaySuccess ? '#10b981' : '#3b82f6'} strokeWidth="1.5" />
           {/* Left drop to Supabase SQL */}
-          <line x1="20%" y1="10" x2="20%" y2="22" stroke={isSqlActive ? '#10b981' : '#cbd5e1'} strokeWidth="1.5" strokeDasharray="3 3" className={isSqlActive ? 'animated-dash-line' : ''} />
+          <line x1="20%" y1="10" x2="20%" y2="22" stroke={isSqlSuccess ? '#10b981' : isSqlActive ? '#10b981' : '#cbd5e1'} strokeWidth="1.5" strokeDasharray="3 3" className={isSqlActive || isSqlSuccess ? 'animated-dash-line' : ''} />
           {/* Center drop to Redis */}
-          <line x1="50%" y1="10" x2="50%" y2="22" stroke={isCacheHit ? '#f59e0b' : '#cbd5e1'} strokeWidth="1.5" strokeDasharray="3 3" className={isCacheHit ? 'animated-dash-line' : ''} />
+          <line x1="50%" y1="10" x2="50%" y2="22" stroke={isCacheSuccess ? '#10b981' : isCacheHit ? '#f59e0b' : '#cbd5e1'} strokeWidth="1.5" strokeDasharray="3 3" className={isCacheHit || isCacheSuccess ? 'animated-dash-line' : ''} />
           {/* Right drop to pgvector */}
-          <line x1="80%" y1="10" x2="80%" y2="22" stroke={isRagActive ? '#3b82f6' : '#cbd5e1'} strokeWidth="1.5" strokeDasharray="3 3" className={isRagActive ? 'animated-dash-line' : ''} />
+          <line x1="80%" y1="10" x2="80%" y2="22" stroke={isRagSuccess ? '#10b981' : isRagActive ? '#3b82f6' : '#cbd5e1'} strokeWidth="1.5" strokeDasharray="3 3" className={isRagActive || isRagSuccess ? 'animated-dash-line' : ''} />
         </svg>
-        {isSqlActive && <div className="moving-packet-branch" style={{ left: '20%', background: '#10b981' }} />}
-        {isCacheHit && <div className="moving-packet-branch" style={{ left: '50%', background: '#f59e0b' }} />}
-        {isRagActive && <div className="moving-packet-branch" style={{ left: '80%', background: '#3b82f6' }} />}
+        {(isSqlActive || isSqlSuccess) && <div className="moving-packet-branch" style={{ left: '20%', background: '#10b981' }} />}
+        {(isCacheHit || isCacheSuccess) && <div className="moving-packet-branch" style={{ left: '50%', background: '#10b981' }} />}
+        {(isRagActive || isRagSuccess) && <div className="moving-packet-branch" style={{ left: '80%', background: '#10b981' }} />}
       </div>
 
       {/* NODE 3: Compact Database Grid (Postgres SQL + pgvector + Redis) */}
@@ -483,18 +523,18 @@ export default function ExecutionWorkflow({
         <div
           className={sqlState.status === 'running' ? 'active-node-box' : ''}
           style={{
-            background: isSqlActive ? '#f0fdf4' : '#fafafa',
-            border: isSqlActive ? '1.5px solid #10b981' : '1px solid #e5e5e0',
+            background: isSqlSuccess ? '#f0fdf4' : isSqlActive ? '#f0fdf4' : '#fafafa',
+            border: isSqlSuccess ? '1.5px solid #10b981' : isSqlActive ? '1.5px solid #10b981' : '1px solid #e5e5e0',
             borderRadius: '6px',
             padding: '5px 8px',
-            transition: 'all 0.2s',
-            boxShadow: isSqlActive ? '0 0 8px rgba(16,185,129,0.2)' : 'none'
+            transition: 'all 0.25s ease',
+            boxShadow: isSqlSuccess || isSqlActive ? '0 0 8px rgba(16,185,129,0.2)' : 'none'
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
               <span style={{ fontSize: '11px' }}>🗄️</span>
-              <span style={{ fontSize: '10.5px', fontWeight: '700', color: isSqlActive ? '#065f46' : '#4b5563' }}>
+              <span style={{ fontSize: '10.5px', fontWeight: '700', color: isSqlSuccess || isSqlActive ? '#065f46' : '#4b5563' }}>
                 PostgreSQL 17
               </span>
             </div>
@@ -502,16 +542,17 @@ export default function ExecutionWorkflow({
               style={{
                 fontSize: '8.5px',
                 fontWeight: '700',
-                color: isSqlActive ? '#047857' : '#9ca3af',
-                background: isSqlActive ? '#d1fae5' : '#f3f4f6',
+                color: isSqlSuccess ? '#047857' : sqlState.status === 'running' ? '#047857' : '#9ca3af',
+                background: isSqlSuccess ? '#dcfce7' : sqlState.status === 'running' ? '#d1fae5' : '#f3f4f6',
+                border: isSqlSuccess ? '1px solid #86efac' : 'none',
                 padding: '1px 4px',
                 borderRadius: '3px'
               }}
             >
-              {sqlState.status === 'running' ? 'QUERYING ⟳' : isSqlActive ? 'ACTIVE ✓' : 'STANDBY'}
+              {sqlState.status === 'running' ? 'QUERYING ⟳' : isSqlSuccess ? 'EXECUTED ✓' : isSqlActive ? 'ACTIVE ✓' : 'STANDBY'}
             </span>
           </div>
-          <div style={{ fontSize: '8.5px', color: '#6b7280', marginTop: '2px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          <div style={{ fontSize: '8.5px', color: isSqlSuccess ? '#047857' : '#6b7280', marginTop: '2px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
             fact_packages, fact_ar_aging
           </div>
         </div>
@@ -520,18 +561,18 @@ export default function ExecutionWorkflow({
         <div
           className={ragState.status === 'running' ? 'active-node-box' : ''}
           style={{
-            background: isRagActive ? '#eff6ff' : '#fafafa',
-            border: isRagActive ? '1.5px solid #3b82f6' : '1px solid #e5e5e0',
+            background: isRagSuccess ? '#f0fdf4' : isRagActive ? '#eff6ff' : '#fafafa',
+            border: isRagSuccess ? '1.5px solid #10b981' : isRagActive ? '1.5px solid #3b82f6' : '1px solid #e5e5e0',
             borderRadius: '6px',
             padding: '5px 8px',
-            transition: 'all 0.2s',
-            boxShadow: isRagActive ? '0 0 8px rgba(59,130,246,0.2)' : 'none'
+            transition: 'all 0.25s ease',
+            boxShadow: isRagSuccess ? '0 0 8px rgba(16,185,129,0.2)' : isRagActive ? '0 0 8px rgba(59,130,246,0.2)' : 'none'
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
               <span style={{ fontSize: '11px' }}>🧠</span>
-              <span style={{ fontSize: '10.5px', fontWeight: '700', color: isRagActive ? '#1e40af' : '#4b5563' }}>
+              <span style={{ fontSize: '10.5px', fontWeight: '700', color: isRagSuccess ? '#065f46' : isRagActive ? '#1e40af' : '#4b5563' }}>
                 pgvector HNSW
               </span>
             </div>
@@ -539,16 +580,17 @@ export default function ExecutionWorkflow({
               style={{
                 fontSize: '8.5px',
                 fontWeight: '700',
-                color: isRagActive ? '#1d4ed8' : '#9ca3af',
-                background: isRagActive ? '#dbeafe' : '#f3f4f6',
+                color: isRagSuccess ? '#047857' : ragState.status === 'running' ? '#1d4ed8' : '#9ca3af',
+                background: isRagSuccess ? '#dcfce7' : ragState.status === 'running' ? '#dbeafe' : '#f3f4f6',
+                border: isRagSuccess ? '1px solid #86efac' : 'none',
                 padding: '1px 4px',
                 borderRadius: '3px'
               }}
             >
-              {ragState.status === 'running' ? 'SEARCHING ⟳' : isRagActive ? 'ACTIVE ✓' : 'STANDBY'}
+              {ragState.status === 'running' ? 'SEARCHING ⟳' : isRagSuccess ? 'RETRIEVED ✓' : isRagActive ? 'ACTIVE ✓' : 'STANDBY'}
             </span>
           </div>
-          <div style={{ fontSize: '8.5px', color: '#6b7280', marginTop: '2px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          <div style={{ fontSize: '8.5px', color: isRagSuccess ? '#047857' : '#6b7280', marginTop: '2px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
             746 chunks • 109 verified SOPs
           </div>
         </div>
@@ -557,18 +599,20 @@ export default function ExecutionWorkflow({
       {/* DB 3C: Redis L1 Cache (Compact Strip) */}
       <div
         style={{
-          background: isCacheHit ? '#fefce8' : '#fafafa',
-          border: isCacheHit ? '1.5px solid #eab308' : '1px solid #e5e5e0',
+          background: isCacheSuccess ? '#f0fdf4' : isCacheHit ? '#fefce8' : '#fafafa',
+          border: isCacheSuccess ? '1.5px solid #10b981' : isCacheHit ? '1.5px solid #eab308' : '1px solid #e5e5e0',
           borderRadius: '5px',
           padding: '4px 8px',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between'
+          justifyContent: 'space-between',
+          transition: 'all 0.25s ease',
+          boxShadow: isCacheSuccess ? '0 0 6px rgba(16,185,129,0.15)' : 'none'
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
           <span style={{ fontSize: '11px' }}>⚡</span>
-          <span style={{ fontSize: '10px', fontWeight: '600', color: isCacheHit ? '#854d0e' : '#6b7280' }}>
+          <span style={{ fontSize: '10px', fontWeight: '600', color: isCacheSuccess ? '#065f46' : isCacheHit ? '#854d0e' : '#6b7280' }}>
             Redis L1 Cache (SHA-256 Memory)
           </span>
         </div>
@@ -576,20 +620,21 @@ export default function ExecutionWorkflow({
           style={{
             fontSize: '8.5px',
             fontWeight: '700',
-            color: isCacheHit ? '#a16207' : '#9ca3af',
-            background: isCacheHit ? '#fef08a' : '#f3f4f6',
+            color: isCacheSuccess ? '#047857' : '#9ca3af',
+            background: isCacheSuccess ? '#dcfce7' : '#f3f4f6',
+            border: isCacheSuccess ? '1px solid #86efac' : 'none',
             padding: '1px 4px',
             borderRadius: '3px'
           }}
         >
-          {isCacheHit ? 'HIT (<15ms) ✓' : 'CHECKED'}
+          {isCacheSuccess ? 'CACHE HIT (<15ms) ✓' : 'CHECKED'}
         </span>
       </div>
 
       {/* CONNECTOR 3: Returning from DBs to Gateway Gemini Synthesis */}
       <div className="connector-track">
         <svg width="100%" height="20" style={{ display: 'block' }}>
-          <line x1="50%" y1="0" x2="50%" y2="20" stroke="#10b981" strokeWidth="1.5" strokeDasharray="3 3" className="animated-dash-line" />
+          <line x1="50%" y1="0" x2="50%" y2="20" stroke={isGeminiSuccess ? '#10b981' : '#10b981'} strokeWidth="1.5" strokeDasharray="3 3" className="animated-dash-line" />
         </svg>
         <div className="moving-packet" style={{ background: '#10b981' }} />
         <span style={{ position: 'absolute', right: '10px', top: '2px', fontSize: '8.5px', color: '#047857', fontWeight: '600' }}>
@@ -601,24 +646,24 @@ export default function ExecutionWorkflow({
       <div
         className={currentLocation.node === 'gemini' ? 'active-node-box' : ''}
         style={{
-          background: '#ffffff',
-          border: currentLocation.node === 'gemini' ? '1.5px solid #8b5cf6' : '1px solid #e5e5e0',
+          background: isGeminiSuccess ? '#f0fdf4' : '#ffffff',
+          border: isGeminiSuccess ? '1.5px solid #10b981' : currentLocation.node === 'gemini' ? '1.5px solid #8b5cf6' : '1px solid #e5e5e0',
           borderRadius: '7px',
           padding: '6px 10px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          transition: 'all 0.2s',
-          boxShadow: currentLocation.node === 'gemini' ? '0 0 10px rgba(139,92,246,0.25)' : 'none'
+          transition: 'all 0.25s ease',
+          boxShadow: isGeminiSuccess ? '0 1px 4px rgba(16,185,129,0.15)' : currentLocation.node === 'gemini' ? '0 0 10px rgba(139,92,246,0.25)' : 'none'
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
           <span style={{ fontSize: '12px' }}>✨</span>
           <div>
-            <div style={{ fontSize: '11px', fontWeight: '700', color: '#111827' }}>
+            <div style={{ fontSize: '11px', fontWeight: '700', color: isGeminiSuccess ? '#065f46' : '#111827' }}>
               Gemini 2.5 Pro (Deep Tier Reasoning)
             </div>
-            <div style={{ fontSize: '9px', color: '#6b7280' }}>
+            <div style={{ fontSize: '9px', color: isGeminiSuccess ? '#047857' : '#6b7280' }}>
               Dual-Synthesis • Strict MSC Citation Grounding
             </div>
           </div>
@@ -627,8 +672,9 @@ export default function ExecutionWorkflow({
           style={{
             fontSize: '9px',
             fontWeight: '700',
-            color: geminiState.status === 'running' ? '#7c3aed' : '#059669',
-            background: geminiState.status === 'running' ? '#ede9fe' : '#d1fae5',
+            color: isGeminiSuccess ? '#047857' : geminiState.status === 'running' ? '#7c3aed' : '#059669',
+            background: isGeminiSuccess ? '#dcfce7' : geminiState.status === 'running' ? '#ede9fe' : '#d1fae5',
+            border: isGeminiSuccess ? '1px solid #86efac' : 'none',
             padding: '1px 5px',
             borderRadius: '4px'
           }}
@@ -640,10 +686,10 @@ export default function ExecutionWorkflow({
       {/* CONNECTOR 4: Streaming to Client */}
       <div className="connector-track">
         <svg width="100%" height="20" style={{ display: 'block' }}>
-          <line x1="50%" y1="0" x2="50%" y2="20" stroke="#059669" strokeWidth="1.5" strokeDasharray="3 3" className="animated-dash-line" />
+          <line x1="50%" y1="0" x2="50%" y2="20" stroke={isStreamerSuccess ? '#10b981' : '#059669'} strokeWidth="1.5" strokeDasharray="3 3" className="animated-dash-line" />
         </svg>
-        <div className="moving-packet" style={{ background: '#059669' }} />
-        <span style={{ position: 'absolute', right: '10px', top: '2px', fontSize: '8.5px', color: '#059669', fontWeight: '600' }}>
+        <div className="moving-packet" style={{ background: '#10b981' }} />
+        <span style={{ position: 'absolute', right: '10px', top: '2px', fontSize: '8.5px', color: '#047857', fontWeight: '600' }}>
           `workflow_event` &rarr; `complete`
         </span>
       </div>
@@ -653,12 +699,14 @@ export default function ExecutionWorkflow({
         className={currentLocation.node === 'streamer' || currentLocation.node === 'client_done' ? 'active-node-box' : ''}
         style={{
           background: '#f0fdf4',
-          border: '1px solid #bbf7d0',
+          border: '1.5px solid #10b981',
           borderRadius: '7px',
           padding: '6px 10px',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between'
+          justifyContent: 'space-between',
+          boxShadow: '0 1px 4px rgba(16,185,129,0.15)',
+          transition: 'all 0.25s ease'
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
@@ -672,7 +720,15 @@ export default function ExecutionWorkflow({
             </div>
           </div>
         </div>
-        <span style={{ fontSize: '9px', fontWeight: '700', color: '#059669', background: '#d1fae5', padding: '1px 5px', borderRadius: '4px' }}>
+        <span style={{
+          fontSize: '9px',
+          fontWeight: '700',
+          color: '#047857',
+          background: '#dcfce7',
+          border: '1px solid #86efac',
+          padding: '1px 5px',
+          borderRadius: '4px'
+        }}>
           {isStreaming ? 'STREAMING' : 'DELIVERED ✓'}
         </span>
       </div>
