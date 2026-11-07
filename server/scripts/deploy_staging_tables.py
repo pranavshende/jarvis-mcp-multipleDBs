@@ -6,8 +6,9 @@ import os
 import re
 import psycopg2
 
-# Read DIRECT_URL from .env
-env_path = os.path.join(r"d:\eigi.ai", ".env")
+# Read DIRECT_URL from server/.env
+server_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+env_path = os.path.join(server_dir, ".env") if os.path.exists(os.path.join(server_dir, ".env")) else os.path.join(os.path.dirname(server_dir), ".env")
 env_vars = {}
 with open(env_path, "r", encoding="utf-8") as f:
     for line in f:

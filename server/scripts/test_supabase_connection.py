@@ -6,8 +6,9 @@ import os
 import psycopg2
 from urllib.parse import urlparse
 
-# Read from .env manually to avoid external dotenv dependency
-env_path = os.path.join(r"d:\eigi.ai", ".env")
+# Read from server/.env or root .env
+server_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+env_path = os.path.join(server_dir, ".env") if os.path.exists(os.path.join(server_dir, ".env")) else os.path.join(os.path.dirname(server_dir), ".env")
 env_vars = {}
 if os.path.exists(env_path):
     with open(env_path, "r", encoding="utf-8") as f:

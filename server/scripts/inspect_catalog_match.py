@@ -2,8 +2,10 @@
 import psycopg2
 import os
 
+server_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+env_path = os.path.join(server_dir, ".env") if os.path.exists(os.path.join(server_dir, ".env")) else os.path.join(os.path.dirname(server_dir), ".env")
 env_vars = {}
-with open(r"d:\eigi.ai\.env", "r", encoding="utf-8") as f:
+with open(env_path, "r", encoding="utf-8") as f:
     for line in f:
         if "=" in line and not line.startswith("#"):
             k, v = line.strip().split("=", 1)
