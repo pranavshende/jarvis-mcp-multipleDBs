@@ -1,241 +1,276 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 /**
  * TutorialGuide
- * Guided first-time visitor onboarding walkthrough for Jarvis AI Enterprise Platform.
- * - Explains the architecture, conversational canvas, deep reasoning, live data topology, and subviews.
- * - Includes a Skip button, step-by-step navigation, keyboard controls (Left/Right/Esc), and restart capability.
+ * Interactive Spotlight Walkthrough that takes the user directly to each button on the page.
+ * 
+ * Features:
+ * - Dynamic spotlight cutout box positioned over the target button using getBoundingClientRect()
+ * - Floating tooltip card anchored to the button with directional pointer arrow
+ * - Auto-scrolls elements into view
+ * - Auto-opens sidebar if the target button is inside the sidebar
+ * - Skip Tour button, step dots, and full keyboard navigation (Arrows / Escape)
  */
 
-const TUTORIAL_STEPS = [
+const TOUR_STEPS = [
   {
-    step: 1,
-    badge: 'ARCHITECTURE OVERVIEW',
+    target: '[data-tour="new-chat-btn"]',
+    title: '+ New Chat Button',
+    badge: 'SESSION MANAGEMENT',
     badgeColor: '#0e372d',
     badgeBg: '#e8f5ec',
-    title: 'Welcome to Jarvis Enterprise Intelligence',
-    subtitle: 'Unified AI intelligence layer for Meridian Supply Chain',
-    icon: '🏢',
-    content: (
+    icon: '✨',
+    preferredPlacement: 'right',
+    requiresSidebar: true,
+    description: (
       <div>
-        <p style={{ margin: '0 0 12px 0', fontSize: '13.5px', lineHeight: '1.6', color: '#374151' }}>
-          Meridian Supply Chain operates across fragmented departmental systems: <strong>Seller DB</strong>, <strong>WMS (EWR1/ONT1)</strong>, <strong>Partner Portal</strong>, and <strong>QuickBooks AR Ledger</strong>.
+        <p style={{ margin: '0 0 8px 0', fontSize: '13px', lineHeight: '1.5', color: '#374151' }}>
+          Starts a fresh conversation session. Your ongoing questions stay grouped together in isolated multi-turn threads rather than fragmenting into separate records.
         </p>
-        <p style={{ margin: '0 0 14px 0', fontSize: '13.5px', lineHeight: '1.6', color: '#374151' }}>
-          <strong>Jarvis</strong> unites these independent sources into one business-aware intelligence platform powered by Google Gemini, deterministic SQL, and enterprise pgvector RAG.
-        </p>
-
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '8px', marginTop: '12px' }}>
-          <div style={{ background: '#f8f7f4', border: '1px solid #e5e5e0', borderRadius: '8px', padding: '10px 12px' }}>
-            <div style={{ fontSize: '15px', marginBottom: '2px' }}>⚡</div>
-            <div style={{ fontSize: '11.5px', fontWeight: '700', color: '#111827' }}>Fastify Gateway</div>
-            <div style={{ fontSize: '10px', color: '#6b7280' }}>&lt;15ms Semantic Cache</div>
-          </div>
-          <div style={{ background: '#f8f7f4', border: '1px solid #e5e5e0', borderRadius: '8px', padding: '10px 12px' }}>
-            <div style={{ fontSize: '15px', marginBottom: '2px' }}>🗄️</div>
-            <div style={{ fontSize: '11.5px', fontWeight: '700', color: '#111827' }}>PostgreSQL 17</div>
-            <div style={{ fontSize: '10px', color: '#6b7280' }}>Star Schema Facts</div>
-          </div>
-          <div style={{ background: '#f8f7f4', border: '1px solid #e5e5e0', borderRadius: '8px', padding: '10px 12px' }}>
-            <div style={{ fontSize: '15px', marginBottom: '2px' }}>🧠</div>
-            <div style={{ fontSize: '11.5px', fontWeight: '700', color: '#111827' }}>pgvector HNSW</div>
-            <div style={{ fontSize: '10px', color: '#6b7280' }}>746 SOP Chunks</div>
-          </div>
-          <div style={{ background: '#f8f7f4', border: '1px solid #e5e5e0', borderRadius: '8px', padding: '10px 12px' }}>
-            <div style={{ fontSize: '15px', marginBottom: '2px' }}>🤖</div>
-            <div style={{ fontSize: '11.5px', fontWeight: '700', color: '#111827' }}>Gemini 2.5 Pro</div>
-            <div style={{ fontSize: '10px', color: '#6b7280' }}>Grounded Synthesis</div>
-          </div>
+        <div style={{ fontSize: '11.5px', color: '#0e372d', background: '#f0fdf4', padding: '6px 8px', borderRadius: '6px', border: '1px solid #bbf7d0' }}>
+          💡 <strong>Tip:</strong> Use a new chat whenever you switch business topics (e.g. moving from warehouse dock receiving to wholesale partner credit lines).
         </div>
       </div>
     )
   },
   {
-    step: 2,
-    badge: 'CONVERSATIONAL QUERIES',
+    target: '[data-tour="recent-chats"]',
+    title: 'Recents & Session History',
+    badge: 'POSTGRESQL CONTINUITY',
     badgeColor: '#1d4ed8',
     badgeBg: '#eff6ff',
-    title: 'Natural Language Intelligence & Starters',
-    subtitle: 'Ask questions in plain English across all business domains',
     icon: '💬',
-    content: (
+    preferredPlacement: 'right',
+    requiresSidebar: true,
+    description: (
       <div>
-        <p style={{ margin: '0 0 12px 0', fontSize: '13.5px', lineHeight: '1.6', color: '#374151' }}>
-          You can interact with Jarvis conversationally without writing SQL queries or searching documents manually.
+        <p style={{ margin: '0 0 8px 0', fontSize: '13px', lineHeight: '1.5', color: '#374151' }}>
+          All your historical multi-turn chat sessions are persisted here in Supabase PostgreSQL 17.
         </p>
-
-        <div style={{ background: '#fdfbf7', border: '1px solid #f2ede4', borderRadius: '8px', padding: '12px', marginBottom: '12px' }}>
-          <div style={{ fontSize: '11.5px', fontWeight: '700', color: '#0e372d', marginBottom: '6px' }}>
-            Try queries like:
-          </div>
-          <ul style={{ margin: 0, paddingLeft: '18px', fontSize: '12px', color: '#4b5563', lineHeight: '1.7' }}>
-            <li><em>"What is our daily dock receiving summary across facilities?"</em></li>
-            <li><em>"Why is Partner 301 on credit hold and what is their exposure?"</em></li>
-            <li><em>"What are our official return grading and packaging inspection rules?"</em></li>
-            <li><em>"Calculate FIFO inventory valuation and price inversion anomalies."</em></li>
-          </ul>
-        </div>
-
-        <div style={{ fontSize: '12px', color: '#6b7280', display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <span style={{ fontSize: '14px' }}>💡</span>
-          <span><strong>Quick Tip:</strong> Click any of the 4 prompt starter cards on the canvas to trigger instant queries.</span>
-        </div>
+        <ul style={{ margin: '0 0 8px 0', paddingLeft: '16px', fontSize: '12px', color: '#4b5563', lineHeight: '1.6' }}>
+          <li>Click any session to restore its messages, citations, and execution telemetry.</li>
+          <li>Click <strong>✎</strong> to rename a thread or <strong>✕</strong> to archive/delete it.</li>
+        </ul>
       </div>
     )
   },
   {
-    step: 3,
-    badge: 'PROMPT CONTROL & CANCELLATION',
-    badgeColor: '#b45309',
-    badgeBg: '#fef3c7',
-    title: 'Edit Prompts & Stop Execution Mid-Way',
-    subtitle: 'Full control over active reasoning and conversational flow',
-    icon: '✎',
-    content: (
-      <div>
-        <p style={{ margin: '0 0 12px 0', fontSize: '13.5px', lineHeight: '1.6', color: '#374151' }}>
-          Jarvis provides granular operational controls to refine, re-execute, or cancel generation at any moment:
-        </p>
-
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-          <div style={{ display: 'flex', gap: '10px', background: '#faf9f6', padding: '10px', borderRadius: '8px', border: '1px solid #ebe8e1' }}>
-            <span style={{ fontSize: '18px' }}>✎</span>
-            <div>
-              <div style={{ fontSize: '12.5px', fontWeight: '700', color: '#111827' }}>In-Place Prompt Rewriting</div>
-              <div style={{ fontSize: '12px', color: '#4b5563', marginTop: '2px' }}>
-                Click the <strong>Edit</strong> button on any message to refine your inquiry. Jarvis cleanly rewinds chat context and re-executes.
-              </div>
-            </div>
-          </div>
-
-          <div style={{ display: 'flex', gap: '10px', background: '#faf9f6', padding: '10px', borderRadius: '8px', border: '1px solid #ebe8e1' }}>
-            <span style={{ fontSize: '18px' }}>⏹</span>
-            <div>
-              <div style={{ fontSize: '12.5px', fontWeight: '700', color: '#dc2626' }}>Instant Mid-Way Stop</div>
-              <div style={{ fontSize: '12px', color: '#4b5563', marginTop: '2px' }}>
-                Click the red <strong>[ ⏹ Stop ]</strong> button in the bottom bar or inside the workflow header to abort SSE streaming instantly.
-              </div>
-            </div>
-          </div>
-
-          <div style={{ display: 'flex', gap: '10px', background: '#faf9f6', padding: '10px', borderRadius: '8px', border: '1px solid #ebe8e1' }}>
-            <span style={{ fontSize: '18px' }}>⭘</span>
-            <div>
-              <div style={{ fontSize: '12.5px', fontWeight: '700', color: '#0e372d' }}>Deep Reasoning "Think" Mode</div>
-              <div style={{ fontSize: '12px', color: '#4b5563', marginTop: '2px' }}>
-                Toggle <strong>Think</strong> beside the input bar for deep chain-of-thought analysis on complex supply chain reconciliations.
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  },
-  {
-    step: 4,
-    badge: 'DATA TOPOLOGY & FLOW',
-    badgeColor: '#059669',
-    badgeBg: '#d1fae5',
-    title: 'Live Moving Database & Gateway Flow',
-    subtitle: 'Full observability into where every number and citation originates',
-    icon: '☊',
-    content: (
-      <div>
-        <p style={{ margin: '0 0 12px 0', fontSize: '13.5px', lineHeight: '1.6', color: '#374151' }}>
-          Whenever Jarvis answers, the <strong>AI Workflow &amp; Data Topology</strong> card shows live telemetry side-by-side:
-        </p>
-
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '12px' }}>
-          <div style={{ background: '#f0fdf4', border: '1.5px solid #10b981', borderRadius: '8px', padding: '10px' }}>
-            <div style={{ fontSize: '11px', fontWeight: '700', color: '#065f46', marginBottom: '2px' }}>
-              ≡ Pipeline Stepper
-            </div>
-            <div style={{ fontSize: '10px', color: '#047857', lineHeight: '1.4' }}>
-              7 stages with millisecond timers showing intent detection, SQL execution, and citation checks.
-            </div>
-          </div>
-
-          <div style={{ background: '#f0fdf4', border: '1.5px solid #10b981', borderRadius: '8px', padding: '10px' }}>
-            <div style={{ fontSize: '11px', fontWeight: '700', color: '#065f46', marginBottom: '2px' }}>
-              ☊ Topology Diagram
-            </div>
-            <div style={{ fontSize: '10px', color: '#047857', lineHeight: '1.4' }}>
-              Animated query packets travel along connector tracks into PostgreSQL, pgvector, or Redis.
-            </div>
-          </div>
-        </div>
-
-        <div style={{ background: '#faf9f6', border: '1px solid #ebe8e1', borderRadius: '6px', padding: '8px 10px', fontSize: '11.5px', color: '#374151' }}>
-          ✅ <strong>Success-Green Boxes:</strong> Every participating node and database lights up green with a verified checkmark upon completion!
-        </div>
-      </div>
-    )
-  },
-  {
-    step: 5,
-    badge: 'OPERATIONAL MODULES',
+    target: '[data-tour="sidebar-modules"]',
+    title: 'Enterprise Intelligence Modules',
+    badge: 'SYSTEM NAVIGATION',
     badgeColor: '#7c3aed',
     badgeBg: '#ede9fe',
-    title: 'Explore Specialized Platform Subviews',
-    subtitle: 'Access alerts, metrics, knowledge base & optimizer controls',
-    icon: '🧭',
-    content: (
+    icon: '🏢',
+    preferredPlacement: 'right',
+    requiresSidebar: true,
+    description: (
       <div>
-        <p style={{ margin: '0 0 12px 0', fontSize: '13.5px', lineHeight: '1.6', color: '#374151' }}>
-          In addition to the conversational AI, you have full access to dedicated enterprise intelligence modules:
+        <p style={{ margin: '0 0 8px 0', fontSize: '13px', lineHeight: '1.5', color: '#374151' }}>
+          Switch between the conversational chat and specialized supply chain engines:
         </p>
-
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
-          <div style={{ background: '#ffffff', border: '1px solid #e5e5e0', borderRadius: '6px', padding: '8px 10px' }}>
-            <div style={{ fontSize: '11.5px', fontWeight: '700', color: '#dc2626' }}>🚨 Operational Alerts</div>
-            <div style={{ fontSize: '9.5px', color: '#6b7280', marginTop: '1px' }}>Partner credit breach monitors &amp; human-gated holds</div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px', fontSize: '11px' }}>
+          <div style={{ background: '#f8f7f4', padding: '5px 7px', borderRadius: '5px' }}>
+            <strong>🚨 Alert Center:</strong> Credit breach monitors
           </div>
-          <div style={{ background: '#ffffff', border: '1px solid #e5e5e0', borderRadius: '6px', padding: '8px 10px' }}>
-            <div style={{ fontSize: '11.5px', fontWeight: '700', color: '#2563eb' }}>📚 Knowledge Base</div>
-            <div style={{ fontSize: '9.5px', color: '#6b7280', marginTop: '1px' }}>109 indexed documents &amp; 746 verified SOP chunks</div>
+          <div style={{ background: '#f8f7f4', padding: '5px 7px', borderRadius: '5px' }}>
+            <strong>📊 SQL Metrics:</strong> 15 deterministic queries
           </div>
-          <div style={{ background: '#ffffff', border: '1px solid #e5e5e0', borderRadius: '6px', padding: '8px 10px' }}>
-            <div style={{ fontSize: '11.5px', fontWeight: '700', color: '#059669' }}>📊 Deterministic SQL</div>
-            <div style={{ fontSize: '9.5px', color: '#6b7280', marginTop: '1px' }}>15 pre-compiled certified financial queries</div>
+          <div style={{ background: '#f8f7f4', padding: '5px 7px', borderRadius: '5px' }}>
+            <strong>📚 Library:</strong> 746 verified SOP chunks
           </div>
-          <div style={{ background: '#ffffff', border: '1px solid #e5e5e0', borderRadius: '6px', padding: '8px 10px' }}>
-            <div style={{ fontSize: '11.5px', fontWeight: '700', color: '#7c3aed' }}>⚡ Control Plane</div>
-            <div style={{ fontSize: '9.5px', color: '#6b7280', marginTop: '1px' }}>MCP tokens, 50-scenario CI test center &amp; budgets</div>
+          <div style={{ background: '#f8f7f4', padding: '5px 7px', borderRadius: '5px' }}>
+            <strong>⚡ MCP Admin:</strong> Tool tokens &amp; budgets
           </div>
         </div>
-
-        <p style={{ margin: '14px 0 0 0', fontSize: '12px', color: '#4b5563', lineHeight: '1.5' }}>
-          Switch views anytime using the <strong>left sidebar navigation</strong> or the <strong>Operations Dashboard ↗</strong> button on the top bar.
+      </div>
+    )
+  },
+  {
+    target: '[data-tour="model-selector"]',
+    title: 'AI Model Selector',
+    badge: 'DYNAMIC ROUTING',
+    badgeColor: '#059669',
+    badgeBg: '#d1fae5',
+    icon: '🤖',
+    preferredPlacement: 'bottom',
+    description: (
+      <div>
+        <p style={{ margin: '0 0 8px 0', fontSize: '13px', lineHeight: '1.5', color: '#374151' }}>
+          Choose the Gemini reasoning tier that fits your objective:
         </p>
+        <ul style={{ margin: 0, paddingLeft: '16px', fontSize: '12px', color: '#4b5563', lineHeight: '1.6' }}>
+          <li><strong>gemini-2.5-pro:</strong> Deep multi-step reasoning, root cause analysis, and strict citation grounding.</li>
+          <li><strong>gemini-2.5-flash:</strong> Fast conversational responses and rapid operational lookups.</li>
+        </ul>
+      </div>
+    )
+  },
+  {
+    target: '[data-tour="ops-dashboard-btn"]',
+    title: 'Operations Dashboard Button',
+    badge: 'EXECUTIVE OVERVIEW',
+    badgeColor: '#18181b',
+    badgeBg: '#f4f4f5',
+    icon: '↗',
+    preferredPlacement: 'bottom',
+    description: (
+      <div>
+        <p style={{ margin: '0 0 8px 0', fontSize: '13px', lineHeight: '1.5', color: '#374151' }}>
+          Toggles the executive <strong>Founder Ground Truth</strong> overview.
+        </p>
+        <p style={{ margin: 0, fontSize: '12px', color: '#4b5563', lineHeight: '1.5' }}>
+          Gives enterprise leadership a unified panoramic view of dock-to-stock throughput, live warehouse intake charts (EWR1/ONT1), and QuickBooks AR balance aging.
+        </p>
+      </div>
+    )
+  },
+  {
+    target: '[data-tour="tour-btn"]',
+    title: 'Tutorial Tour Restart Button',
+    badge: 'ON-DEMAND REFRESHER',
+    badgeColor: '#0e372d',
+    badgeBg: '#e8f5ec',
+    icon: '🎓',
+    preferredPlacement: 'bottom',
+    description: (
+      <div>
+        <p style={{ margin: '0 0 8px 0', fontSize: '13px', lineHeight: '1.5', color: '#374151' }}>
+          You can click this <strong>🎓 Tutorial Tour</strong> button at any time in the future to restart this interactive spotlight walkthrough and review any button.
+        </p>
+      </div>
+    )
+  },
+  {
+    target: '[data-tour="starter-prompts"]',
+    title: 'Starter Query Cards',
+    badge: 'ONE-CLICK DISPATCH',
+    badgeColor: '#2563eb',
+    badgeBg: '#eff6ff',
+    icon: '⚡',
+    preferredPlacement: 'top',
+    description: (
+      <div>
+        <p style={{ margin: '0 0 8px 0', fontSize: '13px', lineHeight: '1.5', color: '#374151' }}>
+          Pre-compiled operational queries designed to immediately test the platform's multi-system intelligence:
+        </p>
+        <div style={{ fontSize: '11.5px', color: '#4b5563', background: '#fdfbf7', padding: '6px 8px', borderRadius: '6px', border: '1px solid #f2ede4' }}>
+          Click any card to trigger an automated Dual-Synthesis that queries PostgreSQL 17 and pgvector RAG simultaneously.
+        </div>
+      </div>
+    )
+  },
+  {
+    target: '[data-tour="think-toggle"]',
+    title: 'Deep Reasoning "Think" Toggle',
+    badge: 'CHAIN-OF-THOUGHT',
+    badgeColor: '#0e372d',
+    badgeBg: '#e8f5ec',
+    icon: '⭘',
+    preferredPlacement: 'top',
+    description: (
+      <div>
+        <p style={{ margin: '0 0 8px 0', fontSize: '13px', lineHeight: '1.5', color: '#374151' }}>
+          Click to activate or deactivate Gemini's <strong>Deep Think</strong> mode.
+        </p>
+        <p style={{ margin: 0, fontSize: '12px', color: '#4b5563', lineHeight: '1.5' }}>
+          When active, Jarvis reveals its internal reasoning graph and performs cross-departmental reconciliation before outputting the final business synthesis.
+        </p>
+      </div>
+    )
+  },
+  {
+    target: '[data-tour="send-stop-btn"]',
+    title: 'Send & Stop Execution Button',
+    badge: 'EXECUTION CONTROLLER',
+    badgeColor: '#dc2626',
+    badgeBg: '#fee2e2',
+    icon: '⏹',
+    preferredPlacement: 'top',
+    description: (
+      <div>
+        <p style={{ margin: '0 0 8px 0', fontSize: '13px', lineHeight: '1.5', color: '#374151' }}>
+          Dual-purpose execution controller:
+        </p>
+        <ul style={{ margin: 0, paddingLeft: '16px', fontSize: '12px', color: '#4b5563', lineHeight: '1.6' }}>
+          <li><strong>When idle (Dark Green ↑):</strong> Submits your query (or press Enter).</li>
+          <li><strong>When running (Red ⏹):</strong> Immediately aborts active AI generation and cancels the SSE stream mid-way!</li>
+        </ul>
       </div>
     )
   }
 ];
 
-export default function TutorialGuide({ isOpen, onClose }) {
+export default function TutorialGuide({ isOpen, onClose, onEnsureSidebarOpen }) {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const [targetRect, setTargetRect] = useState(null);
+  const resizeObserverRef = useRef(null);
 
-  // Keyboard navigation: Left/Right arrows and Escape to exit
+  const currentStep = TOUR_STEPS[currentStepIndex];
+  const isFirst = currentStepIndex === 0;
+  const isLast = currentStepIndex === TOUR_STEPS.length - 1;
+
+  // Measure and position spotlight around target element
+  const updateTargetPosition = () => {
+    if (!isOpen || !currentStep) return;
+
+    if (currentStep.requiresSidebar && onEnsureSidebarOpen) {
+      onEnsureSidebarOpen();
+    }
+
+    setTimeout(() => {
+      const el = document.querySelector(currentStep.target);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+        const rect = el.getBoundingClientRect();
+        setTargetRect({
+          top: rect.top,
+          left: rect.left,
+          width: rect.width,
+          height: rect.height,
+          bottom: rect.bottom,
+          right: rect.right
+        });
+      } else {
+        // If element not currently visible on DOM, center tooltip
+        setTargetRect(null);
+      }
+    }, 60);
+  };
+
+  useEffect(() => {
+    if (!isOpen) {
+      setTargetRect(null);
+      return;
+    }
+    updateTargetPosition();
+
+    const handleResize = () => updateTargetPosition();
+    window.addEventListener('resize', handleResize);
+    window.addEventListener('scroll', handleResize, true);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('scroll', handleResize, true);
+    };
+  }, [isOpen, currentStepIndex]);
+
+  // Keyboard navigation
   useEffect(() => {
     if (!isOpen) return;
     const handleKeyDown = (e) => {
       if (e.key === 'ArrowRight') {
-        setCurrentStepIndex((prev) => (prev < TUTORIAL_STEPS.length - 1 ? prev + 1 : prev));
+        handleNext();
       } else if (e.key === 'ArrowLeft') {
-        setCurrentStepIndex((prev) => (prev > 0 ? prev - 1 : prev));
+        handlePrev();
       } else if (e.key === 'Escape') {
         handleSkip();
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen]);
+  }, [isOpen, currentStepIndex]);
 
   if (!isOpen) return null;
-
-  const currentStep = TUTORIAL_STEPS[currentStepIndex];
-  const isFirst = currentStepIndex === 0;
-  const isLast = currentStepIndex === TUTORIAL_STEPS.length - 1;
 
   const handleNext = () => {
     if (isLast) {
@@ -265,155 +300,242 @@ export default function TutorialGuide({ isOpen, onClose }) {
     onClose();
   };
 
+  // Compute tooltip position relative to spotlight target
+  const getTooltipPosition = () => {
+    if (!targetRect) {
+      // Centered fallback
+      return {
+        position: 'fixed',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        arrow: null
+      };
+    }
+
+    const margin = 14;
+    const tooltipWidth = 360;
+    const tooltipHeight = 260;
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+
+    let placement = currentStep.preferredPlacement || 'bottom';
+
+    // Auto-adjust if offscreen
+    if (placement === 'right' && targetRect.right + tooltipWidth + margin > viewportWidth) {
+      placement = targetRect.left - tooltipWidth - margin > 0 ? 'left' : 'bottom';
+    }
+    if (placement === 'bottom' && targetRect.bottom + tooltipHeight + margin > viewportHeight) {
+      placement = 'top';
+    }
+    if (placement === 'top' && targetRect.top - tooltipHeight - margin < 0) {
+      placement = 'bottom';
+    }
+
+    if (placement === 'right') {
+      return {
+        position: 'fixed',
+        top: Math.max(16, Math.min(viewportHeight - tooltipHeight - 16, targetRect.top + targetRect.height / 2 - 80)),
+        left: targetRect.right + margin,
+        arrow: 'left'
+      };
+    }
+    if (placement === 'left') {
+      return {
+        position: 'fixed',
+        top: Math.max(16, Math.min(viewportHeight - tooltipHeight - 16, targetRect.top + targetRect.height / 2 - 80)),
+        left: Math.max(16, targetRect.left - tooltipWidth - margin),
+        arrow: 'right'
+      };
+    }
+    if (placement === 'top') {
+      return {
+        position: 'fixed',
+        top: Math.max(16, targetRect.top - tooltipHeight - margin),
+        left: Math.max(16, Math.min(viewportWidth - tooltipWidth - 16, targetRect.left + targetRect.width / 2 - tooltipWidth / 2)),
+        arrow: 'bottom'
+      };
+    }
+    // Default bottom
+    return {
+      position: 'fixed',
+      top: Math.min(viewportHeight - tooltipHeight - 16, targetRect.bottom + margin),
+      left: Math.max(16, Math.min(viewportWidth - tooltipWidth - 16, targetRect.left + targetRect.width / 2 - tooltipWidth / 2)),
+      arrow: 'top'
+    };
+  };
+
+  const tooltipPos = getTooltipPosition();
+
   return (
     <div
       style={{
         position: 'fixed',
         inset: 0,
-        background: 'rgba(17, 24, 39, 0.65)',
-        backdropFilter: 'blur(4px)',
-        zIndex: 10000,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '16px',
-        animation: 'fadeIn 0.2s ease-out'
+        zIndex: 99999,
+        pointerEvents: 'auto'
       }}
-      onClick={handleSkip}
     >
+      {/* Dark Overlay (clicks outside skip/close) */}
       <div
         style={{
-          background: '#ffffff',
-          borderRadius: '16px',
+          position: 'fixed',
+          inset: 0,
+          background: targetRect ? 'transparent' : 'rgba(15, 23, 42, 0.65)',
+          backdropFilter: targetRect ? 'none' : 'blur(3px)',
+          transition: 'all 0.3s ease'
+        }}
+        onClick={handleSkip}
+      />
+
+      {/* Spotlight Cutout around the specific button */}
+      {targetRect && (
+        <div
+          style={{
+            position: 'fixed',
+            top: targetRect.top - 6,
+            left: targetRect.left - 6,
+            width: targetRect.width + 12,
+            height: targetRect.height + 12,
+            borderRadius: '9px',
+            border: '3px solid #10b981',
+            boxShadow: '0 0 0 9999px rgba(15, 23, 42, 0.72), 0 0 20px rgba(16, 185, 129, 0.65)',
+            pointerEvents: 'none',
+            zIndex: 100000,
+            transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)'
+          }}
+        >
+          {/* Animated Target Beacon Ring */}
+          <div
+            style={{
+              position: 'absolute',
+              inset: '-8px',
+              border: '2px solid #10b981',
+              borderRadius: '13px',
+              animation: 'tourBeacon 1.6s infinite ease-out',
+              pointerEvents: 'none'
+            }}
+          />
+        </div>
+      )}
+
+      {/* Floating Explanation Tooltip Card */}
+      <div
+        style={{
+          ...tooltipPos,
           width: '100%',
-          maxWidth: '560px',
-          boxShadow: '0 20px 40px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.1)',
-          border: '1px solid #e5e5e0',
-          overflow: 'hidden',
+          maxWidth: '380px',
+          background: '#ffffff',
+          borderRadius: '14px',
+          boxShadow: '0 16px 36px rgba(0, 0, 0, 0.28), 0 2px 8px rgba(0, 0, 0, 0.1)',
+          border: '1.5px solid #10b981',
+          zIndex: 100001,
           display: 'flex',
           flexDirection: 'column',
-          maxHeight: '90vh'
+          overflow: 'hidden',
+          animation: 'tourCardFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+          transition: 'top 0.3s ease, left 0.3s ease'
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Top Header */}
+        {/* Tooltip Header */}
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            padding: '14px 20px',
-            borderBottom: '1px solid #f0eee8',
-            background: '#faf9f6'
+            padding: '12px 16px',
+            background: '#faf9f6',
+            borderBottom: '1px solid #f0eee8'
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <span
               style={{
-                fontSize: '10.5px',
+                fontSize: '10px',
                 fontWeight: '700',
-                letterSpacing: '0.05em',
+                letterSpacing: '0.04em',
                 background: currentStep.badgeBg,
                 color: currentStep.badgeColor,
-                padding: '3px 8px',
-                borderRadius: '6px'
+                padding: '2px 7px',
+                borderRadius: '5px'
               }}
             >
               {currentStep.badge}
             </span>
-            <span style={{ fontSize: '11.5px', color: '#6b7280', fontWeight: '500' }}>
-              Step {currentStep.step} of {TUTORIAL_STEPS.length}
+            <span style={{ fontSize: '11px', color: '#6b7280', fontWeight: '500' }}>
+              Step {currentStepIndex + 1} of {TOUR_STEPS.length}
             </span>
           </div>
 
-          {/* Skip Button */}
           <button
             type="button"
             onClick={handleSkip}
+            title="Skip guided tour"
             style={{
               background: 'transparent',
               border: 'none',
               color: '#6b7280',
-              fontSize: '12px',
+              fontSize: '11.5px',
               fontWeight: '600',
               cursor: 'pointer',
-              padding: '4px 8px',
-              borderRadius: '6px',
-              transition: 'all 0.15s ease'
+              padding: '2px 6px',
+              borderRadius: '4px'
             }}
             onMouseEnter={(e) => (e.currentTarget.style.color = '#111827')}
             onMouseLeave={(e) => (e.currentTarget.style.color = '#6b7280')}
           >
-            Skip Tutorial ✕
+            Skip ✕
           </button>
         </div>
 
-        {/* Step Body */}
-        <div style={{ padding: '20px 24px', overflowY: 'auto', flex: 1 }}>
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', marginBottom: '12px' }}>
-            <div
-              style={{
-                width: '40px',
-                height: '40px',
-                borderRadius: '10px',
-                background: '#f4f3ef',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '20px',
-                flexShrink: 0
-              }}
-            >
-              {currentStep.icon}
-            </div>
-            <div>
-              <h3 style={{ margin: '0 0 3px 0', fontSize: '17px', fontWeight: '700', color: '#111827' }}>
-                {currentStep.title}
-              </h3>
-              <p style={{ margin: 0, fontSize: '12.5px', color: '#6b7280' }}>
-                {currentStep.subtitle}
-              </p>
-            </div>
+        {/* Tooltip Body */}
+        <div style={{ padding: '16px 18px', flex: 1 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+            <span style={{ fontSize: '18px' }}>{currentStep.icon}</span>
+            <h4 style={{ margin: 0, fontSize: '15px', fontWeight: '700', color: '#111827' }}>
+              {currentStep.title}
+            </h4>
           </div>
 
-          {currentStep.content}
+          {currentStep.description}
         </div>
 
-        {/* Footer Navigation */}
+        {/* Tooltip Footer */}
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            padding: '14px 20px',
-            borderTop: '1px solid #f0eee8',
-            background: '#faf9f6'
+            padding: '10px 16px',
+            background: '#faf9f6',
+            borderTop: '1px solid #f0eee8'
           }}
         >
           {/* Step Dots */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            {TUTORIAL_STEPS.map((_, idx) => (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+            {TOUR_STEPS.map((_, idx) => (
               <button
                 key={idx}
                 type="button"
                 onClick={() => setCurrentStepIndex(idx)}
                 style={{
-                  width: idx === currentStepIndex ? '20px' : '7px',
-                  height: '7px',
-                  borderRadius: '4px',
-                  background: idx === currentStepIndex ? '#0e372d' : '#d1d5db',
+                  width: idx === currentStepIndex ? '16px' : '6px',
+                  height: '6px',
+                  borderRadius: '3px',
+                  background: idx === currentStepIndex ? '#10b981' : '#d1d5db',
                   border: 'none',
                   padding: 0,
                   cursor: 'pointer',
                   transition: 'all 0.2s ease'
                 }}
-                title={`Go to step ${idx + 1}`}
+                title={`Jump to step ${idx + 1}`}
               />
             ))}
           </div>
 
-          {/* Action Buttons */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {/* Navigation Controls */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             {!isFirst && (
               <button
                 type="button"
@@ -422,12 +544,11 @@ export default function TutorialGuide({ isOpen, onClose }) {
                   background: '#ffffff',
                   border: '1px solid #d1d5db',
                   color: '#374151',
-                  borderRadius: '8px',
-                  padding: '7px 14px',
-                  fontSize: '12.5px',
+                  borderRadius: '6px',
+                  padding: '5px 10px',
+                  fontSize: '11.5px',
                   fontWeight: '600',
-                  cursor: 'pointer',
-                  transition: 'all 0.15s ease'
+                  cursor: 'pointer'
                 }}
               >
                 ← Back
@@ -441,26 +562,37 @@ export default function TutorialGuide({ isOpen, onClose }) {
                 background: '#0e372d',
                 border: 'none',
                 color: '#ffffff',
-                borderRadius: '8px',
-                padding: '7px 18px',
-                fontSize: '12.5px',
+                borderRadius: '6px',
+                padding: '5px 14px',
+                fontSize: '11.5px',
                 fontWeight: '600',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '6px',
-                boxShadow: '0 2px 6px rgba(14, 55, 45, 0.2)',
-                transition: 'all 0.15s ease'
+                gap: '5px',
+                boxShadow: '0 2px 5px rgba(14, 55, 45, 0.2)'
               }}
               onMouseEnter={(e) => (e.currentTarget.style.background = '#0a2720')}
               onMouseLeave={(e) => (e.currentTarget.style.background = '#0e372d')}
             >
-              <span>{isLast ? 'Get Started' : 'Next'}</span>
+              <span>{isLast ? 'Got it' : 'Next'}</span>
               <span>{isLast ? '🚀' : '→'}</span>
             </button>
           </div>
         </div>
       </div>
+
+      <style>{`
+        @keyframes tourBeacon {
+          0% { transform: scale(0.96); opacity: 0.9; }
+          50% { transform: scale(1.08); opacity: 0.3; }
+          100% { transform: scale(0.96); opacity: 0.9; }
+        }
+        @keyframes tourCardFadeIn {
+          from { opacity: 0; transform: translateY(6px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
     </div>
   );
 }

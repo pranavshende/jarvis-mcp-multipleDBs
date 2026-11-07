@@ -774,6 +774,7 @@ export default function JarvisChatbot() {
         {/* New Chat Button */}
         <div style={{ padding: '6px 12px 10px' }}>
           <button
+            data-tour="new-chat-btn"
             onClick={handleNewChat}
             style={{
               width: '100%',
@@ -801,7 +802,7 @@ export default function JarvisChatbot() {
         </div>
 
         {/* Navigation Links */}
-        <div style={{ padding: '0 8px', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+        <div data-tour="sidebar-modules" style={{ padding: '0 8px', display: 'flex', flexDirection: 'column', gap: '2px' }}>
           {[
             { id: 'chat', label: 'Conversational Intelligence', icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> },
             { id: 'founder', label: 'Operations Dashboard', icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> },
@@ -1001,10 +1002,11 @@ export default function JarvisChatbot() {
           )}
 
           {/* Recents */}
-          <div style={{ fontSize: '11px', fontWeight: '700', color: '#787a74', padding: '4px 10px 6px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-            Recents
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+          <div data-tour="recent-chats">
+            <div style={{ fontSize: '11px', fontWeight: '700', color: '#787a74', padding: '4px 10px 6px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              Recents
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
             {filteredSessions.length === 0 ? (
               <div style={{ padding: '6px 10px', fontSize: '11.5px', color: '#9ca3af', fontStyle: 'italic' }}>
                 No active conversations
@@ -1095,6 +1097,7 @@ export default function JarvisChatbot() {
                 );
               })
             )}
+            </div>
           </div>
         </div>
 
@@ -1260,7 +1263,7 @@ export default function JarvisChatbot() {
             </span>
 
             {/* Model Selector Dropdown Pill */}
-            <div style={{ position: 'relative' }}>
+            <div data-tour="model-selector" style={{ position: 'relative' }}>
               <div
                 onClick={() => setShowModelMenu(!showModelMenu)}
                 style={{
@@ -1386,6 +1389,7 @@ export default function JarvisChatbot() {
 
             {/* Tutorial & Onboarding Guide Restart Button */}
             <button
+              data-tour="tour-btn"
               type="button"
               onClick={() => setShowTutorial(true)}
               title="Restart guided tutorial walkthrough"
@@ -1419,6 +1423,7 @@ export default function JarvisChatbot() {
             {/* Operations Dashboard Button */}
             {!isMobile ? (
               <button
+                data-tour="ops-dashboard-btn"
                 onClick={() => setActiveView(activeView === 'founder' ? 'chat' : 'founder')}
                 style={{
                   background: '#18181b',
@@ -1436,6 +1441,7 @@ export default function JarvisChatbot() {
               </button>
             ) : (
               <button
+                data-tour="ops-dashboard-btn"
                 onClick={() => setActiveView(activeView === 'founder' ? 'chat' : 'founder')}
                 title="Operations Dashboard"
                 style={{
@@ -1545,6 +1551,7 @@ export default function JarvisChatbot() {
 
                     {/* Prompt suggestion chips */}
                     <div
+                      data-tour="starter-prompts"
                       style={{
                         display: 'grid',
                         gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)',
@@ -1929,6 +1936,7 @@ export default function JarvisChatbot() {
 
               {/* Chat Input Field */}
               <input
+                data-tour="input-textarea"
                 ref={inputRef}
                 type="text"
                 value={inputQuery}
@@ -1956,6 +1964,7 @@ export default function JarvisChatbot() {
               <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '5px' : '8px' }}>
                 {/* Think reasoning toggle */}
                 <button
+                  data-tour="think-toggle"
                   type="button"
                   onClick={() => setIsDeepThink(!isDeepThink)}
                   style={{
@@ -1978,60 +1987,62 @@ export default function JarvisChatbot() {
                 </button>
 
                 {/* Submit or Stop Button */}
-                {isLoading ? (
-                  <button
-                    type="button"
-                    onClick={handleStopExecution}
-                    title="Stop AI execution mid-way"
-                    style={{
-                      width: isMobile ? '32px' : '36px',
-                      height: isMobile ? '32px' : '36px',
-                      borderRadius: '50%',
-                      background: '#dc2626',
-                      border: 'none',
-                      color: '#ffffff',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      cursor: 'pointer',
-                      boxShadow: '0 2px 6px rgba(220, 38, 38, 0.35)',
-                      flexShrink: 0,
-                      transition: 'transform 0.15s ease'
-                    }}
-                    onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.05)')}
-                    onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1.0)')}
-                  >
-                    <svg width={isMobile ? '12' : '14'} height={isMobile ? '12' : '14'} viewBox="0 0 24 24" fill="currentColor">
-                      <rect x="6" y="6" width="12" height="12" rx="2" />
-                    </svg>
-                  </button>
-                ) : (
-                  <button
-                    type="submit"
-                    disabled={!inputQuery.trim()}
-                    title="Send message (Enter)"
-                    style={{
-                      width: isMobile ? '32px' : '36px',
-                      height: isMobile ? '32px' : '36px',
-                      borderRadius: '50%',
-                      background: '#0e372d',
-                      border: 'none',
-                      color: '#ffffff',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      cursor: inputQuery.trim() ? 'pointer' : 'default',
-                      opacity: inputQuery.trim() ? 1 : 0.6,
-                      transition: 'opacity 0.15s ease',
-                      flexShrink: 0
-                    }}
-                  >
-                    <svg width={isMobile ? '13' : '15'} height={isMobile ? '13' : '15'} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                      <line x1="12" y1="19" x2="12" y2="5"/>
-                      <polyline points="5 12 12 5 19 12"/>
-                    </svg>
-                  </button>
-                )}
+                <div data-tour="send-stop-btn" style={{ display: 'inline-flex', alignItems: 'center' }}>
+                  {isLoading ? (
+                    <button
+                      type="button"
+                      onClick={handleStopExecution}
+                      title="Stop AI execution mid-way"
+                      style={{
+                        width: isMobile ? '32px' : '36px',
+                        height: isMobile ? '32px' : '36px',
+                        borderRadius: '50%',
+                        background: '#dc2626',
+                        border: 'none',
+                        color: '#ffffff',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        boxShadow: '0 2px 6px rgba(220, 38, 38, 0.35)',
+                        flexShrink: 0,
+                        transition: 'transform 0.15s ease'
+                      }}
+                      onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.05)')}
+                      onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1.0)')}
+                    >
+                      <svg width={isMobile ? '12' : '14'} height={isMobile ? '12' : '14'} viewBox="0 0 24 24" fill="currentColor">
+                        <rect x="6" y="6" width="12" height="12" rx="2" />
+                      </svg>
+                    </button>
+                  ) : (
+                    <button
+                      type="submit"
+                      disabled={!inputQuery.trim()}
+                      title="Send message (Enter)"
+                      style={{
+                        width: isMobile ? '32px' : '36px',
+                        height: isMobile ? '32px' : '36px',
+                        borderRadius: '50%',
+                        background: '#0e372d',
+                        border: 'none',
+                        color: '#ffffff',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: inputQuery.trim() ? 'pointer' : 'default',
+                        opacity: inputQuery.trim() ? 1 : 0.6,
+                        transition: 'opacity 0.15s ease',
+                        flexShrink: 0
+                      }}
+                    >
+                      <svg width={isMobile ? '13' : '15'} height={isMobile ? '13' : '15'} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                        <line x1="12" y1="19" x2="12" y2="5"/>
+                        <polyline points="5 12 12 5 19 12"/>
+                      </svg>
+                    </button>
+                  )}
+                </div>
               </div>
             </form>
           </div>
@@ -2054,6 +2065,7 @@ export default function JarvisChatbot() {
         <TutorialGuide
           isOpen={showTutorial}
           onClose={() => setShowTutorial(false)}
+          onEnsureSidebarOpen={() => setSidebarOpen(true)}
         />
 
         {/* Mobile Workflow Modal / Bottom Sheet */}
