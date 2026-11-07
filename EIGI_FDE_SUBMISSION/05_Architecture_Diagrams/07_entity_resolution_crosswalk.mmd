@@ -1,0 +1,36 @@
+graph LR
+    subgraph Silo1["seller_db (Django/Postgres)"]
+        S_Mem["member_id: 4412\n(Marcus Vance, VIP)"]
+        S_Sub["submission_id: 8812\n(Pre-Quote: $1,280)"]
+        S_Track["tracking_number:\n1Z999AA10123456784"]
+    end
+
+    subgraph Silo2["wms_db (Rails/Postgres)"]
+        W_Pkg["package_id: pkg-9901\n(Received: EWR1)"]
+        W_Track["carrier_tracking:\n1Z999AA10123456784"]
+        W_Item["barcode_id: BC-8821\n(Sealed Box Scan)"]
+    end
+
+    subgraph Silo3["portal_db (Node/Postgres)"]
+        P_Part["partner_id: 301\n(Northgate Hobby)"]
+        P_Quote["quote_id: 9914\n(Wholesale Net-30)"]
+        P_Order["order_id: ORD-5541\n(Status: Fulfilled)"]
+    end
+
+    subgraph Crosswalk["Canonical Crosswalk Engine (jarvis_system.dim_crosswalk_entities)"]
+        Canon_M["Canonical Member:\nENT-M-004412"]
+        Canon_P["Canonical Partner:\nENT-P-000301"]
+        Canon_SKU["Canonical Product:\nENT-SKU-ET001"]
+    end
+
+    S_Track ---|Deterministic Hash Match| W_Track
+    S_Mem --> Canon_M
+    W_Pkg --> Canon_M
+
+    P_Part --> Canon_P
+    P_Quote --> Canon_P
+    P_Order --> Canon_P
+
+    S_Sub --> Canon_SKU
+    W_Item --> Canon_SKU
+    P_Order --> Canon_SKU

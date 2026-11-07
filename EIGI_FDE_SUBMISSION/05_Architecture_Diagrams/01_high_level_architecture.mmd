@@ -1,0 +1,58 @@
+flowchart TD
+    subgraph Clients["1. Client Layer (Multi-Interface Access)"]
+        UI["Internal Web Dashboard (Vite/React)"]
+        Slack["Slack Bot (Socket Mode / Bolt)"]
+        IDE["Developer IDEs (Claude Code / Cursor / Codex)"]
+        MCP["MCP Protocol Clients (stdio / HTTP)"]
+    end
+
+    subgraph Gateway["2. Fastify Intelligence Gateway (:4000)"]
+        Auth["JWT & Bearer Token Authentication"]
+        RateLimit["Token-Bucket Rate Limiter & Budget Guard"]
+        SanitizerIn["Pre-LLM Prompt Injection & Delimiter Guard"]
+        Router["Single-Orchestrator Intent Classifier"]
+        Cache["Redis L1 SHA-256 & L2 Semantic Cache"]
+    end
+
+    subgraph Execution["3. Dual Execution Planes"]
+        direction TB
+        subgraph Deterministic["Deterministic SQL Execution Plane"]
+            SQLGen["Parameterized SQL Template Engine"]
+            ReplicaPool["AWS RDS Read Replicas (statement_timeout=8000ms)"]
+            Crosswalk["Canonical Entity Crosswalk Engine"]
+        end
+
+        subgraph Semantic["Semantic RAG & Knowledge Plane"]
+            Embedder["Embedding Service (bge-large-en-v1.5)"]
+            VectorDB["PostgreSQL 16 + pgvector (HNSW Index)"]
+            RRF["Reciprocal Rank Fusion (Dense + BM25)"]
+        end
+    end
+
+    subgraph LLMTier["4. Dynamic Multi-Tier Model Router"]
+        Flash["Tier 1 Fast: Gemini 2.5 Flash / Claude 3.5 Haiku ($0.25/M)"]
+        Pro["Tier 2 Deep: Gemini 2.5 Pro / Claude 3.5 Sonnet ($3.00/M)"]
+        SanitizerOut["Output PII & Delimiter Validator"]
+    end
+
+    subgraph Background["5. Asynchronous Core & Action Gateway"]
+        BullMQ["BullMQ Job Processor on Redis 7"]
+        ETL["15-Min Replicated Data Sync"]
+        Alerts["Proactive Risk Engine (ACH, Northgate, Margin)"]
+        ActionGW["Human-in-the-Loop Restricted Action API"]
+    end
+
+    Clients -->|HTTPS / JWT| Gateway
+    Gateway --> Auth --> RateLimit --> SanitizerIn --> Cache
+    Cache -->|Cache Miss| Router
+    
+    Router -->|Operational Numbers| SQLGen --> ReplicaPool
+    ReplicaPool --> Crosswalk
+    
+    Router -->|SOPs & Policies| Embedder --> VectorDB --> RRF
+    
+    Crosswalk & RRF --> Flash & Pro
+    Flash & Pro --> SanitizerOut --> Gateway
+    
+    BullMQ --> ETL & Alerts
+    Alerts --> ActionGW

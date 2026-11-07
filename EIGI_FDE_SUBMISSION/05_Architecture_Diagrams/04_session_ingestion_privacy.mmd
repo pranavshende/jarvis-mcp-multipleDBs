@@ -1,0 +1,28 @@
+flowchart TD
+    subgraph Capture["1. Asynchronous Client Telemetry"]
+        ClaudeHook["Claude Code Subshell Hook"]
+        CursorWatcher["Cursor IDE Extension Telemetry"]
+        SlackBot["Slack Bot Session Archiver"]
+    end
+
+    subgraph IngestionBoundary["2. Ingestion Gateway (:4000)"]
+        IngestEndpoint["POST /api/telemetry/session-turn"]
+        Queue["BullMQ 'session-ingest' Queue (Redis 7)"]
+    end
+
+    subgraph Sanitizer["3. Multi-Layer Deterministic Privacy Boundary"]
+        RegexScrubber["Regex Pattern Matcher\n- US SSN & Tax EIN\n- Bank Account & Routing Numbers\n- Credit Cards (Luhn Algorithm)"]
+        GustoFilter["Gusto Payroll & Comp Filter\n- Match salary tables, W2 headers\n- Strip compensation discussions"]
+        PrivateClassifier["Founder Privacy & ABAC Classifier\n- Detect Marcus private strategic notes\n- Tag: access_level = 'FOUNDER_ONLY'"]
+    end
+
+    subgraph Storage["4. Governed Vector Memory (pgvector)"]
+        Chunker["Semantic Markdown Chunker (500 tokens / 50 overlap)"]
+        EmbedEngine["Embedding Engine (bge-large-en-v1.5)"]
+        PgvectorTable[("tbl_organizational_memory\n(HNSW Index, Partitioned by ABAC)")]
+    end
+
+    Capture -->|JSONL Stream| IngestEndpoint
+    IngestEndpoint --> Queue
+    Queue --> RegexScrubber --> GustoFilter --> PrivateClassifier
+    PrivateClassifier --> Chunker --> EmbedEngine --> PgvectorTable

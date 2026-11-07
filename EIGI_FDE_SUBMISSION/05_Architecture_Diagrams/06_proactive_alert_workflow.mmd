@@ -1,0 +1,30 @@
+sequenceDiagram
+    autonumber
+    participant Engine as BullMQ Anomaly Engine
+    participant DB as Replicated ODS (PostgreSQL 16)
+    participant Rule as Deterministic Rule Evaluator
+    participant Gate as Action Service (Human-in-the-Loop)
+    participant Slack as Founder / Finance Slack Alert
+    actor Marcus as Marcus (Founder)
+
+    loop Every 15 Minutes
+        Engine->>DB: Query fact_ar_aging & fact_payout_batches
+        DB-->>Engine: Return Latest Aggregates
+        
+        Engine->>Rule: Evaluate Threshold Rules
+        Note over Rule: Check 1: Partner AR > Limit ($284.3k vs $250k)<br/>Check 2: NACHA Payout Failures (9 batches $19.6k)<br/>Check 3: Reprint Margin Crash (-31%)
+        
+        opt Anomaly Detected
+            Rule->>Gate: Stage Restricted Action Proposal
+            Note over Gate: Action: PLACE_CREDIT_HOLD<br/>Target: Partner #301 (Northgate Hobby)<br/>Token: HMAC-SHA256 Signed
+            
+            Gate->>Slack: Dispatch Priority Alert with Action Pill
+            Note over Slack: "CRITICAL: Northgate $34.3k over limit.<br/>[1-Click: Confirm Credit Hold]"
+            
+            Marcus->>Slack: Click "Confirm Credit Hold"
+            Slack->>Gate: POST /api/actions/confirm { token, user_id }
+            
+            Gate->>DB: UPDATE portal_db.partner_accounts SET credit_hold = TRUE
+            Gate-->>Marcus: Confirmation Receipt Delivered
+        end
+    end

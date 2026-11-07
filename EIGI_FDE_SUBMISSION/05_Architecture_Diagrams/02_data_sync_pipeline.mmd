@@ -1,0 +1,32 @@
+flowchart LR
+    subgraph Sources["Operational Primary Systems (AWS us-east-1)"]
+        S_DB[("seller_db (Django/Postgres)\nMembers, Buy Lists, Payouts")]
+        W_DB[("wms_db (Rails/Postgres)\nPackages, Bins, Inspections")]
+        P_DB[("portal_db (Node/Postgres)\nPartners, Orders, Catalog")]
+        QBO["QuickBooks Online API\nMonthly P&L, AR Aging, FIFO"]
+    end
+
+    subgraph Tunnel["Encrypted Transport"]
+        WG["WireGuard Secure VPN Tunnel\n(Cross-Cloud Transit AWS -> Hetzner)"]
+    end
+
+    subgraph SyncEngine["BullMQ Asynchronous Sync Engine (:4000)"]
+        Cron["15-Minute Scheduled Cron / CDC"]
+        WorkerPool["BullMQ Replicating Workers"]
+        Transform["Canonical Entity Normalizer"]
+        CrosswalkUpdater["Entity Crosswalk Indexer"]
+    end
+
+    subgraph ODS["Replicated Operational Data Store (Hetzner EU)"]
+        Rep_S[("rep_seller_db\n(Read Replica)")]
+        Rep_W[("rep_wms_db\n(Read Replica)")]
+        Rep_P[("rep_portal_db\n(Read Replica)")]
+        Rep_Q[("rep_qbo_financials\n(Materialized Views)")]
+        CrossTab[("dim_crosswalk_entities\n(Resolved IDs)")]
+    end
+
+    S_DB & W_DB & P_DB & QBO --> WG
+    WG --> Cron --> WorkerPool --> Transform
+    Transform --> CrosswalkUpdater
+    CrosswalkUpdater --> CrossTab
+    Transform --> Rep_S & Rep_W & Rep_P & Rep_Q

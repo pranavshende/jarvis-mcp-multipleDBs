@@ -1,0 +1,42 @@
+sequenceDiagram
+    autonumber
+    actor User as Internal Staff / Founder
+    participant GW as Fastify Gateway (:4000)
+    participant Auth as RBAC / ABAC Guard
+    participant Cache as Redis L1 / L2 Semantic Cache
+    participant Router as Intent Classifier
+    participant SQL as Deterministic SQL Engine
+    participant RAG as pgvector Hybrid Retriever
+    participant LLM as Model Tier (Flash / Pro)
+    participant Out as Output PII Validator
+
+    User->>GW: POST /api/query/stream { prompt: "How many packages yesterday?" }
+    GW->>Auth: Validate JWT & User Roles (ROLE_FOUNDER)
+    Auth-->>GW: OK (Identity context attached)
+    
+    GW->>Cache: Lookup SHA-256 & Semantic Similarity (>0.96)
+    alt Cache Hit
+        Cache-->>GW: Cached JSON Response (0.07ms)
+        GW-->>User: Stream Cached Result via SSE
+    else Cache Miss
+        GW->>Router: Classify Intent & Entity Targets
+        Router-->>GW: Route = DETERMINISTIC_SQL (Target = wms_db)
+        
+        GW->>SQL: Execute Golden SQL Template (Timezone-Aware)
+        Note over SQL: Converts received_at AT TIME ZONE w.timezone<br/>Extracts exactly 103 packages (59 East, 44 West)
+        SQL-->>GW: Structured Fact Record (103 pkgs, 4,812 units)
+        
+        opt Hybrid Synthesis Needed
+            GW->>RAG: Retrieve SOP-WH-02 / Damage Policy Chunks
+            RAG-->>GW: Relevant Context Chunks
+        end
+        
+        GW->>LLM: Dispatch [Prompt + Reconciled Facts + SOP Context]
+        LLM-->>GW: Formatted Natural Language Response
+        
+        GW->>Out: Scan Output for Accidental PII / System Delimiters
+        Out-->>GW: Clean Verified Stream
+        
+        GW->>Cache: Store in L1 Redis + L2 Semantic Cache
+        GW-->>User: SSE Chunked Markdown Stream
+    end

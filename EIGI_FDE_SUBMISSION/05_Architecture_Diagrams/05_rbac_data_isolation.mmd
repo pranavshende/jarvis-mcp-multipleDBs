@@ -1,0 +1,28 @@
+graph TD
+    subgraph Identities["Authenticated Identities (JWT / Bearer Tokens)"]
+        F["Marcus (Founder)\nROLE_FOUNDER"]
+        Fin["Sofia (Finance)\nROLE_FINANCE"]
+        Ops["Leo / Priya (Ops & WH)\nROLE_OPS_WAREHOUSE"]
+        Sales["Sales Team\nROLE_SALES"]
+        Emp["General Staff / Contractors\nROLE_EMPLOYEE"]
+    end
+
+    subgraph PolicyEngine["ABAC / RBAC Policy Enforcement Engine"]
+        PolicyCheck{"Authorize Query Intent & Data Scope"}
+    end
+
+    subgraph DataSilos["Data Partitions & Isolation Boundaries"]
+        FounderNotes[("Founder Private Notes\n[TAG: FOUNDER_ONLY]\n(Encrypted / Isolated)")]
+        Financials[("Financial Ledger & QBO\n[TAG: FINANCE_RESTRICTED]\n(Full P&L, AR Aging)")]
+        WMSData[("WMS Dock & Inventory\n[TAG: INTERNAL_OPS]\n(Packages, Bins, Discrepancies)")]
+        PortalData[("Partner Portal & Catalog\n[TAG: COMMERCIAL]\n(Orders, Quotes, Price Index)")]
+        PublicSOPs[("Internal SOPs & Knowledge\n[TAG: INTERNAL_ALL]\n(General Company Memory)")]
+    end
+
+    Identities --> PolicyCheck
+
+    PolicyCheck -->|Marcus Only| FounderNotes
+    PolicyCheck -->|Marcus & Sofia| Financials
+    PolicyCheck -->|Marcus, Sofia, Ops| WMSData
+    PolicyCheck -->|Marcus, Sofia, Sales, Ops| PortalData
+    PolicyCheck -->|All Authenticated Roles| PublicSOPs
