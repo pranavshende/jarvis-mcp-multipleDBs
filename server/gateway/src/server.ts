@@ -57,7 +57,36 @@ export async function buildGatewayServer(): Promise<FastifyInstance> {
   // 2. Chat Conversation History Routes
   await fastify.register(conversationRoutes);
 
-  // 3. Public Health Endpoint
+  // 3. Public Health & Root Endpoints
+  const rootStatus = async (_req: any, reply: any) => {
+    let dbStatus = 'UNHEALTHY';
+    try {
+      const res = await pool.query('SELECT 1 as live');
+      if (res.rows.length > 0) dbStatus = 'HEALTHY';
+    } catch {}
+
+    reply.send({
+      service: 'Jarvis v1 Enterprise Intelligence Gateway',
+      status: 'HEALTHY',
+      version: '1.0.0',
+      database: dbStatus,
+      timestamp: new Date().toISOString(),
+      endpoints: {
+        health: '/api/health',
+        query: '/api/query',
+        queryStream: '/api/query/stream',
+        auth: '/api/auth',
+        conversations: '/api/conversations',
+        metrics: '/api/metrics',
+        knowledge: '/api/knowledge',
+        mcp: '/mcp/stream'
+      }
+    });
+  };
+
+  fastify.get('/', rootStatus);
+  fastify.head('/', rootStatus);
+
   fastify.get('/api/health', async (_req, reply) => {
     let dbStatus = 'UNHEALTHY';
     try {
