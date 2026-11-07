@@ -37,21 +37,70 @@ export default function JarvisChatbot() {
   const [chatSessions, setChatSessions] = useState(() => {
     try {
       const saved = localStorage.getItem('msc_jarvis_sessions');
-      if (saved) return JSON.parse(saved);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          // Filter out legacy mockup sessions
+          const cleaned = parsed.filter((s) => {
+            const title = (s.title || '').toLowerCase();
+            return (
+              !title.includes('roadmap') &&
+              !title.includes('system design assessment') &&
+              !title.includes('antigravity remotely') &&
+              s.id !== 'sess-1' &&
+              s.id !== 'sess-2' &&
+              s.id !== 'sess-3' &&
+              s.id !== 'sess-4'
+            );
+          });
+          return cleaned;
+        }
+      }
     } catch {
       // fallback
     }
-    return [
-      { id: 'sess-1', title: 'Review and Improve Roadmap', messages: [] },
-      { id: 'sess-2', title: 'System Design Assessment', messages: [] },
-      { id: 'sess-3', title: 'Control Antigravity Remotely', messages: [] },
-      { id: 'sess-4', title: 'Warehouse Operations (EWR1/ONT1)', messages: [] }
-    ];
+    return [];
   });
   const [currentSessionId, setCurrentSessionId] = useState('new');
   const [editingSessionId, setEditingSessionId] = useState(null);
   const [editingTitle, setEditingTitle] = useState('');
   const [sessionToDelete, setSessionToDelete] = useState(null);
+
+  // Dynamic Projects (persisted in localStorage)
+  const [projects, setProjects] = useState(() => {
+    try {
+      const saved = localStorage.getItem('msc_jarvis_projects');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          const cleaned = parsed
+            .map((p, idx) => (typeof p === 'string' ? { id: `proj-${idx}`, name: p } : p))
+            .filter((p) => {
+              const n = (p.name || '').toLowerCase();
+              return (
+                !n.includes('cctv') &&
+                !n.includes('sampark') &&
+                !n.includes('lumpy') &&
+                !n.includes('solar industries')
+              );
+            });
+          if (cleaned.length > 0) return cleaned;
+        }
+      }
+    } catch {
+      // fallback
+    }
+    return [
+      { id: 'proj-1', name: 'Partner Credit & AR Aging' },
+      { id: 'proj-2', name: 'Warehouse Intake SLA (EWR1/ONT1)' },
+      { id: 'proj-3', name: 'FIFO Inventory Costing' },
+      { id: 'proj-4', name: 'Inspection & Grading Governance' }
+    ];
+  });
+  const [isAddingProject, setIsAddingProject] = useState(false);
+  const [newProjectName, setNewProjectName] = useState('');
+  const [editingProjectId, setEditingProjectId] = useState(null);
+  const [editingProjectName, setEditingProjectName] = useState('');
 
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
@@ -64,6 +113,43 @@ export default function JarvisChatbot() {
       // ignore
     }
   }, [chatSessions]);
+
+  // Save projects to localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem('msc_jarvis_projects', JSON.stringify(projects));
+    } catch {
+      // ignore
+    }
+  }, [projects]);
+
+  const handleAddProject = () => {
+    const trimmed = newProjectName.trim();
+    if (!trimmed) {
+      setIsAddingProject(false);
+      return;
+    }
+    const newProj = { id: `proj-${Date.now()}`, name: trimmed };
+    setProjects((prev) => [...prev, newProj]);
+    setNewProjectName('');
+    setIsAddingProject(false);
+  };
+
+  const handleRenameProject = (id, newName) => {
+    if (!newName.trim()) {
+      setEditingProjectId(null);
+      return;
+    }
+    setProjects((prev) =>
+      prev.map((p) => (p.id === id ? { ...p, name: newName.trim() } : p))
+    );
+    setEditingProjectId(null);
+  };
+
+  const handleDeleteProject = (id, e) => {
+    if (e) e.stopPropagation();
+    setProjects((prev) => prev.filter((p) => p.id !== id));
+  };
 
   // Scroll to bottom on new messages
   useEffect(() => {
@@ -100,24 +186,7 @@ export default function JarvisChatbot() {
     if (session.messages && session.messages.length > 0) {
       setMessages(session.messages);
     } else {
-      setMessages([
-        { id: `seed-u-${session.id}`, role: 'user', content: session.title, timestamp: new Date() },
-        {
-          id: `seed-b-${session.id}`,
-          role: 'assistant',
-          content: `Here is the certified operational briefing for **${session.title}**.\n\nAll data is verified against Meridian Supply Chain knowledge chunks and deterministic warehouse metrics [Source: about-msc.md (v1.0) -> Operations].`,
-          route: 'KNOWLEDGE',
-          citations: ['Source: about-msc.md (v1.0) -> Operations'],
-          latencyMs: 142.5,
-          fromCache: true,
-          events: [
-            { stage: 'QUERY_UNDERSTANDING', status: 'completed', message: 'Resolved session context', durationMs: 25 },
-            { stage: 'ORCHESTRATOR', status: 'completed', message: 'Loaded session from cache', durationMs: 5 },
-            { stage: 'FINAL_RESPONSE', status: 'completed', message: 'Delivered cached briefing', durationMs: 142.5 }
-          ],
-          timestamp: new Date()
-        }
-      ]);
+      setMessages([]);
     }
   };
 
@@ -454,43 +523,169 @@ export default function JarvisChatbot() {
         {/* Scrollable Projects & Recents */}
         <div style={{ flex: 1, overflowY: 'auto', padding: '12px 8px' }}>
           {/* Projects */}
-          <div style={{ fontSize: '11px', fontWeight: '600', color: '#71717a', padding: '4px 10px 6px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-            Projects
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '4px 10px 6px'
+            }}
+          >
+            <span
+              style={{
+                fontSize: '11px',
+                fontWeight: '600',
+                color: '#71717a',
+                textTransform: 'uppercase',
+                letterSpacing: '0.04em'
+              }}
+            >
+              Projects
+            </span>
+            <button
+              onClick={() => setIsAddingProject(true)}
+              title="Create new project workspace"
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: '#9ca3af',
+                cursor: 'pointer',
+                padding: '2px 6px',
+                borderRadius: '4px',
+                fontSize: '14px',
+                lineHeight: 1
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = '#ffffff';
+                e.currentTarget.style.background = '#2a2a2a';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = '#9ca3af';
+                e.currentTarget.style.background = 'transparent';
+              }}
+            >
+              +
+            </button>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginBottom: '14px' }}>
-            {[
-              'city wide cctv surveillance',
-              'jan_Sampark',
-              'lumpy skin disease',
-              'Solar Industries Internship Project',
-              'Warehouse Operations (EWR1/ONT1)'
-            ].map((p, idx) => (
-              <div
-                key={idx}
-                onClick={() => {
-                  setActiveView('chat');
-                  setInputQuery(`Provide an executive briefing on ${p}`);
+
+          {/* New Project Input */}
+          {isAddingProject && (
+            <div style={{ padding: '0 8px 8px' }}>
+              <input
+                type="text"
+                value={newProjectName}
+                onChange={(e) => setNewProjectName(e.target.value)}
+                onBlur={handleAddProject}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleAddProject();
+                  if (e.key === 'Escape') {
+                    setIsAddingProject(false);
+                    setNewProjectName('');
+                  }
                 }}
+                placeholder="New project..."
+                autoFocus
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '9px',
-                  padding: '6px 10px',
-                  borderRadius: '6px',
-                  color: '#d1d5db',
+                  width: '100%',
+                  background: '#212121',
+                  border: '1px solid #3b82f6',
+                  borderRadius: '5px',
+                  color: '#ffffff',
                   fontSize: '12px',
-                  cursor: 'pointer',
-                  overflow: 'hidden',
-                  whiteSpace: 'nowrap',
-                  textOverflow: 'ellipsis'
+                  padding: '5px 8px',
+                  outline: 'none',
+                  boxSizing: 'border-box'
                 }}
-                onMouseEnter={(e) => (e.currentTarget.style.background = '#212121')}
-                onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
-              >
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-                <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{p}</span>
-              </div>
-            ))}
+              />
+            </div>
+          )}
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginBottom: '14px' }}>
+            {projects.map((p) => {
+              const isEditing = editingProjectId === p.id;
+              return (
+                <div
+                  key={p.id}
+                  onClick={() => {
+                    if (isEditing) return;
+                    setActiveView('chat');
+                    setInputQuery(`Provide an executive briefing on ${p.name}`);
+                  }}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: '6px 8px',
+                    borderRadius: '6px',
+                    color: '#d1d5db',
+                    fontSize: '12px',
+                    cursor: 'pointer'
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.background = '#212121')}
+                  onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0, flex: 1 }}>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ flexShrink: 0, opacity: 0.8 }}>
+                      <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                    </svg>
+                    {isEditing ? (
+                      <input
+                        type="text"
+                        value={editingProjectName}
+                        onChange={(e) => setEditingProjectName(e.target.value)}
+                        onBlur={() => handleRenameProject(p.id, editingProjectName)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') handleRenameProject(p.id, editingProjectName);
+                          if (e.key === 'Escape') setEditingProjectId(null);
+                        }}
+                        autoFocus
+                        onClick={(e) => e.stopPropagation()}
+                        style={{
+                          background: '#2b2b2b',
+                          border: '1px solid #3b82f6',
+                          borderRadius: '4px',
+                          color: '#ffffff',
+                          fontSize: '12px',
+                          padding: '2px 6px',
+                          outline: 'none',
+                          width: '100%'
+                        }}
+                      />
+                    ) : (
+                      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {p.name}
+                      </span>
+                    )}
+                  </div>
+
+                  {!isEditing && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px', opacity: 0.7 }} onClick={(e) => e.stopPropagation()}>
+                      <button
+                        title="Rename"
+                        onClick={() => {
+                          setEditingProjectId(p.id);
+                          setEditingProjectName(p.name);
+                        }}
+                        style={{ background: 'transparent', border: 'none', color: '#9ca3af', cursor: 'pointer', padding: '1px 3px', fontSize: '11px' }}
+                        onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
+                        onMouseLeave={(e) => (e.currentTarget.style.color = '#9ca3af')}
+                      >
+                        ✎
+                      </button>
+                      <button
+                        title="Delete"
+                        onClick={(e) => handleDeleteProject(p.id, e)}
+                        style={{ background: 'transparent', border: 'none', color: '#9ca3af', cursor: 'pointer', padding: '1px 3px', fontSize: '11px' }}
+                        onMouseEnter={(e) => (e.currentTarget.style.color = '#ef4444')}
+                        onMouseLeave={(e) => (e.currentTarget.style.color = '#9ca3af')}
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
 
           {/* Recents */}
@@ -498,7 +693,12 @@ export default function JarvisChatbot() {
             Recents
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-            {filteredSessions.map((s) => {
+            {filteredSessions.length === 0 ? (
+              <div style={{ padding: '6px 10px', fontSize: '11.5px', color: '#52525b', fontStyle: 'italic' }}>
+                No active conversations
+              </div>
+            ) : (
+              filteredSessions.map((s) => {
               const isSelected = activeView === 'chat' && currentSessionId === s.id;
               const isEditing = editingSessionId === s.id;
 
@@ -581,7 +781,7 @@ export default function JarvisChatbot() {
                   )}
                 </div>
               );
-            })}
+            }))}
           </div>
         </div>
 
