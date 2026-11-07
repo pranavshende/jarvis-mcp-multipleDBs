@@ -29,7 +29,5 @@ desktop.ini
 dist/
 */dist/
 
-# Context bank shortcuts
-notes
-session_logs
+# Cache & memory
 memory.jsonl
