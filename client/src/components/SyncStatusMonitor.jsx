@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { fetchSyncStatus, fetchReconciliationHistory, triggerReconciliation } from '../api/client';
+import PagePurposeBanner from './PagePurposeBanner';
 
 export default function SyncStatusMonitor() {
   const [syncData, setSyncData] = useState(null);
@@ -41,6 +42,20 @@ export default function SyncStatusMonitor() {
 
   return (
     <div style={{ padding: '24px', maxWidth: '1400px', margin: '0 auto', color: '#1a1c19' }}>
+      <PagePurposeBanner
+        pageTitle="Analytics Ingestion, Star Schema & Scheduled Sync"
+        tagline="Continuous multi-source data ingestion, ETL watermarks, and automated nightly reconciliation"
+        whatItDoes="Monitors real-time synchronization pipelines connecting Seller DB, Warehouse WMS, Partner Portal, and QuickBooks. Tracks ETL high-watermarks, staging tables, analytics star schema transformations, and on-demand reconciliation executions."
+        solutionContribution="Ensures Meridian's central intelligence repository remains perpetually updated and mathematically reconciled across all transactional source databases, preventing stale data, replication drift, or conflicting inventory balances from degrading AI decisions."
+        badges={[
+          'Cross-Source Ingestion Pipeline',
+          'ETL High-Watermark Tracking',
+          'Star Schema Dimensional Modeling',
+          'Reconciliation Engine',
+          'Supabase PostgreSQL 17'
+        ]}
+      />
+
       <div style={{ marginBottom: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <div>
           <h1 style={{ fontSize: '24px', fontWeight: '700', color: '#111827' }}>

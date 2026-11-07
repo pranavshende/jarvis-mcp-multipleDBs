@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { executeMetric } from '../api/client';
+import PagePurposeBanner from './PagePurposeBanner';
 
 export default function FounderDashboard() {
   const [loading, setLoading] = useState(true);
@@ -30,6 +31,20 @@ export default function FounderDashboard() {
 
   return (
     <div style={{ padding: '24px', maxWidth: '1400px', margin: '0 auto', color: '#1a1c19' }}>
+      <PagePurposeBanner
+        pageTitle="Operations Dashboard (Executive Decision Cockpit)"
+        tagline="Deterministic executive visibility across warehouse facilities, credit risk, and payouts"
+        whatItDoes="Surfaces instant, mathematically verified answers to high-stakes executive questions—including facility-level package receipts (EWR1 vs. ONT1 calculated within exact IANA operating timezones), partner credit limit exposures, and pending ACH payout statuses."
+        solutionContribution="Directly addresses Meridian Supply Chain's fragmented architecture by querying the centralized analytics warehouse with zero LLM arithmetic or hallucination. It gives executive leadership a unified, unassailable operational ground truth across WMS and financial records."
+        badges={[
+          'Deterministic SQL Analytics',
+          'IANA Timezone Normalization',
+          'Partner Credit Auditing',
+          'Live Supabase PostgreSQL 17',
+          'Executive Ground Truth'
+        ]}
+      />
+
       <div style={{ marginBottom: '24px' }}>
         <h1 style={{ fontSize: '24px', fontWeight: '700', color: '#111827' }}>Executive Decision Cockpit</h1>
         <p style={{ fontSize: '14px', color: '#6b7280', marginTop: '4px' }}>

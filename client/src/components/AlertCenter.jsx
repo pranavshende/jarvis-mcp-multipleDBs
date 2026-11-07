@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import PagePurposeBanner from './PagePurposeBanner';
 import {
   fetchAlertsSummary,
   fetchAlerts,
@@ -153,6 +154,20 @@ export default function AlertCenter() {
 
   return (
     <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '24px', color: '#1a1c19' }}>
+      <PagePurposeBanner
+        pageTitle="Operational Alert Center & Restricted Actions"
+        tagline="Deterministic anomaly detection, proactive risk alerts, and human-gated workflow execution"
+        whatItDoes="Continuously monitors operational data streams for critical anomalies—such as partner credit limit breaches, ACH payout velocity spikes, inventory price inversions, and intake SLA delays. It provides two-man rule confirmation and tamper-evident audit logging for sensitive actions like placing credit holds."
+        solutionContribution="Transforms Meridian Supply Chain from a reactive, firefighting operation into a proactive intelligence platform. Instead of finding out about cash-flow risks or shipment bottlenecks days later, Jarvis catches breaches in real-time and enables authorized, auditable operational interventions."
+        badges={[
+          'Proactive Anomaly Detection',
+          'Human-Gated Restricted Actions',
+          'Two-Man Rule Governance',
+          'Deterministic Breach Monitoring',
+          'Tamper-Proof Audit Ledger'
+        ]}
+      />
+
       {/* Title & Actions Bar */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
         <div>

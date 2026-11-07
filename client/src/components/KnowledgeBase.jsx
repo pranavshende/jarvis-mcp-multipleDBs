@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import PagePurposeBanner from './PagePurposeBanner';
 import {
   fetchKnowledgeStats,
   fetchKnowledgeSources,
@@ -140,6 +141,20 @@ export default function KnowledgeBase() {
 
   return (
     <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '24px', color: '#1a1c19' }}>
+      <PagePurposeBanner
+        pageTitle="Company Knowledge Base & pgvector RAG Retrieval"
+        tagline="Multi-tier verified institutional memory, Reciprocal Rank Fusion, and strict human governance"
+        whatItDoes="Indexes 109 verified organizational documents into 746 semantic chunks across standard operating procedures (SOPs), grading rules, SLA governance, and executive leadership documents. It supports semantic cosine search, RAG contextual retrieval, and candidate review queues."
+        solutionContribution="Solves Meridian's document fragmentation problem where critical operating policies, grading rules, and partner agreements are lost across drives and emails. Jarvis provides verified answers with exact chunk citations while strictly quarantining confidential founder memory from general retrieval."
+        badges={[
+          'pgvector HNSW Cosine Indexing',
+          'Reciprocal Rank Fusion (RRF)',
+          '3-Tier Memory Governance',
+          'Founder-Private Isolation',
+          'Verifiable Chunk Citations'
+        ]}
+      />
+
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
         <div>

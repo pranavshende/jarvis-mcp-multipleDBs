@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import PagePurposeBanner from './PagePurposeBanner';
 import {
   fetchAdminTokens,
   createAdminToken,
@@ -269,6 +270,20 @@ export default function AdminDashboard() {
 
   return (
     <div style={{ maxWidth: '1440px', margin: '0 auto', padding: '24px', color: '#1a1c19' }}>
+      <PagePurposeBanner
+        pageTitle="Jarvis Control Plane & Model Context Protocol (MCP) Governance"
+        tagline="Streaming MCP tool transports, RBAC security tokens, continuous evaluation, and semantic cache"
+        whatItDoes="Oversees Jarvis's autonomous runtime infrastructure: Model Context Protocol (MCP) stream endpoints, API token lifecycle with Role-Based Access Control, 50-scenario continuous evaluation testing, SHA-256 semantic cache analytics, departmental LLM budgets, and BullMQ dead-letter queues."
+        solutionContribution="Provides the rigorous enterprise security, reliability, and governance framework needed to run AI at scale across Meridian Supply Chain. Guarantees that only authorized employees trigger sensitive workflows, defends against prompt injections, prevents budget overruns, and keeps latency sub-100ms."
+        badges={[
+          'Model Context Protocol (MCP)',
+          'RBAC Token Governance',
+          '96% CI Evaluation Pass Rate',
+          'Composite Semantic Cache',
+          'BullMQ Dead-Letter Recovery'
+        ]}
+      />
+
       {/* Top Banner */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
         <div>

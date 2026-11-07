@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { fetchCrosswalkStats, searchProducts, lookupOrder } from '../api/client';
+import PagePurposeBanner from './PagePurposeBanner';
 
 export default function CrosswalkViewer() {
   const [stats, setStats] = useState(null);
@@ -39,6 +40,20 @@ export default function CrosswalkViewer() {
 
   return (
     <div style={{ padding: '24px', maxWidth: '1400px', margin: '0 auto', color: '#1a1c19' }}>
+      <PagePurposeBanner
+        pageTitle="Canonical Crosswalk & Entity Resolution"
+        tagline="Universal entity mapping across disjoint SKU, UPC, order, and partner identifiers"
+        whatItDoes="Resolves disparate identifiers across Meridian's systems into canonical master entities—mapping 12-digit warehouse UPC barcodes, alphanumeric wholesale SKUs, QuickBooks vendor accounts, and multi-line customer purchase orders into unified records."
+        solutionContribution="Cures the core friction of fragmented enterprise data: different systems referring to the same product or transaction with incompatible IDs. With Crosswalk, Jarvis traces inventory and order journeys end-to-end without discrepancies or manual cross-referencing."
+        badges={[
+          'Universal Entity Resolution',
+          'UPC-to-SKU Crosswalk',
+          'Master Data Management (MDM)',
+          'Canonical Order Normalization',
+          'Silo Elimination'
+        ]}
+      />
+
       <div style={{ marginBottom: '24px' }}>
         <h1 style={{ fontSize: '24px', fontWeight: '700', color: '#111827' }}>Canonical Crosswalk & Entity Resolution</h1>
         <p style={{ fontSize: '14px', color: '#6b7280', marginTop: '4px' }}>

@@ -13,6 +13,7 @@ import {
 import StructuredResponse from './StructuredResponse';
 import ExecutionWorkflow from './ExecutionWorkflow';
 import AuthModal from './AuthModal';
+import PagePurposeBanner from './PagePurposeBanner';
 
 // Import enterprise sub-views to consolidate everything within the chatbot
 import FounderDashboard from './FounderDashboard';
@@ -1351,6 +1352,20 @@ export default function JarvisChatbot() {
                   gap: isMobile ? '18px' : '24px'
                 }}
               >
+                {/* Architecture Purpose Banner */}
+                <PagePurposeBanner
+                  pageTitle="Conversational Intelligence (Unified Intent Gateway)"
+                  tagline="Autonomous query routing across deterministic SQL, pgvector RAG, and MCP tools"
+                  whatItDoes="Serves as the primary natural-language conversational interface powered by Google Gemini 2.5. Employees can ask operational, financial, and warehouse questions, audit wholesale partner terms, request live metrics, and review step-by-step reasoning workflows with persistent multi-turn chat sessions."
+                  solutionContribution="Eliminates the need for employees to manually navigate disjoint systems (Seller DB, WMS, Partner Portal, QuickBooks). Jarvis autonomously decides whether a question requires pre-compiled SQL metrics, semantic document retrieval with chunk citations, or restricted workflow executions, turning fragmented organizational data into actionable answers."
+                  badges={[
+                    'Google Gemini AI Reasoning',
+                    'Autonomous Intent Orchestration',
+                    'Multi-Turn Session Continuity',
+                    'Real-Time Workflow Streaming',
+                    'Verified Source Citations'
+                  ]}
+                />
                 
                 {/* Zero State Hero Screen when no active conversation */}
                 {messages.length === 0 ? (
