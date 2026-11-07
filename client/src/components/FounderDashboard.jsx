@@ -30,7 +30,7 @@ export default function FounderDashboard() {
   }, []);
 
   return (
-    <div style={{ padding: '24px', maxWidth: '1400px', margin: '0 auto', color: '#1a1c19' }}>
+    <div style={{ padding: '16px 12px', maxWidth: '1400px', margin: '0 auto', color: '#1a1c19', boxSizing: 'border-box' }}>
       <PagePurposeBanner
         pageTitle="Operations Dashboard (Executive Decision Cockpit)"
         tagline="Deterministic executive visibility across warehouse facilities, credit risk, and payouts"
@@ -59,8 +59,8 @@ export default function FounderDashboard() {
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           {/* Card 1: Question 1 */}
-          <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e5e5e0', padding: '24px', boxShadow: '0 1px 3px rgba(0,0,0,0.03)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+          <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e5e5e0', padding: '20px', boxShadow: '0 1px 3px rgba(0,0,0,0.03)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '10px', marginBottom: '16px' }}>
               <div>
                 <span style={{ fontSize: '11px', textTransform: 'uppercase', color: '#4f46e5', fontWeight: '700', letterSpacing: '0.05em' }}>
                   Founder Question 1 • Facility Operations
@@ -94,8 +94,8 @@ export default function FounderDashboard() {
           </div>
 
           {/* Card 2: Question 2 */}
-          <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e5e5e0', padding: '24px', boxShadow: '0 1px 3px rgba(0,0,0,0.03)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+          <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e5e5e0', padding: '20px', boxShadow: '0 1px 3px rgba(0,0,0,0.03)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '10px', marginBottom: '16px' }}>
               <div>
                 <span style={{ fontSize: '11px', textTransform: 'uppercase', color: '#0e372d', fontWeight: '700', letterSpacing: '0.05em' }}>
                   Founder Question 2 • Financial Performance
@@ -138,8 +138,8 @@ export default function FounderDashboard() {
           </div>
 
           {/* Card 3: Question 3 */}
-          <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e5e5e0', padding: '24px', boxShadow: '0 1px 3px rgba(0,0,0,0.03)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+          <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e5e5e0', padding: '20px', boxShadow: '0 1px 3px rgba(0,0,0,0.03)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '10px', marginBottom: '16px' }}>
               <div>
                 <span style={{ fontSize: '11px', textTransform: 'uppercase', color: '#dc2626', fontWeight: '700', letterSpacing: '0.05em' }}>
                   Founder Question 3 • Operational & Credit Risks

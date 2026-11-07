@@ -455,6 +455,23 @@ export default function TutorialGuide({ isOpen, onClose, onEnsureSidebarOpen }) 
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
 
+    // Mobile Viewport Optimization: keep card strictly within visible screen
+    if (viewportWidth < 640) {
+      const isTargetInTopHalf = (targetRect.top + targetRect.height / 2) < (viewportHeight / 2);
+      const computedTop = isTargetInTopHalf
+        ? Math.min(viewportHeight - tooltipHeight - 16, Math.max(12, targetRect.bottom + margin))
+        : Math.max(12, Math.min(viewportHeight - tooltipHeight - 16, targetRect.top - tooltipHeight - margin));
+
+      return {
+        position: 'fixed',
+        top: computedTop,
+        left: 12,
+        width: 'calc(100vw - 24px)',
+        maxWidth: 'calc(100vw - 24px)',
+        arrow: isTargetInTopHalf ? 'top' : 'bottom'
+      };
+    }
+
     let placement = currentStep.preferredPlacement || 'bottom';
 
     // Auto-adjust if offscreen

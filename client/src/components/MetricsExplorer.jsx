@@ -43,7 +43,7 @@ export default function MetricsExplorer() {
   }
 
   return (
-    <div style={{ padding: '24px', maxWidth: '1400px', margin: '0 auto', color: '#1a1c19' }}>
+    <div style={{ padding: '16px 12px', maxWidth: '1400px', margin: '0 auto', color: '#1a1c19', boxSizing: 'border-box' }}>
       <PagePurposeBanner
         pageTitle="Deterministic Business Metrics Engine"
         tagline="15 audit-grade, pre-compiled SQL queries with zero free-form SQL or LLM arithmetic"
@@ -66,9 +66,9 @@ export default function MetricsExplorer() {
       </div>
 
       {/* Query Controls */}
-      <div style={{ background: '#ffffff', padding: '24px', borderRadius: '12px', border: '1px solid #e5e5e0', marginBottom: '24px', boxShadow: '0 1px 3px rgba(0,0,0,0.03)' }}>
-        <form onSubmit={handleExecute} style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', alignItems: 'flex-end' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', minWidth: '320px', flex: '1' }}>
+      <div style={{ background: '#ffffff', padding: '20px', borderRadius: '12px', border: '1px solid #e5e5e0', marginBottom: '24px', boxShadow: '0 1px 3px rgba(0,0,0,0.03)' }}>
+        <form onSubmit={handleExecute} style={{ display: 'flex', flexWrap: 'wrap', gap: '14px', alignItems: 'flex-end' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', minWidth: 'min(100%, 280px)', flex: '1' }}>
             <label style={{ fontSize: '12px', fontWeight: '600', color: '#4b5563' }}>Select Registered Business Metric</label>
             <select
               value={selectedMetric}
@@ -80,6 +80,8 @@ export default function MetricsExplorer() {
                 background: '#ffffff',
                 color: '#111827',
                 fontSize: '14px',
+                width: '100%',
+                boxSizing: 'border-box'
               }}
             >
               {metrics.map((m) => (
@@ -90,7 +92,7 @@ export default function MetricsExplorer() {
             </select>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', width: '160px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', minWidth: '130px', flex: '1' }}>
             <label style={{ fontSize: '12px', fontWeight: '600', color: '#4b5563' }}>Target Date</label>
             <input
               type="date"
@@ -103,11 +105,13 @@ export default function MetricsExplorer() {
                 background: '#ffffff',
                 color: '#111827',
                 fontSize: '14px',
+                width: '100%',
+                boxSizing: 'border-box'
               }}
             />
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', width: '160px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', minWidth: '130px', flex: '1' }}>
             <label style={{ fontSize: '12px', fontWeight: '600', color: '#4b5563' }}>Target Month (YYYY-MM)</label>
             <input
               type="text"
@@ -121,6 +125,8 @@ export default function MetricsExplorer() {
                 background: '#ffffff',
                 color: '#111827',
                 fontSize: '14px',
+                width: '100%',
+                boxSizing: 'border-box'
               }}
             />
           </div>
@@ -138,7 +144,10 @@ export default function MetricsExplorer() {
               border: 'none',
               cursor: loading ? 'not-allowed' : 'pointer',
               opacity: loading ? 0.7 : 1,
-              boxShadow: '0 1px 2px rgba(14, 55, 45, 0.2)'
+              boxShadow: '0 1px 2px rgba(14, 55, 45, 0.2)',
+              flex: '1',
+              minWidth: '160px',
+              whiteSpace: 'nowrap'
             }}
           >
             {loading ? 'Executing SQL...' : 'Execute Metric'}
@@ -148,8 +157,8 @@ export default function MetricsExplorer() {
 
       {/* Results View */}
       {result && result.status === 'SUCCESS' && (
-        <div style={{ background: '#ffffff', padding: '24px', borderRadius: '12px', border: '1px solid #e5e5e0', boxShadow: '0 1px 3px rgba(0,0,0,0.03)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+        <div style={{ background: '#ffffff', padding: '20px', borderRadius: '12px', border: '1px solid #e5e5e0', boxShadow: '0 1px 3px rgba(0,0,0,0.03)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '10px', marginBottom: '16px' }}>
             <div>
               <span style={{ fontSize: '11px', color: '#0e372d', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                 {result.result.category} • {result.result.metric_id}
@@ -172,8 +181,8 @@ export default function MetricsExplorer() {
           </div>
 
           {result.result.data.length > 0 ? (
-            <div style={{ overflowX: 'auto', border: '1px solid #e5e5e0', borderRadius: '8px' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
+            <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', width: '100%', border: '1px solid #e5e5e0', borderRadius: '8px', boxSizing: 'border-box' }}>
+              <table style={{ width: '100%', minWidth: '600px', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
                 <thead>
                   <tr style={{ borderBottom: '1px solid #e5e5e0', background: '#f8f7f4', color: '#4b5563' }}>
                     {Object.keys(result.result.data[0]).map((col) => (

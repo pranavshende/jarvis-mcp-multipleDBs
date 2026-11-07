@@ -310,6 +310,13 @@ export default function JarvisChatbot() {
               console.warn('Could not restore messages for session:', savedSessionId, loadErr);
             }
           }
+
+          // If user is authenticated and hasn't decided on tutorial tour yet, prompt them
+          try {
+            if (!localStorage.getItem('jarvis_tour_decided')) {
+              setTimeout(() => setShowTourPrompt(true), 500);
+            }
+          } catch {}
         } else {
           setCurrentUser(null);
           setAuthModalOpen(true);
@@ -449,13 +456,8 @@ export default function JarvisChatbot() {
   const [editingMessageText, setEditingMessageText] = useState('');
 
   // First-time user tutorial guide walkthrough state
-  const [showTutorial, setShowTutorial] = useState(() => {
-    try {
-      return !localStorage.getItem('jarvis_tutorial_completed');
-    } catch {
-      return false;
-    }
-  });
+  const [showTutorial, setShowTutorial] = useState(false);
+  const [showTourPrompt, setShowTourPrompt] = useState(false);
 
   // Stop active AI execution mid-way
   const handleStopExecution = () => {
@@ -2260,8 +2262,117 @@ export default function JarvisChatbot() {
             if (initialConvId) {
               handleSelectSession({ id: initialConvId });
             }
+            try {
+              if (!localStorage.getItem('jarvis_tour_decided')) {
+                setTimeout(() => setShowTourPrompt(true), 400);
+              }
+            } catch {}
           }}
         />
+
+        {/* Tour Invitation Prompt Modal (Yes / No) */}
+        {showTourPrompt && (
+          <div
+            style={{
+              position: 'fixed',
+              inset: 0,
+              background: 'rgba(15, 23, 42, 0.65)',
+              backdropFilter: 'blur(4px)',
+              zIndex: 10002,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '16px',
+              animation: 'fadeIn 0.2s ease'
+            }}
+          >
+            <div
+              style={{
+                background: '#ffffff',
+                borderRadius: '16px',
+                maxWidth: '460px',
+                width: '100%',
+                padding: '28px 24px',
+                boxShadow: '0 20px 45px -10px rgba(0, 0, 0, 0.25)',
+                border: '1px solid #e2e8f0',
+                textAlign: 'center',
+                boxSizing: 'border-box'
+              }}
+            >
+              <div
+                style={{
+                  width: '56px',
+                  height: '56px',
+                  borderRadius: '50%',
+                  background: '#ecfdf5',
+                  color: '#059669',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '28px',
+                  margin: '0 auto 16px'
+                }}
+              >
+                🎓
+              </div>
+              <h3 style={{ margin: '0 0 10px 0', fontSize: '20px', fontWeight: '700', color: '#111827' }}>
+                Take a Quick Tour of Jarvis?
+              </h3>
+              <p style={{ margin: '0 0 22px 0', fontSize: '13.5px', color: '#4b5563', lineHeight: '1.55' }}>
+                Welcome to Meridian Jarvis! Would you like a guided walkthrough of each feature? We will highlight how to execute deterministic SQL queries, explore SOPs, inspect warehouse crosswalks, and connect external AI tools via MCP.
+              </p>
+              <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    try { localStorage.setItem('jarvis_tour_decided', 'true'); } catch {}
+                    setShowTourPrompt(false);
+                  }}
+                  style={{
+                    flex: '1',
+                    padding: '11px 16px',
+                    borderRadius: '8px',
+                    border: '1px solid #d1d5db',
+                    background: '#f9fafb',
+                    color: '#4b5563',
+                    fontSize: '13.5px',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    transition: 'all 0.15s ease'
+                  }}
+                >
+                  No, Skip
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    try { localStorage.setItem('jarvis_tour_decided', 'true'); } catch {}
+                    setShowTourPrompt(false);
+                    setShowTutorial(true);
+                  }}
+                  style={{
+                    flex: '1.4',
+                    padding: '11px 16px',
+                    borderRadius: '8px',
+                    border: 'none',
+                    background: '#0e372d',
+                    color: '#ffffff',
+                    fontSize: '13.5px',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    boxShadow: '0 2px 6px rgba(14, 55, 45, 0.25)',
+                    transition: 'all 0.15s ease'
+                  }}
+                >
+                  Yes, Take Tour 🚀
+                </button>
+              </div>
+              <div style={{ marginTop: '14px', fontSize: '11.5px', color: '#9ca3af' }}>
+                You can also restart the tour anytime by clicking <strong>Tutorial Tour</strong> in the top bar.
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* First-Time Guided Tutorial Walkthrough Modal */}
         <TutorialGuide

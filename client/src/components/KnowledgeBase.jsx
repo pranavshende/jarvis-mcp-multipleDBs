@@ -140,7 +140,7 @@ export default function KnowledgeBase() {
   ];
 
   return (
-    <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '24px', color: '#1a1c19' }}>
+    <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '16px 12px', color: '#1a1c19', boxSizing: 'border-box' }}>
       <PagePurposeBanner
         pageTitle="Company Knowledge Base & pgvector RAG Retrieval"
         tagline="Multi-tier verified institutional memory, Reciprocal Rank Fusion, and strict human governance"
@@ -156,9 +156,9 @@ export default function KnowledgeBase() {
       />
 
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-        <div>
-          <h1 style={{ fontSize: '24px', fontWeight: '700', color: '#111827', margin: '0 0 6px 0', display: 'flex', alignItems: 'center', gap: '10px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '14px', marginBottom: '24px' }}>
+        <div style={{ flex: '1', minWidth: 'min(100%, 280px)' }}>
+          <h1 style={{ fontSize: '24px', fontWeight: '700', color: '#111827', margin: '0 0 6px 0', display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
             Company Knowledge Base & RAG Retrieval
             <span style={{ fontSize: '12px', background: '#e0f2fe', color: '#0369a1', padding: '3px 10px', borderRadius: '12px', border: '1px solid #bae6fd', fontWeight: '500' }}>
               pgvector + HNSW Cosine
@@ -180,7 +180,8 @@ export default function KnowledgeBase() {
               fontSize: '13px',
               fontWeight: '600',
               cursor: 'pointer',
-              boxShadow: '0 1px 2px rgba(14, 55, 45, 0.2)'
+              boxShadow: '0 1px 2px rgba(14, 55, 45, 0.2)',
+              whiteSpace: 'nowrap'
             }}
           >
             Execute RAG Query
@@ -189,7 +190,7 @@ export default function KnowledgeBase() {
       </div>
 
       {/* Stats Summary Bar */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '16px', marginBottom: '24px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 140px), 1fr))', gap: '12px', marginBottom: '24px' }}>
         <div style={{ background: '#ffffff', border: '1px solid #e5e5e0', borderRadius: '12px', padding: '16px', boxShadow: '0 1px 3px rgba(0,0,0,0.03)' }}>
           <div style={{ fontSize: '12px', color: '#6b7280', fontWeight: '500', textTransform: 'uppercase' }}>Indexed Sources</div>
           <div style={{ fontSize: '28px', fontWeight: '700', color: '#111827', marginTop: '6px' }}>
@@ -238,7 +239,7 @@ export default function KnowledgeBase() {
       </div>
 
       {/* Subtab Navigation */}
-      <div style={{ display: 'flex', gap: '8px', borderBottom: '1px solid #e5e5e0', paddingBottom: '12px', marginBottom: '24px' }}>
+      <div style={{ display: 'flex', gap: '8px', borderBottom: '1px solid #e5e5e0', paddingBottom: '12px', marginBottom: '24px', overflowX: 'auto', WebkitOverflowScrolling: 'touch', flexWrap: 'nowrap' }}>
         {[
           { id: 'playground', label: 'RAG Search Playground' },
           { id: 'library', label: 'Document Library (110)' },
@@ -258,7 +259,8 @@ export default function KnowledgeBase() {
               borderColor: subTab === tab.id ? '#0e372d' : '#ded9d2',
               background: subTab === tab.id ? '#0e372d' : '#ffffff',
               color: subTab === tab.id ? '#ffffff' : '#4b5563',
-              transition: 'all 0.15s ease'
+              transition: 'all 0.15s ease',
+              whiteSpace: 'nowrap'
             }}
           >
             {tab.label}
@@ -269,11 +271,11 @@ export default function KnowledgeBase() {
       {/* Subtab 1: RAG Search Playground */}
       {subTab === 'playground' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-          <div style={{ background: '#ffffff', border: '1px solid #e5e5e0', borderRadius: '12px', padding: '24px', boxShadow: '0 1px 3px rgba(0,0,0,0.03)' }}>
+          <div style={{ background: '#ffffff', border: '1px solid #e5e5e0', borderRadius: '12px', padding: '20px', boxShadow: '0 1px 3px rgba(0,0,0,0.03)' }}>
             <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#374151', marginBottom: '8px' }}>
               Enter Natural Language Company Query:
             </label>
-            <div style={{ display: 'flex', gap: '10px', marginBottom: '14px' }}>
+            <div style={{ display: 'flex', gap: '10px', marginBottom: '14px', flexWrap: 'wrap' }}>
               <input
                 type="text"
                 value={query}

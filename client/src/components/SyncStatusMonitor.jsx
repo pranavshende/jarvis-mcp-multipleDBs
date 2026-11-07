@@ -41,7 +41,7 @@ export default function SyncStatusMonitor() {
   }
 
   return (
-    <div style={{ padding: '24px', maxWidth: '1400px', margin: '0 auto', color: '#1a1c19' }}>
+    <div style={{ padding: '16px 12px', maxWidth: '1400px', margin: '0 auto', color: '#1a1c19', boxSizing: 'border-box' }}>
       <PagePurposeBanner
         pageTitle="Analytics Ingestion, Star Schema & Scheduled Sync"
         tagline="Continuous multi-source data ingestion, ETL watermarks, and automated nightly reconciliation"
@@ -56,8 +56,8 @@ export default function SyncStatusMonitor() {
         ]}
       />
 
-      <div style={{ marginBottom: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-        <div>
+      <div style={{ marginBottom: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '14px' }}>
+        <div style={{ flex: '1', minWidth: 'min(100%, 280px)' }}>
           <h1 style={{ fontSize: '24px', fontWeight: '700', color: '#111827' }}>
             Analytics Ingestion, Star Schema & Reconciliation
           </h1>
@@ -77,7 +77,8 @@ export default function SyncStatusMonitor() {
             fontWeight: '600',
             border: 'none',
             cursor: runningRecon ? 'not-allowed' : 'pointer',
-            boxShadow: '0 1px 2px rgba(14, 55, 45, 0.2)'
+            boxShadow: '0 1px 2px rgba(14, 55, 45, 0.2)',
+            whiteSpace: 'nowrap'
           }}
         >
           {runningRecon ? 'Running Reconciliation...' : 'Run Reconciliation Now'}
@@ -118,8 +119,8 @@ export default function SyncStatusMonitor() {
           </div>
 
           {/* Section 1: Reconciliation Execution Logs */}
-          <div style={{ background: '#ffffff', padding: '24px', borderRadius: '12px', border: '1px solid #e5e5e0', marginBottom: '24px', boxShadow: '0 1px 3px rgba(0,0,0,0.03)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+          <div style={{ background: '#ffffff', padding: '20px', borderRadius: '12px', border: '1px solid #e5e5e0', marginBottom: '24px', boxShadow: '0 1px 3px rgba(0,0,0,0.03)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '10px', marginBottom: '16px' }}>
               <div>
                 <h3 style={{ fontSize: '16px', fontWeight: '700', color: '#111827' }}>
                   Source-to-Analytics Nightly Reconciliation Engine
@@ -128,14 +129,14 @@ export default function SyncStatusMonitor() {
                   Compares row counts, orphan records, and financial totals across AWS read replicas and Supabase analytics facts.
                 </p>
               </div>
-              <span style={{ fontSize: '12px', background: '#e8f5ec', color: '#166534', padding: '4px 10px', borderRadius: '6px', border: '1px solid #bbf7d0', fontWeight: '500' }}>
+              <span style={{ fontSize: '12px', background: '#e8f5ec', color: '#166534', padding: '4px 10px', borderRadius: '6px', border: '1px solid #bbf7d0', fontWeight: '500', whiteSpace: 'nowrap' }}>
                 Target SLA: &lt;30 min (Measured: ~6.3s)
               </span>
             </div>
 
             {reconHistory.length > 0 ? (
-              <div style={{ overflowX: 'auto', border: '1px solid #e5e5e0', borderRadius: '8px' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
+              <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', width: '100%', border: '1px solid #e5e5e0', borderRadius: '8px', boxSizing: 'border-box' }}>
+                <table style={{ width: '100%', minWidth: '650px', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
                   <thead>
                     <tr style={{ borderBottom: '1px solid #e5e5e0', background: '#f8f7f4', color: '#4b5563' }}>
                       <th style={{ padding: '12px 14px', fontWeight: '600' }}>Run Batch ID</th>

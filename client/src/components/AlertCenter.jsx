@@ -153,7 +153,7 @@ export default function AlertCenter() {
   };
 
   return (
-    <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '24px', color: '#1a1c19' }}>
+    <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '16px 12px', color: '#1a1c19', boxSizing: 'border-box' }}>
       <PagePurposeBanner
         pageTitle="Operational Alert Center & Restricted Actions"
         tagline="Deterministic anomaly detection, proactive risk alerts, and human-gated workflow execution"
@@ -169,9 +169,9 @@ export default function AlertCenter() {
       />
 
       {/* Title & Actions Bar */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-        <div>
-          <h1 style={{ fontSize: '24px', fontWeight: '700', color: '#111827', margin: '0 0 6px 0', display: 'flex', alignItems: 'center', gap: '10px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '14px', marginBottom: '24px' }}>
+        <div style={{ flex: '1', minWidth: 'min(100%, 280px)' }}>
+          <h1 style={{ fontSize: '24px', fontWeight: '700', color: '#111827', margin: '0 0 6px 0', display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
             Operational Alert Center & Restricted Actions
             <span style={{ fontSize: '12px', background: '#eef2ff', color: '#4338ca', padding: '3px 10px', borderRadius: '12px', border: '1px solid #c7d2fe', fontWeight: '500' }}>
               Deterministic Engine
@@ -181,14 +181,14 @@ export default function AlertCenter() {
             Real-time proactive anomaly detection, decoupled notification dispatch, and human-gated restricted action execution.
           </p>
         </div>
-        <div style={{ display: 'flex', gap: '10px' }}>
+        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
           <button
             onClick={() => handleOpenActionModal('301')}
             style={{
               background: '#dc2626',
               color: '#fff',
               border: 'none',
-              padding: '10px 18px',
+              padding: '10px 16px',
               borderRadius: '8px',
               fontSize: '13px',
               fontWeight: '600',
@@ -196,7 +196,8 @@ export default function AlertCenter() {
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              boxShadow: '0 1px 2px rgba(220, 38, 38, 0.2)'
+              boxShadow: '0 1px 2px rgba(220, 38, 38, 0.2)',
+              whiteSpace: 'nowrap'
             }}
           >
             Initiate Credit Hold (Partner 301)
@@ -211,7 +212,8 @@ export default function AlertCenter() {
               borderRadius: '8px',
               fontSize: '13px',
               fontWeight: '500',
-              cursor: 'pointer'
+              cursor: 'pointer',
+              whiteSpace: 'nowrap'
             }}
           >
             Refresh Feed
@@ -220,7 +222,7 @@ export default function AlertCenter() {
       </div>
 
       {/* Metric Cards Summary */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '16px', marginBottom: '24px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 140px), 1fr))', gap: '12px', marginBottom: '24px' }}>
         <div style={{ background: '#ffffff', border: '1px solid #e5e5e0', borderRadius: '12px', padding: '16px', boxShadow: '0 1px 3px rgba(0,0,0,0.03)' }}>
           <div style={{ fontSize: '12px', color: '#6b7280', fontWeight: '500', textTransform: 'uppercase' }}>Active Alerts</div>
           <div style={{ fontSize: '28px', fontWeight: '700', color: '#111827', marginTop: '6px' }}>
@@ -263,12 +265,12 @@ export default function AlertCenter() {
       </div>
 
       {/* Main Grid: Alerts Feed + Side Panels */}
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '24px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: '20px' }}>
         {/* Left Column: Alerts Feed */}
-        <div style={{ background: '#ffffff', border: '1px solid #e5e5e0', borderRadius: '12px', padding: '24px', boxShadow: '0 1px 3px rgba(0,0,0,0.03)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+        <div style={{ background: '#ffffff', border: '1px solid #e5e5e0', borderRadius: '12px', padding: '20px', boxShadow: '0 1px 3px rgba(0,0,0,0.03)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px', marginBottom: '16px' }}>
             <h2 style={{ fontSize: '16px', fontWeight: '700', color: '#111827', margin: 0 }}>Operational Alerts Feed</h2>
-            <div style={{ display: 'flex', gap: '8px' }}>
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
               <select
                 value={severityFilter}
                 onChange={(e) => setSeverityFilter(e.target.value)}
@@ -337,11 +339,11 @@ export default function AlertCenter() {
                       {alert.summary}
                     </p>
 
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '6px', paddingTop: '8px', borderTop: '1px solid #e5e5e0' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px', marginTop: '6px', paddingTop: '8px', borderTop: '1px solid #e5e5e0' }}>
                       <div style={{ fontSize: '11px', color: '#6b7280' }}>
                         Type: <strong style={{ color: '#111827' }}>{alert.alert_type}</strong> | Target: <strong style={{ color: '#111827' }}>{alert.entity_type} {alert.entity_id}</strong>
                       </div>
-                      <div style={{ display: 'flex', gap: '6px' }}>
+                      <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
                         {alert.action_payload?.action_type === 'ACTION_CREDIT_HOLD' && (
                           <button
                             onClick={() => handleOpenActionModal(alert.entity_id)}

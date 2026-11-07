@@ -39,7 +39,7 @@ export default function CrosswalkViewer() {
   }
 
   return (
-    <div style={{ padding: '24px', maxWidth: '1400px', margin: '0 auto', color: '#1a1c19' }}>
+    <div style={{ padding: '16px 12px', maxWidth: '1400px', margin: '0 auto', color: '#1a1c19', boxSizing: 'border-box' }}>
       <PagePurposeBanner
         pageTitle="Canonical Crosswalk & Entity Resolution"
         tagline="Universal entity mapping across disjoint SKU, UPC, order, and partner identifiers"
@@ -85,11 +85,11 @@ export default function CrosswalkViewer() {
       </div>
 
       {/* Order Normalization Test Box */}
-      <div style={{ background: '#ffffff', padding: '24px', borderRadius: '12px', border: '1px solid #e5e5e0', marginBottom: '24px', boxShadow: '0 1px 3px rgba(0,0,0,0.03)' }}>
+      <div style={{ background: '#ffffff', padding: '20px', borderRadius: '12px', border: '1px solid #e5e5e0', marginBottom: '24px', boxShadow: '0 1px 3px rgba(0,0,0,0.03)' }}>
         <h3 style={{ fontSize: '16px', fontWeight: '700', color: '#111827', marginBottom: '12px' }}>
           Deterministic Order Join Resolver
         </h3>
-        <form onSubmit={handleOrderLookup} style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+        <form onSubmit={handleOrderLookup} style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
           <input
             type="text"
             value={orderQuery}
@@ -103,7 +103,9 @@ export default function CrosswalkViewer() {
               color: '#111827',
               fontSize: '14px',
               flex: '1',
+              minWidth: 'min(100%, 220px)',
               maxWidth: '350px',
+              boxSizing: 'border-box'
             }}
           />
           <button
@@ -117,7 +119,8 @@ export default function CrosswalkViewer() {
               fontWeight: '600',
               border: 'none',
               cursor: 'pointer',
-              boxShadow: '0 1px 2px rgba(14, 55, 45, 0.2)'
+              boxShadow: '0 1px 2px rgba(14, 55, 45, 0.2)',
+              whiteSpace: 'nowrap'
             }}
           >
             Resolve Join
@@ -142,9 +145,9 @@ export default function CrosswalkViewer() {
       </div>
 
       {/* Product Crosswalk Table */}
-      <div style={{ background: '#ffffff', padding: '24px', borderRadius: '12px', border: '1px solid #e5e5e0', boxShadow: '0 1px 3px rgba(0,0,0,0.03)' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-          <h3 style={{ fontSize: '16px', fontWeight: '700', color: '#111827' }}>
+      <div style={{ background: '#ffffff', padding: '20px', borderRadius: '12px', border: '1px solid #e5e5e0', boxShadow: '0 1px 3px rgba(0,0,0,0.03)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px', marginBottom: '16px' }}>
+          <h3 style={{ fontSize: '16px', fontWeight: '700', color: '#111827', margin: 0 }}>
             Canonical Product Mapping (analytics.dim_product_crosswalk)
           </h3>
           <input
@@ -162,13 +165,21 @@ export default function CrosswalkViewer() {
               background: '#ffffff',
               color: '#111827',
               fontSize: '13px',
-              width: '280px',
+              width: '100%',
+              maxWidth: '320px',
+              boxSizing: 'border-box'
             }}
           />
         </div>
 
-        <div style={{ overflowX: 'auto', border: '1px solid #e5e5e0', borderRadius: '8px' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', padding: '0 2px' }}>
+          <span style={{ fontSize: '12px', color: '#6b7280', fontWeight: '500' }}>
+            📱 <em>Swipe horizontally to view all columns (Method, Confidence, UPC)</em>
+          </span>
+        </div>
+
+        <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', width: '100%', border: '1px solid #e5e5e0', borderRadius: '8px', boxSizing: 'border-box' }}>
+          <table style={{ width: '100%', minWidth: '650px', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
             <thead>
               <tr style={{ borderBottom: '1px solid #e5e5e0', background: '#f8f7f4', color: '#4b5563' }}>
                 <th style={{ padding: '12px 14px', fontWeight: '600' }}>Canonical SKU</th>
