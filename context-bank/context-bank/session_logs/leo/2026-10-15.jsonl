@@ -1,3 +1,0 @@
-{"ts": "2026-10-15T07:16:56Z", "session_id": "cod_1015_3061dfa3", "user": "leo@meridiansc.com", "tool": "codex", "model": "gpt-5-codex", "event": "user_prompt", "content": "pandas: weekly fail rate by warehouse from package_lines"}
-{"ts": "2026-10-15T07:21:33Z", "session_id": "cod_1015_3061dfa3", "user": "leo@meridiansc.com", "tool": "codex", "model": "gpt-5-codex", "event": "assistant", "content": "groupby([warehouse, week]).agg(failed=sum, inspected=sum) …", "tokens_in": 1823, "tokens_out": 60}
-{"ts": "2026-10-15T07:22:03Z", "session_id": "cod_1015_3061dfa3", "user": "leo@meridiansc.com", "tool": "codex", "model": "gpt-5-codex", "event": "session_end", "tokens_in_total": 1823, "tokens_out_total": 60, "est_cost_usd": 0.0029}

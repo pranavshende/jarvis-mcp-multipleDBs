@@ -1,3 +1,0 @@
-{"ts": "2026-09-26T16:53:25Z", "session_id": "cha_0926_d92f482f", "user": "dana@meridiansc.com", "tool": "chatgpt", "model": "gpt-5", "event": "user_prompt", "content": "write a checklist for spotting resealed TCG boxes"}
-{"ts": "2026-09-26T16:56:34Z", "session_id": "cha_0926_d92f482f", "user": "dana@meridiansc.com", "tool": "chatgpt", "model": "gpt-5", "event": "assistant", "content": "1. Shrink seam position 2. Weight vs reference 3. Glue on flaps 4. Logo alignment on wrap", "tokens_in": 1826, "tokens_out": 60}
-{"ts": "2026-09-26T16:57:04Z", "session_id": "cha_0926_d92f482f", "user": "dana@meridiansc.com", "tool": "chatgpt", "model": "gpt-5", "event": "session_end", "tokens_in_total": 1826, "tokens_out_total": 60, "est_cost_usd": 0.0029}
