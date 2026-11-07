@@ -53,6 +53,42 @@ export default function JarvisChatbot() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Virtual keyboard tracking for mobile devices (ensures input bar rises with keyboard)
+  const [keyboardOffset, setKeyboardOffset] = useState(0);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const handleVisualViewportChange = () => {
+      if (window.visualViewport) {
+        const currentHeight = window.visualViewport.height;
+        const layoutHeight = window.innerHeight;
+        const offset = layoutHeight - currentHeight - (window.visualViewport.offsetTop || 0);
+        setKeyboardOffset(Math.max(0, Math.round(offset)));
+      }
+    };
+
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', handleVisualViewportChange);
+      window.visualViewport.addEventListener('scroll', handleVisualViewportChange);
+    }
+
+    return () => {
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener('resize', handleVisualViewportChange);
+        window.visualViewport.removeEventListener('scroll', handleVisualViewportChange);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (keyboardOffset > 0) {
+      setTimeout(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }, 120);
+    }
+  }, [keyboardOffset]);
+
   // Conversational state (100% Dynamic - starts clean or restores user history)
   const [messages, setMessages] = useState(() => {
     try {
@@ -555,7 +591,8 @@ export default function JarvisChatbot() {
       style={{
         display: 'flex',
         width: '100%',
-        height: '100vh',
+        height: '100%',
+        minHeight: '100dvh',
         background: '#f8f7f4',
         color: '#1a1c19',
         fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
@@ -1335,11 +1372,14 @@ export default function JarvisChatbot() {
               style={{
                 flex: 1,
                 overflowY: 'auto',
-                padding: isMobile ? '16px 12px 110px 12px' : '28px 24px 130px 24px',
+                padding: isMobile
+                  ? `16px 12px calc(84px + ${keyboardOffset}px) 12px`
+                  : '28px 24px 130px 24px',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                width: '100%'
+                width: '100%',
+                WebkitOverflowScrolling: 'touch'
               }}
             >
               <div
@@ -1590,11 +1630,14 @@ export default function JarvisChatbot() {
           <div
             style={{
               position: 'absolute',
-              bottom: isMobile ? '12px' : '24px',
+              bottom: isMobile
+                ? `calc(12px + ${keyboardOffset}px + env(safe-area-inset-bottom, 0px))`
+                : '24px',
               left: '50%',
               transform: 'translateX(-50%)',
               width: isMobile ? 'calc(100% - 24px)' : 'min(820px, calc(100% - 48px))',
-              zIndex: 35
+              zIndex: 35,
+              transition: 'bottom 0.16s cubic-bezier(0.16, 1, 0.3, 1)'
             }}
           >
             <form
@@ -1638,6 +1681,11 @@ export default function JarvisChatbot() {
                 type="text"
                 value={inputQuery}
                 onChange={(e) => setInputQuery(e.target.value)}
+                onFocus={() => {
+                  setTimeout(() => {
+                    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+                  }, 250);
+                }}
                 placeholder="Ask Jarvis..."
                 disabled={isLoading}
                 style={{
