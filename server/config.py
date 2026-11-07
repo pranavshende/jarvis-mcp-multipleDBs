@@ -23,7 +23,7 @@ _env = load_env()
 
 DATABASE_URL = os.environ.get("DATABASE_URL", _env.get("DATABASE_URL", ""))
 DIRECT_URL = os.environ.get("DIRECT_URL", _env.get("DIRECT_URL", ""))
-PORT = int(os.environ.get("PORT", 5000))
+PORT = int(os.environ.get("FLASK_PORT", 5000))
 HOST = os.environ.get("HOST", "0.0.0.0")
 DEBUG = os.environ.get("DEBUG", "False").lower() in ("true", "1", "yes")
 

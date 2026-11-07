@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: jarvis-enterprise-backend
+    runtime: docker
+    dockerfilePath: server/Dockerfile
+    dockerContext: server
+    plan: standard
+    healthCheckPath: /api/health
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: DIRECT_URL
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: JARVIS_BEARER_TOKEN
+        value: msc_mcp_founder_sec_7a8f9b1c2d3e4f5a6b7c8d9e0f1a2b3c
+      - key: FLASK_BACKEND_URL
+        value: http://127.0.0.1:5000
+      - key: FLASK_PORT
+        value: "5000"
+      - key: NODE_ENV
+        value: production

@@ -12,7 +12,7 @@ dotenv.config({ path: path.resolve(__dirname, '../../../../.env') });
 dotenv.config();
 
 export const config = {
-  port: parseInt(process.env.GATEWAY_PORT || '4000', 10),
+  port: parseInt(process.env.PORT || process.env.GATEWAY_PORT || '4000', 10),
   host: process.env.GATEWAY_HOST || '0.0.0.0',
   nodeEnv: process.env.NODE_ENV || 'development',
   

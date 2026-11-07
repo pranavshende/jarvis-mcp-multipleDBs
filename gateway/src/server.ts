@@ -1,6 +1,7 @@
 import Fastify, { FastifyInstance } from 'fastify';
 import cors from '@fastify/cors';
 import sensible from '@fastify/sensible';
+import fastifyHttpProxy from '@fastify/http-proxy';
 import crypto from 'crypto';
 import { config } from './config/environment.js';
 import { authenticateRequest } from './auth/authentication.js';
@@ -118,6 +119,28 @@ export async function buildGatewayServer(): Promise<FastifyInstance> {
     // Admin Control Plane
     await protectedApp.register(adminRoutes);
   });
+
+  // 4. Downstream Proxy for Python Flask Analytics & Knowledge Endpoints
+  const flaskPrefixes = [
+    '/api/health/db',
+    '/api/metrics',
+    '/api/crosswalk',
+    '/api/sync',
+    '/api/reconciliation',
+    '/api/alerts',
+    '/api/monitoring',
+    '/api/actions',
+    '/api/knowledge',
+  ];
+
+  for (const prefix of flaskPrefixes) {
+    await fastify.register(fastifyHttpProxy, {
+      upstream: config.flaskBackendUrl,
+      prefix,
+      rewritePrefix: prefix,
+      http2: false,
+    });
+  }
 
   return fastify;
 }

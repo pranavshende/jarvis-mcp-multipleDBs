@@ -1,6 +1,7 @@
 // API client for Jarvis v1 Flask Backend (Phase 1 & Phase 2)
 
 const API_BASE = '/api';
+const GATEWAY_BASE = import.meta.env.VITE_GATEWAY_URL || '';
 
 export async function fetchHealth() {
   const res = await fetch(`${API_BASE}/health/db`);
@@ -326,7 +327,7 @@ export async function fetchAdminHealth() {
 }
 
 export async function queryGatewayIntent(queryText, sessionId = 'default') {
-  const res = await fetch('http://127.0.0.1:4000/api/query', {
+  const res = await fetch(`${GATEWAY_BASE}/api/query`, {
     method: 'POST',
     headers: getAdminHeaders(),
     body: JSON.stringify({ query: queryText, sessionId })
@@ -336,7 +337,7 @@ export async function queryGatewayIntent(queryText, sessionId = 'default') {
 
 export async function queryGatewayStream(queryText, sessionId = 'default', onWorkflowEvent, onComplete, onError) {
   try {
-    const res = await fetch('http://127.0.0.1:4000/api/query/stream', {
+    const res = await fetch(`${GATEWAY_BASE}/api/query/stream`, {
       method: 'POST',
       headers: getAdminHeaders(),
       body: JSON.stringify({ query: queryText, sessionId }),

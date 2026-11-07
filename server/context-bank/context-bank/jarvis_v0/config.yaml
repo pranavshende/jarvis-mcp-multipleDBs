@@ -1,0 +1,37 @@
+# jarvis v0 runtime config
+model: claude-sonnet-4-5
+fallback_model: gpt-5
+max_tokens_out: 2000
+context:
+  always_include:
+    - notes/MSC Now.md
+    - memory/memory.jsonl
+  notes_top_k: 5
+  notes_index: keyword   # embeddings planned
+tools:
+  sql:
+    dsn: postgresql://jarvis_svc@msc-prod.cluster-ro.us-east-1.rds.amazonaws.com:5432/{db}
+    databases: [seller_db, wms_db, portal_db]
+    statement_timeout_ms: 20000
+  seller_api:
+    base_url: https://seller.meridiansc.com/api/v2
+    key_ref: 1password://eng-shared/seller-integration-prod
+  search_notes:
+    root: /srv/jarvis/notes
+memory:
+  path: /srv/jarvis/memory/memory.jsonl
+  append_on_remember: true
+  nightly_ingest:
+    source: /srv/exports/session_logs/
+    extractor_prompt: prompts/extract_facts.md
+    review: false
+security:
+  injection_filter: enabled   # regex on "ignore previous instructions"
+  pii_masking: answers_only
+  allowed_users: all_workspace_members
+permissions:
+  mode: service_account     # all users share jarvis_svc
+hosting:
+  provider: hetzner
+  region: fsn1
+  instance: cx22
