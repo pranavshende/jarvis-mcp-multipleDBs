@@ -37,38 +37,20 @@ export default function JarvisChatbot() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Initial seed message matching the luxury reference screenshot
-  const initialDemoMessages = [
-    {
-      id: 'demo-user-1',
-      role: 'user',
-      content: 'Why is Partner 301 on credit hold and what is the process to release it?',
-      timestamp: '10:24 AM'
-    },
-    {
-      id: 'demo-bot-1',
-      role: 'assistant',
-      route: 'KNOWLEDGE + DATA',
-      latencyMs: 12400,
-      content: "Here's the analysis for Partner 301's credit hold and the required release process.",
-      citations: [
-        'partner-terms.md (v1.0) -> §4.2 Credit Hold Policy',
-        'AR-policy.md (v1.1) -> Credit Release Procedure'
-      ],
-      timestamp: '10:24 AM'
-    }
-  ];
-
-  // Conversational state
+  // Conversational state (100% Dynamic - starts clean or restores user history)
   const [messages, setMessages] = useState(() => {
     try {
       const saved = localStorage.getItem('msc_jarvis_active_chat');
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        if (Array.isArray(parsed)) {
+          // Filter out legacy demo items if any
+          const cleaned = parsed.filter((m) => m && !m.id?.startsWith('demo-'));
+          return cleaned;
+        }
       }
     } catch {}
-    return initialDemoMessages;
+    return [];
   });
 
   const [inputQuery, setInputQuery] = useState('');
@@ -76,7 +58,7 @@ export default function JarvisChatbot() {
   const [liveStreamEvents, setLiveStreamEvents] = useState([]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isDeepThink, setIsDeepThink] = useState(false);
-  const [showWorkflowPanel, setShowWorkflowPanel] = useState(true);
+  const [showWorkflowPanel, setShowWorkflowPanel] = useState(false);
   const [activeCitation, setActiveCitation] = useState(null);
   const [searchFilter, setSearchFilter] = useState('');
   const [showSearchInput, setShowSearchInput] = useState(false);
@@ -93,17 +75,15 @@ export default function JarvisChatbot() {
       const saved = localStorage.getItem('msc_jarvis_sessions');
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        if (Array.isArray(parsed)) {
+          const cleaned = parsed.filter((s) => s && s.id && !s.id.startsWith('sess-'));
+          return cleaned;
+        }
       }
     } catch {}
-    return [
-      { id: 'sess-1', title: 'Partner 301 credit hold analysis', messages: [] },
-      { id: 'sess-2', title: 'EWR1 vs ONT1 receiving process', messages: [] },
-      { id: 'sess-3', title: 'Return grading rules', messages: [] },
-      { id: 'sess-4', title: 'October ACH failure post-mortem', messages: [] }
-    ];
+    return [];
   });
-  const [currentSessionId, setCurrentSessionId] = useState('demo');
+  const [currentSessionId, setCurrentSessionId] = useState('new');
   const [editingSessionId, setEditingSessionId] = useState(null);
   const [editingTitle, setEditingTitle] = useState('');
   const [sessionToDelete, setSessionToDelete] = useState(null);
@@ -217,26 +197,11 @@ export default function JarvisChatbot() {
     setCurrentSessionId(session.id);
     if (session.messages && session.messages.length > 0) {
       setMessages(session.messages);
+      setShowWorkflowPanel(true);
     } else {
-      setMessages([
-        {
-          id: `u-${session.id}`,
-          role: 'user',
-          content: session.title,
-          timestamp: '10:24 AM'
-        },
-        {
-          id: `b-${session.id}`,
-          role: 'assistant',
-          route: 'KNOWLEDGE + DATA',
-          latencyMs: 12400,
-          content: `Here's the analysis for ${session.title}.`,
-          citations: ['partner-terms.md (v1.0) -> §4.2 Credit Hold Policy'],
-          timestamp: '10:24 AM'
-        }
-      ]);
+      setMessages([]);
+      setShowWorkflowPanel(false);
     }
-    setShowWorkflowPanel(true);
     if (isMobile) setSidebarOpen(false);
   };
 
@@ -256,9 +221,9 @@ export default function JarvisChatbot() {
     setSessionToDelete(null);
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e, customQuery) => {
     if (e) e.preventDefault();
-    const query = inputQuery.trim();
+    const query = (customQuery !== undefined ? customQuery : inputQuery).trim();
     if (!query || isLoading) return;
 
     const userMessage = {
@@ -321,10 +286,10 @@ export default function JarvisChatbot() {
           };
 
           setMessages((prev) => prev.map((m) => (m.id === pendingBotId ? finalBotMessage : m)));
-          setLiveStreamEvents([]);
+          setLiveStreamEvents(finalBotMessage.events);
 
           // Update current or new chat session
-          if (currentSessionId === 'new' || currentSessionId === 'demo') {
+          if (currentSessionId === 'new') {
             const newId = `sess-${Date.now()}`;
             const newTitle = query.length > 32 ? query.substring(0, 32) + '...' : query;
             const newSession = {
@@ -334,6 +299,14 @@ export default function JarvisChatbot() {
             };
             setChatSessions((prev) => [newSession, ...prev]);
             setCurrentSessionId(newId);
+          } else {
+            setChatSessions((prev) =>
+              prev.map((s) =>
+                s.id === currentSessionId
+                  ? { ...s, messages: [...(s.messages || []), userMessage, finalBotMessage] }
+                  : s
+              )
+            );
           }
         },
         // On Error fallback
@@ -357,6 +330,7 @@ export default function JarvisChatbot() {
             };
 
             setMessages((prev) => prev.map((m) => (m.id === pendingBotId ? finalBotMessage : m)));
+            setLiveStreamEvents(finalBotMessage.events || []);
           } catch (fallbackErr) {
             const errBotMessage = {
               id: pendingBotId,
@@ -385,9 +359,20 @@ export default function JarvisChatbot() {
     }
   };
 
+  const samplePrompts = [
+    'Why is Partner 301 on credit hold and what is their exposure?',
+    'How many packages were received yesterday at EWR1 vs ONT1?',
+    'What are the Gold partner credit terms and payment policies?',
+    'What are the SOP inspection rules for return grading?'
+  ];
+
   const filteredSessions = chatSessions.filter((s) =>
     s.title.toLowerCase().includes(searchFilter.toLowerCase())
   );
+
+  // Latest user query for workflow panel title
+  const latestUserQuery =
+    [...messages].reverse().find((m) => m.role === 'user')?.content || 'Active operational inquiry';
 
   return (
     <div
@@ -643,9 +628,8 @@ export default function JarvisChatbot() {
                   onClick={() => {
                     if (isEditing) return;
                     setActiveView('chat');
-                    setInputQuery(p.query || `Provide an executive briefing on ${p.name}`);
+                    handleSubmit(null, p.query || `Provide an executive briefing on ${p.name}`);
                     if (isMobile) setSidebarOpen(false);
-                    if (inputRef.current) inputRef.current.focus();
                   }}
                   title={p.query || p.name}
                   style={{
@@ -727,90 +711,96 @@ export default function JarvisChatbot() {
             Recents
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-            {filteredSessions.map((s) => {
-              const isSelected = activeView === 'chat' && currentSessionId === s.id;
-              const isEditing = editingSessionId === s.id;
+            {filteredSessions.length === 0 ? (
+              <div style={{ padding: '6px 10px', fontSize: '11.5px', color: '#9ca3af', fontStyle: 'italic' }}>
+                No active conversations
+              </div>
+            ) : (
+              filteredSessions.map((s) => {
+                const isSelected = activeView === 'chat' && currentSessionId === s.id;
+                const isEditing = editingSessionId === s.id;
 
-              return (
-                <div
-                  key={s.id}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '6px 8px',
-                    borderRadius: '6px',
-                    color: isSelected ? '#1a1c19' : '#3d3f3b',
-                    background: isSelected ? '#e5e3dc' : 'transparent',
-                    fontSize: '12px',
-                    fontWeight: isSelected ? '600' : '400',
-                    cursor: 'pointer'
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!isSelected) e.currentTarget.style.background = '#e8e6df';
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!isSelected) e.currentTarget.style.background = 'transparent';
-                  }}
-                >
-                  {isEditing ? (
-                    <input
-                      type="text"
-                      value={editingTitle}
-                      onChange={(e) => setEditingTitle(e.target.value)}
-                      onBlur={() => handleRenameSession(s.id, editingTitle)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') handleRenameSession(s.id, editingTitle);
-                        if (e.key === 'Escape') setEditingSessionId(null);
-                      }}
-                      autoFocus
-                      style={{
-                        background: '#ffffff',
-                        border: '1px solid #0e372d',
-                        borderRadius: '4px',
-                        color: '#1a1c19',
-                        fontSize: '12px',
-                        padding: '2px 6px',
-                        width: '100%'
-                      }}
-                    />
-                  ) : (
-                    <span
-                      onClick={() => handleSelectSession(s)}
-                      style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1 }}
-                    >
-                      {s.title}
-                    </span>
-                  )}
+                return (
+                  <div
+                    key={s.id}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      padding: '6px 8px',
+                      borderRadius: '6px',
+                      color: isSelected ? '#1a1c19' : '#3d3f3b',
+                      background: isSelected ? '#e5e3dc' : 'transparent',
+                      fontSize: '12px',
+                      fontWeight: isSelected ? '600' : '400',
+                      cursor: 'pointer'
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!isSelected) e.currentTarget.style.background = '#e8e6df';
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isSelected) e.currentTarget.style.background = 'transparent';
+                    }}
+                  >
+                    {isEditing ? (
+                      <input
+                        type="text"
+                        value={editingTitle}
+                        onChange={(e) => setEditingTitle(e.target.value)}
+                        onBlur={() => handleRenameSession(s.id, editingTitle)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') handleRenameSession(s.id, editingTitle);
+                          if (e.key === 'Escape') setEditingSessionId(null);
+                        }}
+                        autoFocus
+                        style={{
+                          background: '#ffffff',
+                          border: '1px solid #0e372d',
+                          borderRadius: '4px',
+                          color: '#1a1c19',
+                          fontSize: '12px',
+                          padding: '2px 6px',
+                          width: '100%'
+                        }}
+                      />
+                    ) : (
+                      <span
+                        onClick={() => handleSelectSession(s)}
+                        style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1 }}
+                      >
+                        {s.title}
+                      </span>
+                    )}
 
-                  {!isEditing && (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px', opacity: 0.6 }}>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setEditingSessionId(s.id);
-                          setEditingTitle(s.title);
-                        }}
-                        title="Rename conversation"
-                        style={{ background: 'transparent', border: 'none', color: '#6b7280', cursor: 'pointer', padding: '2px' }}
-                      >
-                        ✎
-                      </button>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSessionToDelete(s);
-                        }}
-                        title="Delete conversation"
-                        style={{ background: 'transparent', border: 'none', color: '#ef4444', cursor: 'pointer', padding: '2px' }}
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
+                    {!isEditing && (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px', opacity: 0.6 }}>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setEditingSessionId(s.id);
+                            setEditingTitle(s.title);
+                          }}
+                          title="Rename conversation"
+                          style={{ background: 'transparent', border: 'none', color: '#6b7280', cursor: 'pointer', padding: '2px' }}
+                        >
+                          ✎
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSessionToDelete(s);
+                          }}
+                          title="Delete conversation"
+                          style={{ background: 'transparent', border: 'none', color: '#ef4444', cursor: 'pointer', padding: '2px' }}
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                );
+              })
+            )}
           </div>
         </div>
 
@@ -854,7 +844,7 @@ export default function JarvisChatbot() {
       </aside>
 
       {/* ========================================================================= */}
-      {/* 2. MAIN APPLICATION CANVAS (Fully Phone & Desktop Responsive)             */}
+      {/* 2. MAIN APPLICATION CANVAS                                                */}
       {/* ========================================================================= */}
       <main style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%', position: 'relative', background: '#f8f7f4', overflow: 'hidden' }}>
         
@@ -1024,7 +1014,7 @@ export default function JarvisChatbot() {
             )}
 
             {/* Mobile Only: Workflow Sheet Toggle Button */}
-            {isMobile && activeView === 'chat' && (
+            {isMobile && activeView === 'chat' && showWorkflowPanel && (
               <button
                 onClick={() => setMobileWorkflowOpen(true)}
                 style={{
@@ -1046,7 +1036,7 @@ export default function JarvisChatbot() {
               </button>
             )}
 
-            {/* Operations Dashboard Button (Desktop or icon on mobile) */}
+            {/* Operations Dashboard Button */}
             {!isMobile ? (
               <button
                 onClick={() => setActiveView(activeView === 'founder' ? 'chat' : 'founder')}
@@ -1118,123 +1108,190 @@ export default function JarvisChatbot() {
             >
               <div style={{ width: '100%', maxWidth: '820px', display: 'flex', flexDirection: 'column', gap: isMobile ? '18px' : '24px' }}>
                 
-                {messages.map((m) => (
-                  <div
-                    key={m.id}
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: m.role === 'user' ? 'flex-end' : 'flex-start',
-                      width: '100%'
-                    }}
-                  >
-                    {/* USER MESSAGE BUBBLE */}
-                    {m.role === 'user' ? (
-                      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', maxWidth: isMobile ? '90%' : '80%' }}>
-                        <div
+                {/* Zero State Hero Screen when no active conversation */}
+                {messages.length === 0 ? (
+                  <div style={{ margin: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', maxWidth: '720px', padding: isMobile ? '30px 10px' : '60px 20px', textAlign: 'center' }}>
+                    <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: '#0e372d', color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px', boxShadow: '0 4px 14px rgba(14, 55, 45, 0.25)' }}>
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="#ffffff">
+                        <path d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.3 1.34.3C19 20 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5s1.75 3.75 1.75 3.75C7 8 17 8 17 8z"/>
+                      </svg>
+                    </div>
+                    <h2 style={{ fontSize: isMobile ? '22px' : '28px', fontWeight: '700', color: '#111827', margin: '0 0 8px 0', letterSpacing: '-0.02em' }}>
+                      Where should we begin?
+                    </h2>
+                    <p style={{ fontSize: isMobile ? '13px' : '14px', color: '#6b7280', margin: '0 0 28px 0', maxWidth: '520px', lineHeight: '1.5' }}>
+                      Ask operational questions, investigate wholesale credit limits, audit return grading SOPs, or evaluate dock-to-stock metrics.
+                    </p>
+
+                    {/* Prompt suggestion chips */}
+                    <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)', gap: '10px', width: '100%' }}>
+                      {samplePrompts.map((promptText, pIdx) => (
+                        <button
+                          key={pIdx}
+                          type="button"
+                          onClick={() => {
+                            handleSubmit(null, promptText);
+                          }}
                           style={{
-                            background: '#ebe5df',
-                            border: '1px solid #ded9d2',
-                            borderRadius: '16px',
-                            padding: isMobile ? '10px 14px' : '12px 18px',
-                            fontSize: isMobile ? '13.5px' : '14.5px',
-                            color: '#1f211e',
-                            lineHeight: '1.55',
-                            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.03)'
+                            background: '#ffffff',
+                            border: '1px solid #e5e5e0',
+                            borderRadius: '10px',
+                            padding: '12px 14px',
+                            textAlign: 'left',
+                            cursor: 'pointer',
+                            fontSize: '13px',
+                            color: '#1f2937',
+                            lineHeight: '1.45',
+                            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.02)',
+                            transition: 'all 0.15s ease'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.borderColor = '#0e372d';
+                            e.currentTarget.style.boxShadow = '0 3px 10px rgba(14, 55, 45, 0.08)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.borderColor = '#e5e5e0';
+                            e.currentTarget.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.02)';
                           }}
                         >
-                          <div>{m.content}</div>
-                          <div style={{ textAlign: 'right', fontSize: '10.5px', color: '#787a74', marginTop: '4px' }}>
-                            {m.timestamp || '10:24 AM'}
+                          <div style={{ fontWeight: '600', color: '#111827', marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <span style={{ color: '#0e372d' }}>✨</span>
+                            <span>Query Suggestion</span>
                           </div>
-                        </div>
-
-                        {/* User Avatar */}
-                        <div
-                          style={{
-                            width: isMobile ? '28px' : '32px',
-                            height: isMobile ? '28px' : '32px',
-                            borderRadius: '50%',
-                            background: '#0e372d',
-                            color: '#ffffff',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            fontWeight: '600',
-                            fontSize: isMobile ? '11px' : '12px',
-                            flexShrink: 0
-                          }}
-                        >
-                          PS
-                        </div>
-                      </div>
-                    ) : (
-                      /* ASSISTANT MESSAGE CONTAINER */
-                      <div style={{ display: 'flex', gap: isMobile ? '10px' : '14px', width: '100%' }}>
-                        {/* Jarvis Avatar */}
-                        <div
-                          style={{
-                            width: isMobile ? '28px' : '32px',
-                            height: isMobile ? '28px' : '32px',
-                            borderRadius: '50%',
-                            background: '#111827',
-                            color: '#ffffff',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            fontWeight: 'bold',
-                            fontSize: isMobile ? '12px' : '13px',
-                            flexShrink: 0
-                          }}
-                        >
-                          J
-                        </div>
-
-                        <div style={{ flex: 1, minWidth: 0 }}>
-                          {/* Route & Latency Badges */}
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                            <span
-                              style={{
-                                fontSize: '10.5px',
-                                color: '#6d28d9',
-                                background: '#ede9fe',
-                                border: '1px solid #ddd6fe',
-                                padding: '2px 7px',
-                                borderRadius: '4px',
-                                fontWeight: '700',
-                                letterSpacing: '0.04em'
-                              }}
-                            >
-                              {m.route || 'KNOWLEDGE + DATA'}
-                            </span>
-
-                            <span style={{ fontSize: '11px', color: '#6b7280', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                              ⏱ {m.latencyMs ? (m.latencyMs / 1000).toFixed(1) : '12.4'}s
-                            </span>
-                          </div>
-
-                          {/* Assistant Response Text */}
-                          <div style={{ fontSize: isMobile ? '13.5px' : '14.5px', color: '#1f2937', lineHeight: '1.6', marginBottom: '10px' }}>
-                            {m.content}
-                          </div>
-
-                          {/* Structured Response Cards */}
-                          <StructuredResponse
-                            content={m.content}
-                            citations={m.citations}
-                            onOpenCitation={(c) => setActiveCitation(c)}
-                          />
-                        </div>
-                      </div>
-                    )}
+                          <div style={{ color: '#4b5563', fontSize: '12.5px' }}>{promptText}</div>
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                ))}
+                ) : (
+                  messages.map((m) => (
+                    <div
+                      key={m.id}
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: m.role === 'user' ? 'flex-end' : 'flex-start',
+                        width: '100%'
+                      }}
+                    >
+                      {/* USER MESSAGE BUBBLE */}
+                      {m.role === 'user' ? (
+                        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', maxWidth: isMobile ? '90%' : '80%' }}>
+                          <div
+                            style={{
+                              background: '#ebe5df',
+                              border: '1px solid #ded9d2',
+                              borderRadius: '16px',
+                              padding: isMobile ? '10px 14px' : '12px 18px',
+                              fontSize: isMobile ? '13.5px' : '14.5px',
+                              color: '#1f211e',
+                              lineHeight: '1.55',
+                              boxShadow: '0 1px 3px rgba(0, 0, 0, 0.03)'
+                            }}
+                          >
+                            <div>{m.content}</div>
+                            <div style={{ textAlign: 'right', fontSize: '10.5px', color: '#787a74', marginTop: '4px' }}>
+                              {m.timestamp}
+                            </div>
+                          </div>
+
+                          {/* User Avatar */}
+                          <div
+                            style={{
+                              width: isMobile ? '28px' : '32px',
+                              height: isMobile ? '28px' : '32px',
+                              borderRadius: '50%',
+                              background: '#0e372d',
+                              color: '#ffffff',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              fontWeight: '600',
+                              fontSize: isMobile ? '11px' : '12px',
+                              flexShrink: 0
+                            }}
+                          >
+                            PS
+                          </div>
+                        </div>
+                      ) : (
+                        /* ASSISTANT MESSAGE CONTAINER */
+                        <div style={{ display: 'flex', gap: isMobile ? '10px' : '14px', width: '100%' }}>
+                          {/* Jarvis Avatar */}
+                          <div
+                            style={{
+                              width: isMobile ? '28px' : '32px',
+                              height: isMobile ? '28px' : '32px',
+                              borderRadius: '50%',
+                              background: '#111827',
+                              color: '#ffffff',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              fontWeight: 'bold',
+                              fontSize: isMobile ? '12px' : '13px',
+                              flexShrink: 0
+                            }}
+                          >
+                            J
+                          </div>
+
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            {/* Route & Latency Badges */}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                              <span
+                                style={{
+                                  fontSize: '10.5px',
+                                  color: '#6d28d9',
+                                  background: '#ede9fe',
+                                  border: '1px solid #ddd6fe',
+                                  padding: '2px 7px',
+                                  borderRadius: '4px',
+                                  fontWeight: '700',
+                                  letterSpacing: '0.04em'
+                                }}
+                              >
+                                {m.route || 'KNOWLEDGE + DATA'}
+                              </span>
+
+                              {m.latencyMs && (
+                                <span style={{ fontSize: '11px', color: '#6b7280', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                  ⏱ {(m.latencyMs / 1000).toFixed(1)}s
+                                </span>
+                              )}
+
+                              {m.isGenerating && (
+                                <span style={{ fontSize: '11px', color: '#10b981', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                  <span className="live-pulsing-dot" />
+                                  <span>Streaming telemetry...</span>
+                                </span>
+                              )}
+                            </div>
+
+                            {/* Structured Response from Real AI Pipeline */}
+                            {m.isGenerating && !m.content ? (
+                              <div style={{ color: '#6b7280', fontStyle: 'italic', fontSize: '13.5px', padding: '6px 0' }}>
+                                Executing retrieval and dual-synthesis stages...
+                              </div>
+                            ) : (
+                              <StructuredResponse
+                                content={m.content}
+                                citations={m.citations}
+                                onOpenCitation={(c) => setActiveCitation(c)}
+                              />
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ))
+                )}
 
                 <div ref={messagesEndRef} />
               </div>
             </div>
 
-            {/* Desktop Only: Docked AI Execution Workflow Panel */}
+            {/* Desktop Only: Docked AI Execution Workflow Panel (100% Dynamic) */}
             {!isMobile && showWorkflowPanel && (
               <div
                 style={{
@@ -1248,7 +1305,7 @@ export default function JarvisChatbot() {
                   <ExecutionWorkflow
                     events={liveStreamEvents}
                     isStreaming={isLoading}
-                    queryTitle={messages[messages.length - 2]?.content || 'Investigating Partner 301 credit hold and release process.'}
+                    queryTitle={latestUserQuery}
                     onClose={() => setShowWorkflowPanel(false)}
                   />
                 </div>
@@ -1294,7 +1351,7 @@ export default function JarvisChatbot() {
               <ExecutionWorkflow
                 events={liveStreamEvents}
                 isStreaming={isLoading}
-                queryTitle={messages[messages.length - 2]?.content || 'Investigating Partner 301 credit hold and release process.'}
+                queryTitle={latestUserQuery}
                 onClose={() => setMobileWorkflowOpen(false)}
               />
             </div>
@@ -1302,7 +1359,7 @@ export default function JarvisChatbot() {
         )}
 
         {/* ===================================================================== */}
-        {/* 3. BOTTOM FLOATING CHAT INPUT BAR (Phone & Desktop Responsive)       */}
+        {/* 3. BOTTOM FLOATING CHAT INPUT BAR                                    */}
         {/* ===================================================================== */}
         {activeView === 'chat' && (
           <div

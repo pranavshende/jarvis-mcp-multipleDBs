@@ -2,98 +2,77 @@ import React, { useState } from 'react';
 
 /**
  * ExecutionWorkflow
- * Premium Enterprise AI Execution Workflow Diagram for Jarvis AI.
- * Recreates the exact macOS card UI from the design reference:
- * - macOS window controls (🔴 🟡 🟢)
- * - Live execution badge (● Live)
- * - Stepper timeline with duration badges (✓ 0.4s)
- * - Parallel execution branch (RAG Retrieval + SQL Engine with spinner)
- * - Grounded validation stages
+ * 100% Dynamic Enterprise AI Execution Workflow Diagram for Jarvis AI.
+ * Driven entirely by real execution events emitted from the Gateway SSE stream.
+ * - Dynamic pipeline stages mapped to live backend events
+ * - Real execution timings (durationMs)
+ * - Dynamic status states: Running (animated spinner), Completed (✓), Skipped (—), Failed (✕)
+ * - Parallel execution fork (RAG Retrieval + SQL Engine)
+ * - Real user query displayed in the subtitle
  */
 
-export const DEFAULT_WORKFLOW_STAGES = [
-  {
-    id: 'QUERY_UNDERSTANDING',
-    label: 'Query Understanding',
-    subtext: 'Analyzed request and extracted intent.',
-    status: 'completed',
-    duration: '0.4s'
-  },
-  {
-    id: 'INTENT_DETECTION',
-    label: 'Intent & Entity Detection',
-    subtext: 'Intent: Credit Investigation | Entity: Partner 301',
-    status: 'completed',
-    duration: '0.6s'
-  },
-  {
-    id: 'ORCHESTRATOR',
-    label: 'Business Orchestration',
-    subtext: 'Selected required systems (SQL + RAG).',
-    status: 'completed',
-    duration: '0.3s'
-  },
+const WORKFLOW_PIPELINE = [
+  { id: 'QUERY_UNDERSTANDING', label: 'Query Understanding', defaultSubtext: 'Analyzing query semantics with Gemini' },
+  { id: 'INTENT_DETECTION', label: 'Intent & Entity Detection', defaultSubtext: 'Extracting operational intent & entities' },
+  { id: 'ORCHESTRATOR', label: 'Business Orchestration', defaultSubtext: 'Planning execution graph' },
   {
     id: 'PARALLEL_EXECUTION',
-    isParallel: true,
+    isFork: true,
     branches: [
-      {
-        id: 'RAG_RETRIEVAL',
-        label: 'RAG Retrieval',
-        subtext: 'Fetched credit policy & release SOP.',
-        status: 'completed',
-        duration: '1.8s'
-      },
-      {
-        id: 'SQL_ENGINE',
-        label: 'SQL Engine',
-        subtext: 'Retrieving live partner AR and credit data...',
-        status: 'running',
-        duration: '2.1s'
-      }
+      { id: 'RAG_RETRIEVAL', label: 'RAG Retrieval', defaultSubtext: 'Searching certified operational knowledge' },
+      { id: 'SQL_ENGINE', label: 'SQL Engine', defaultSubtext: 'Executing deterministic database metrics' }
     ]
   },
-  {
-    id: 'CONTEXT_AGGREGATION',
-    label: 'Context Aggregation',
-    subtext: 'Combining policy and live data...',
-    status: 'pending'
-  },
-  {
-    id: 'GEMINI_REASONING',
-    label: 'Gemini Reasoning',
-    subtext: 'Analyzing results and drafting answer...',
-    status: 'pending'
-  },
-  {
-    id: 'RESPONSE_GENERATION',
-    label: 'Response Generation',
-    subtext: 'Formatting with citations...',
-    status: 'pending'
-  },
-  {
-    id: 'CITATION_VALIDATION',
-    label: 'Citation Validation',
-    subtext: 'Verifying document references...',
-    status: 'pending'
-  }
+  { id: 'CONTEXT_AGGREGATION', label: 'Context Aggregation', defaultSubtext: 'Synthesizing metrics and policy rules' },
+  { id: 'GEMINI_REASONING', label: 'Gemini Reasoning', defaultSubtext: 'Formulating grounded root cause response' },
+  { id: 'CITATION_VALIDATION', label: 'Citation Validation', defaultSubtext: 'Validating against certified MSC sources' }
 ];
 
 export default function ExecutionWorkflow({
   events = [],
   isStreaming = false,
-  queryTitle = 'Investigating Partner 301 credit hold and release process.',
+  queryTitle = 'Awaiting input query...',
   onClose
 }) {
   const [selectedNode, setSelectedNode] = useState(null);
 
-  // Map incoming events to stage states if streaming live
-  const stageMap = {};
-  if (events && events.length > 0) {
+  // Index events by stage for fast lookup
+  const eventMap = {};
+  if (Array.isArray(events)) {
     events.forEach((e) => {
-      stageMap[e.stage] = e;
+      if (e && e.stage) {
+        eventMap[e.stage] = e;
+      }
     });
   }
+
+  // Helper to format duration dynamically
+  const formatDuration = (ms) => {
+    if (ms === undefined || ms === null) return '';
+    if (ms < 100) return '<0.1s';
+    if (ms < 1000) return `${(ms / 1000).toFixed(1)}s`;
+    return `${(ms / 1000).toFixed(1)}s`;
+  };
+
+  // Helper to resolve stage status dynamically
+  const getStageState = (stageId) => {
+    const evt = eventMap[stageId];
+    if (evt) {
+      return {
+        status: evt.status || 'completed',
+        message: evt.message,
+        duration: formatDuration(evt.durationMs),
+        metadata: evt.metadata
+      };
+    }
+    // If no event yet:
+    if (isStreaming) {
+      return { status: 'pending', message: 'Queued in execution pipeline', duration: '' };
+    }
+    return { status: 'skipped', message: 'Stage not required for this query', duration: '' };
+  };
+
+  const hasAnyEvents = events && events.length > 0;
 
   return (
     <div
@@ -128,16 +107,16 @@ export default function ExecutionWorkflow({
               display: 'inline-flex',
               alignItems: 'center',
               gap: '4px',
-              background: '#14532d',
-              color: '#4ade80',
+              background: isStreaming ? '#14532d' : '#f3f4f6',
+              color: isStreaming ? '#4ade80' : '#4b5563',
               fontSize: '10.5px',
               fontWeight: '600',
               padding: '2px 8px',
               borderRadius: '12px'
             }}
           >
-            <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#4ade80' }} />
-            Live
+            {isStreaming && <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#4ade80' }} />}
+            {isStreaming ? 'Live' : 'Verified'}
           </span>
 
           {onClose && (
@@ -151,153 +130,201 @@ export default function ExecutionWorkflow({
         </div>
       </div>
 
-      {/* Title & Subtitle */}
+      {/* Dynamic Title & Subtitle from user query */}
       <div style={{ marginTop: '12px', marginBottom: '14px' }}>
         <h3 style={{ fontSize: '15px', fontWeight: '700', color: '#111827', margin: '0 0 3px 0' }}>
-          Processing your request...
+          {isStreaming ? 'Processing your request...' : (hasAnyEvents ? 'Execution Complete' : 'Standby')}
         </h3>
-        <p style={{ fontSize: '12px', color: '#6b7280', margin: 0, lineHeight: '1.4' }}>
+        <p
+          style={{
+            fontSize: '12px',
+            color: '#6b7280',
+            margin: 0,
+            lineHeight: '1.4',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            display: '-webkit-box',
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical'
+          }}
+        >
           {queryTitle}
         </p>
       </div>
 
-      {/* Stepper Timeline */}
+      {/* Dynamic Stepper Timeline */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', position: 'relative' }}>
         
-        {/* Step 1: Query Understanding */}
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-start', position: 'relative' }}>
-          {/* Timeline Connector Line */}
-          <div style={{ position: 'absolute', left: '9px', top: '20px', bottom: '-12px', width: '2px', background: '#10b981', zIndex: 1 }} />
-          
-          <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: '#10b981', color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: 'bold', zIndex: 2, flexShrink: 0 }}>
-            ✓
-          </div>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <span style={{ fontSize: '12.5px', fontWeight: '600', color: '#111827' }}>Query Understanding</span>
-              <span style={{ fontSize: '11px', color: '#16a34a', fontWeight: '500' }}>✓ 0.4s</span>
-            </div>
-            <div style={{ fontSize: '11px', color: '#6b7280' }}>Analyzed request and extracted intent.</div>
-          </div>
-        </div>
+        {WORKFLOW_PIPELINE.map((stage, sIdx) => {
+          // If parallel execution fork
+          if (stage.isFork) {
+            const ragState = getStageState('RAG_RETRIEVAL');
+            const sqlState = getStageState('SQL_ENGINE');
+            const isForkActive = ragState.status === 'running' || sqlState.status === 'running';
+            const isForkDone = ragState.status === 'completed' || sqlState.status === 'completed';
 
-        {/* Step 2: Intent & Entity Detection */}
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-start', position: 'relative' }}>
-          <div style={{ position: 'absolute', left: '9px', top: '20px', bottom: '-12px', width: '2px', background: '#10b981', zIndex: 1 }} />
-          <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: '#10b981', color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: 'bold', zIndex: 2, flexShrink: 0 }}>
-            ✓
-          </div>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <span style={{ fontSize: '12.5px', fontWeight: '600', color: '#111827' }}>Intent & Entity Detection</span>
-              <span style={{ fontSize: '11px', color: '#16a34a', fontWeight: '500' }}>✓ 0.6s</span>
-            </div>
-            <div style={{ fontSize: '11px', color: '#6b7280' }}>Intent: Credit Investigation | Entity: Partner 301</div>
-          </div>
-        </div>
+            return (
+              <div key={stage.id} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start', position: 'relative' }}>
+                {sIdx < WORKFLOW_PIPELINE.length - 1 && (
+                  <div style={{ position: 'absolute', left: '9px', top: '20px', bottom: '-12px', width: '2px', background: isForkDone ? '#10b981' : '#e5e7eb', zIndex: 1 }} />
+                )}
 
-        {/* Step 3: Business Orchestration */}
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-start', position: 'relative' }}>
-          <div style={{ position: 'absolute', left: '9px', top: '20px', bottom: '-12px', width: '2px', background: '#10b981', zIndex: 1 }} />
-          <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: '#10b981', color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: 'bold', zIndex: 2, flexShrink: 0 }}>
-            ✓
-          </div>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <span style={{ fontSize: '12.5px', fontWeight: '600', color: '#111827' }}>Business Orchestration</span>
-              <span style={{ fontSize: '11px', color: '#16a34a', fontWeight: '500' }}>✓ 0.3s</span>
-            </div>
-            <div style={{ fontSize: '11px', color: '#6b7280' }}>Selected required systems (SQL + RAG).</div>
-          </div>
-        </div>
-
-        {/* Parallel Execution Step (RAG Retrieval + SQL Engine) */}
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-start', position: 'relative' }}>
-          <div style={{ position: 'absolute', left: '9px', top: '20px', bottom: '-12px', width: '2px', background: '#d1d5db', zIndex: 1 }} />
-          <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: '#10b981', color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: 'bold', zIndex: 2, flexShrink: 0 }}>
-            ✓
-          </div>
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            
-            {/* RAG Branch */}
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <span style={{ fontSize: '12px', fontWeight: '600', color: '#111827' }}>RAG Retrieval</span>
-                <span style={{ fontSize: '11px', color: '#16a34a', fontWeight: '500' }}>✓ 1.8s</span>
-              </div>
-              <div style={{ fontSize: '10.5px', color: '#6b7280' }}>Fetched credit policy & release SOP.</div>
-            </div>
-
-            {/* SQL Engine Branch Card with Active Spinner */}
-            <div
-              style={{
-                background: '#faf5ff',
-                border: '1px solid #c084fc',
-                borderRadius: '8px',
-                padding: '8px 10px',
-                marginTop: '2px'
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#7e22ce" strokeWidth="2.5" className="spin-slow">
-                    <line x1="12" y1="2" x2="12" y2="6"/>
-                    <line x1="12" y1="18" x2="12" y2="22"/>
-                    <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/>
-                    <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/>
-                    <line x1="2" y1="12" x2="6" y2="12"/>
-                    <line x1="18" y1="12" x2="22" y2="12"/>
-                  </svg>
-                  <span style={{ fontSize: '12px', fontWeight: '600', color: '#581c87' }}>SQL Engine</span>
+                {/* Node Status Circle */}
+                <div
+                  style={{
+                    width: '20px',
+                    height: '20px',
+                    borderRadius: '50%',
+                    background: isForkDone ? '#10b981' : isForkActive ? '#3b82f6' : '#ffffff',
+                    border: isForkDone || isForkActive ? 'none' : '2px solid #d1d5db',
+                    color: '#ffffff',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '11px',
+                    fontWeight: 'bold',
+                    zIndex: 2,
+                    flexShrink: 0
+                  }}
+                >
+                  {isForkDone ? '✓' : isForkActive ? '⟳' : ''}
                 </div>
-                <span style={{ fontSize: '11px', fontWeight: '600', color: '#7e22ce' }}>⟳ 2.1s</span>
+
+                {/* Fork Branches Container */}
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  
+                  {/* RAG Retrieval Branch */}
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <span style={{ fontSize: '12px', fontWeight: '600', color: ragState.status === 'skipped' ? '#9ca3af' : '#111827' }}>
+                        RAG Retrieval
+                      </span>
+                      {ragState.duration && (
+                        <span style={{ fontSize: '11px', color: '#16a34a', fontWeight: '500' }}>✓ {ragState.duration}</span>
+                      )}
+                      {ragState.status === 'skipped' && (
+                        <span style={{ fontSize: '10px', color: '#9ca3af', fontStyle: 'italic' }}>— Skipped</span>
+                      )}
+                    </div>
+                    <div style={{ fontSize: '10.5px', color: '#6b7280' }}>
+                      {ragState.message || 'Searching certified operational knowledge chunks'}
+                    </div>
+                  </div>
+
+                  {/* SQL Engine Branch */}
+                  {sqlState.status === 'running' ? (
+                    <div
+                      style={{
+                        background: '#faf5ff',
+                        border: '1px solid #c084fc',
+                        borderRadius: '8px',
+                        padding: '8px 10px',
+                        marginTop: '2px'
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                          <span className="spin-slow" style={{ display: 'inline-block', color: '#7e22ce', fontSize: '12px' }}>⟳</span>
+                          <span style={{ fontSize: '12px', fontWeight: '600', color: '#581c87' }}>SQL Engine</span>
+                        </div>
+                        <span style={{ fontSize: '11px', fontWeight: '600', color: '#7e22ce' }}>Active</span>
+                      </div>
+                      <div style={{ fontSize: '10.5px', color: '#6b21a8', marginTop: '2px' }}>
+                        {sqlState.message || 'Executing live SQL metric query'}
+                      </div>
+                    </div>
+                  ) : (
+                    <div>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <span style={{ fontSize: '12px', fontWeight: '600', color: sqlState.status === 'skipped' ? '#9ca3af' : '#111827' }}>
+                          SQL Engine
+                        </span>
+                        {sqlState.duration && (
+                          <span style={{ fontSize: '11px', color: '#16a34a', fontWeight: '500' }}>✓ {sqlState.duration}</span>
+                        )}
+                        {sqlState.status === 'skipped' && (
+                          <span style={{ fontSize: '10px', color: '#9ca3af', fontStyle: 'italic' }}>— Skipped</span>
+                        )}
+                      </div>
+                      <div style={{ fontSize: '10.5px', color: '#6b7280' }}>
+                        {sqlState.message || 'Executing deterministic database metrics'}
+                      </div>
+                    </div>
+                  )}
+
+                </div>
               </div>
-              <div style={{ fontSize: '10.5px', color: '#6b21a8', marginTop: '2px' }}>
-                Retrieving live partner AR and credit data...
+            );
+          }
+
+          // Single Stage Node
+          const state = getStageState(stage.id);
+          const isDone = state.status === 'completed';
+          const isRunning = state.status === 'running';
+          const isFailed = state.status === 'failed';
+          const isSkipped = state.status === 'skipped';
+
+          return (
+            <div key={stage.id} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start', position: 'relative' }}>
+              {/* Connector line */}
+              {sIdx < WORKFLOW_PIPELINE.length - 1 && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    left: '9px',
+                    top: '20px',
+                    bottom: '-12px',
+                    width: '2px',
+                    background: isDone ? '#10b981' : isRunning ? '#3b82f6' : '#e5e7eb',
+                    zIndex: 1
+                  }}
+                />
+              )}
+
+              {/* Status Circle */}
+              <div
+                style={{
+                  width: '20px',
+                  height: '20px',
+                  borderRadius: '50%',
+                  background: isDone ? '#10b981' : isRunning ? '#3b82f6' : isFailed ? '#ef4444' : '#ffffff',
+                  border: isDone || isRunning || isFailed ? 'none' : '2px solid #d1d5db',
+                  color: '#ffffff',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '11px',
+                  fontWeight: 'bold',
+                  zIndex: 2,
+                  flexShrink: 0
+                }}
+              >
+                {isDone ? '✓' : isRunning ? '⟳' : isFailed ? '!' : isSkipped ? '—' : ''}
+              </div>
+
+              {/* Stage Content */}
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <span style={{ fontSize: '12.5px', fontWeight: '600', color: isSkipped ? '#9ca3af' : '#111827' }}>
+                    {stage.label}
+                  </span>
+                  {state.duration && isDone && (
+                    <span style={{ fontSize: '11px', color: '#16a34a', fontWeight: '500' }}>✓ {state.duration}</span>
+                  )}
+                  {isRunning && (
+                    <span style={{ fontSize: '11px', color: '#3b82f6', fontWeight: '600' }} className="spin-slow">⟳</span>
+                  )}
+                  {isSkipped && (
+                    <span style={{ fontSize: '10.5px', color: '#9ca3af', fontStyle: 'italic' }}>— Skipped</span>
+                  )}
+                </div>
+                <div style={{ fontSize: '11px', color: '#6b7280', marginTop: '1px' }}>
+                  {state.message || stage.defaultSubtext}
+                </div>
               </div>
             </div>
-
-          </div>
-        </div>
-
-        {/* Step 5: Context Aggregation */}
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-start', position: 'relative' }}>
-          <div style={{ position: 'absolute', left: '9px', top: '20px', bottom: '-12px', width: '2px', background: '#e5e7eb', zIndex: 1 }} />
-          <div style={{ width: '20px', height: '20px', borderRadius: '50%', border: '2px solid #d1d5db', background: '#ffffff', zIndex: 2, flexShrink: 0 }} />
-          <div style={{ flex: 1 }}>
-            <div style={{ fontSize: '12px', fontWeight: '500', color: '#6b7280' }}>Context Aggregation</div>
-            <div style={{ fontSize: '10.5px', color: '#9ca3af' }}>Combining policy and live data...</div>
-          </div>
-        </div>
-
-        {/* Step 6: Gemini Reasoning */}
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-start', position: 'relative' }}>
-          <div style={{ position: 'absolute', left: '9px', top: '20px', bottom: '-12px', width: '2px', background: '#e5e7eb', zIndex: 1 }} />
-          <div style={{ width: '20px', height: '20px', borderRadius: '50%', border: '2px solid #d1d5db', background: '#ffffff', zIndex: 2, flexShrink: 0 }} />
-          <div style={{ flex: 1 }}>
-            <div style={{ fontSize: '12px', fontWeight: '500', color: '#6b7280' }}>Gemini Reasoning</div>
-            <div style={{ fontSize: '10.5px', color: '#9ca3af' }}>Analyzing results and drafting answer...</div>
-          </div>
-        </div>
-
-        {/* Step 7: Response Generation */}
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-start', position: 'relative' }}>
-          <div style={{ position: 'absolute', left: '9px', top: '20px', bottom: '-12px', width: '2px', background: '#e5e7eb', zIndex: 1 }} />
-          <div style={{ width: '20px', height: '20px', borderRadius: '50%', border: '2px solid #d1d5db', background: '#ffffff', zIndex: 2, flexShrink: 0 }} />
-          <div style={{ flex: 1 }}>
-            <div style={{ fontSize: '12px', fontWeight: '500', color: '#6b7280' }}>Response Generation</div>
-            <div style={{ fontSize: '10.5px', color: '#9ca3af' }}>Formatting with citations...</div>
-          </div>
-        </div>
-
-        {/* Step 8: Citation Validation */}
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
-          <div style={{ width: '20px', height: '20px', borderRadius: '50%', border: '2px solid #d1d5db', background: '#ffffff', zIndex: 2, flexShrink: 0 }} />
-          <div style={{ flex: 1 }}>
-            <div style={{ fontSize: '12px', fontWeight: '500', color: '#6b7280' }}>Citation Validation</div>
-            <div style={{ fontSize: '10.5px', color: '#9ca3af' }}>Verifying document references...</div>
-          </div>
-        </div>
+          );
+        })}
 
       </div>
 
@@ -307,7 +334,7 @@ export default function ExecutionWorkflow({
           to { transform: rotate(360deg); }
         }
         .spin-slow {
-          animation: spin 2s linear infinite;
+          animation: spin 1.5s linear infinite;
         }
       `}</style>
     </div>

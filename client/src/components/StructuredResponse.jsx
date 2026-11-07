@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 
 /**
  * StructuredResponse
- * Premium Enterprise AI Response Renderer for Jarvis AI.
- * Styled in the luxury warm-linen / emerald-accent aesthetic matching the design reference:
- * - Green accent bar headings (| Executive Summary, | Release Process)
- * - Clean white cards with subtle borders and shadows (Current Status, Applicable Policy)
- * - Horizontal interactive workflow steppers
- * - Refined citation source pills with preview
+ * 100% Dynamic Enterprise AI Response Renderer for Jarvis AI.
+ * Completely free of hardcoded mock data, partner IDs, or synthetic cards.
+ * Features:
+ * - Dynamic Markdown Headers with green accent bar
+ * - Dynamic Markdown Tables rendered as clean white enterprise cards
+ * - Dynamic Steppers & Lists for operational procedures
+ * - Dynamic Citation Chips with click-to-preview
  * - Code blocks with copy-to-clipboard
  */
 export default function StructuredResponse({ content, citations = [], onOpenCitation }) {
@@ -148,7 +149,7 @@ export default function StructuredResponse({ content, citations = [], onOpenCita
     return <span key={prefix}>{tokens}</span>;
   };
 
-  // Parse markdown lines into structured blocks
+  // Parse markdown lines dynamically into structured blocks
   const parseBlocks = () => {
     const lines = content.split('\n');
     const blocks = [];
@@ -173,6 +174,28 @@ export default function StructuredResponse({ content, citations = [], onOpenCita
           code: codeLines.join('\n')
         });
         continue;
+      }
+
+      // Markdown Tables
+      if (line.trim().startsWith('|') && line.trim().endsWith('|')) {
+        const tableLines = [];
+        while (i < lines.length && lines[i].trim().startsWith('|') && lines[i].trim().endsWith('|')) {
+          tableLines.push(lines[i].trim());
+          i++;
+        }
+        if (tableLines.length >= 2) {
+          const parseRow = (rowStr) =>
+            rowStr
+              .slice(1, -1)
+              .split('|')
+              .map((c) => c.trim());
+          
+          const headers = parseRow(tableLines[0]);
+          // Filter out the separator line (|---|---|)
+          const dataRows = tableLines.slice(2).map(parseRow);
+          blocks.push({ type: 'table', headers, rows: dataRows });
+          continue;
+        }
       }
 
       // Headers
@@ -239,6 +262,7 @@ export default function StructuredResponse({ content, citations = [], onOpenCita
         lines[i].trim() &&
         !lines[i].startsWith('#') &&
         !lines[i].trim().startsWith('```') &&
+        !lines[i].trim().startsWith('|') &&
         !lines[i].trim().startsWith('* ') &&
         !lines[i].trim().startsWith('- ') &&
         !/^\s*\d+\.\s+/.test(lines[i]) &&
@@ -255,7 +279,7 @@ export default function StructuredResponse({ content, citations = [], onOpenCita
 
   const blocks = parseBlocks();
 
-  // Extract all citations from the entire content for the dedicated bottom sources row
+  // Extract all citations dynamically from content
   const allCitationMatches = [];
   const citeRegex = /\[Source:\s*([^\]]+)\]/g;
   let cm;
@@ -265,219 +289,156 @@ export default function StructuredResponse({ content, citations = [], onOpenCita
     }
   }
 
-  // Check if content is Partner 301 Credit Hold analysis to render the executive visual cards
-  const isCreditHoldAnalysis =
-    content.toLowerCase().includes('301') &&
-    (content.toLowerCase().includes('credit hold') || content.toLowerCase().includes('overdue'));
-
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', color: '#1f2937', fontSize: '14.5px', lineHeight: '1.65' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', color: '#1f2937', fontSize: '14.5px', lineHeight: '1.65' }}>
       
-      {/* If this is the Partner 301 Credit Hold query, render the exact executive status cards and release stepper from the design */}
-      {isCreditHoldAnalysis && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '6px' }}>
-          
-          {/* Executive Summary Bar */}
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-              <div style={{ width: '3px', height: '16px', borderRadius: '2px', background: '#0e372d' }} />
-              <span style={{ fontSize: '15px', fontWeight: '700', color: '#111827' }}>Executive Summary</span>
-            </div>
-            <p style={{ margin: 0, color: '#374151', fontSize: '14px', lineHeight: '1.6' }}>
-              Partner 301 is currently on credit hold due to an overdue balance exceeding the company’s credit policy threshold. Orders will remain blocked until the overdue amount is cleared and payment confirmation is logged.
-            </p>
-          </div>
-
-          {/* Cards Row: Current Status & Applicable Policy */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))', gap: '14px' }}>
-            
-            {/* Card 1: Current Status */}
-            <div
-              style={{
-                background: '#ffffff',
-                border: '1px solid #e5e5e0',
-                borderRadius: '12px',
-                padding: '16px',
-                boxShadow: '0 1px 3px rgba(0, 0, 0, 0.04)'
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0e372d" strokeWidth="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
-                  <span style={{ fontWeight: '600', fontSize: '13.5px', color: '#111827' }}>Current Status</span>
+      {/* Dynamically Parsed Blocks */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        {blocks.map((block, idx) => {
+          switch (block.type) {
+            case 'h1':
+            case 'h2':
+            case 'h3':
+            case 'h4':
+              return (
+                <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '12px', marginBottom: '2px' }}>
+                  <div style={{ width: '3px', height: '16px', borderRadius: '2px', background: '#0e372d' }} />
+                  <h3 style={{ fontSize: block.type === 'h1' ? '17px' : '15px', fontWeight: '700', color: '#111827', margin: 0 }}>
+                    {renderInlineFormatted(block.text, `h-${idx}`)}
+                  </h3>
                 </div>
-                <span
+              );
+
+            case 'paragraph':
+              return (
+                <p key={idx} style={{ margin: 0, color: '#374151', lineHeight: '1.65' }}>
+                  {renderInlineFormatted(block.text, `p-${idx}`)}
+                </p>
+              );
+
+            case 'table':
+              return (
+                <div
+                  key={idx}
                   style={{
-                    background: '#fee2e2',
-                    color: '#dc2626',
-                    fontSize: '11px',
-                    fontWeight: '600',
-                    padding: '2px 8px',
-                    borderRadius: '6px',
-                    border: '1px solid #fecaca'
+                    margin: '8px 0',
+                    background: '#ffffff',
+                    border: '1px solid #e5e5e0',
+                    borderRadius: '10px',
+                    overflow: 'hidden',
+                    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.03)'
                   }}
                 >
-                  On Credit Hold
-                </span>
-              </div>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '13px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', color: '#4b5563' }}>
-                  <span>Open AR</span>
-                  <span style={{ fontWeight: '600', color: '#111827' }}>$284,279.37</span>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', color: '#4b5563' }}>
-                  <span>Overdue (&gt; 60 days)</span>
-                  <span style={{ fontWeight: '600', color: '#111827' }}>$169,705.53</span>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', color: '#4b5563' }}>
-                  <span>Credit Limit</span>
-                  <span style={{ fontWeight: '600', color: '#111827' }}>$250,000.00</span>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '6px', borderTop: '1px solid #f3f4f6' }}>
-                  <span style={{ fontWeight: '500', color: '#4b5563' }}>Utilization</span>
-                  <span style={{ fontWeight: '700', color: '#dc2626' }}>113.7%</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Card 2: Applicable Policy */}
-            <div
-              style={{
-                background: '#ffffff',
-                border: '1px solid #e5e5e0',
-                borderRadius: '12px',
-                padding: '16px',
-                boxShadow: '0 1px 3px rgba(0, 0, 0, 0.04)'
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0e372d" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                <span style={{ fontWeight: '600', fontSize: '13.5px', color: '#111827' }}>Applicable Policy</span>
-              </div>
-              <div style={{ fontSize: '12.5px', fontWeight: '600', color: '#374151', marginBottom: '6px' }}>
-                Section 4.2 – Credit Hold Policy
-              </div>
-              <p style={{ margin: 0, fontSize: '13px', color: '#6b7280', lineHeight: '1.55' }}>
-                Accounts exceeding credit limits by &gt;10% or with balances &gt;60 days overdue must freeze outbound releases until wire confirmation is logged.
-              </p>
-            </div>
-          </div>
-
-          {/* Release Process Stepper */}
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
-              <div style={{ width: '3px', height: '16px', borderRadius: '2px', background: '#0e372d' }} />
-              <span style={{ fontSize: '15px', fontWeight: '700', color: '#111827' }}>Release Process</span>
-            </div>
-
-            <div className="scroll-x-touch" style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '4px' }}>
-              {/* Step 1 */}
-              <div style={{ minWidth: '130px', flex: '1 1 0', background: '#ffffff', border: '1px solid #e5e5e0', borderRadius: '10px', padding: '12px 10px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                <div style={{ fontSize: '12px', fontWeight: '700', color: '#111827' }}>① Receive Payment</div>
-                <div style={{ fontSize: '11px', color: '#6b7280', lineHeight: '1.4' }}>Full or partial clearing of overdue</div>
-              </div>
-
-              {/* Step 2 */}
-              <div style={{ minWidth: '130px', flex: '1 1 0', background: '#ffffff', border: '1px solid #e5e5e0', borderRadius: '10px', padding: '12px 10px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                <div style={{ fontSize: '12px', fontWeight: '700', color: '#111827' }}>② Log Confirmation</div>
-                <div style={{ fontSize: '11px', color: '#6b7280', lineHeight: '1.4' }}>Record payment in AR system</div>
-              </div>
-
-              {/* Step 3 */}
-              <div style={{ minWidth: '130px', flex: '1 1 0', background: '#ffffff', border: '1px solid #e5e5e0', borderRadius: '10px', padding: '12px 10px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                <div style={{ fontSize: '12px', fontWeight: '700', color: '#111827' }}>③ Verify Balance</div>
-                <div style={{ fontSize: '11px', color: '#6b7280', lineHeight: '1.4' }}>Ensure utilization ≤ 100%</div>
-              </div>
-
-              {/* Step 4 (Highlighted) */}
-              <div style={{ minWidth: '130px', flex: '1 1 0', background: '#dcfce7', border: '1px solid #86efac', borderRadius: '10px', padding: '12px 10px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                <div style={{ fontSize: '12px', fontWeight: '700', color: '#166534' }}>④ Release Orders</div>
-                <div style={{ fontSize: '11px', color: '#166534', opacity: 0.85, lineHeight: '1.4' }}>Lift credit hold and resume shipments</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Standard Markdown Blocks for other responses or supplemental details */}
-      {!isCreditHoldAnalysis && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-          {blocks.map((block, idx) => {
-            switch (block.type) {
-              case 'h1':
-              case 'h2':
-              case 'h3':
-              case 'h4':
-                return (
-                  <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '10px', marginBottom: '2px' }}>
-                    <div style={{ width: '3px', height: '16px', borderRadius: '2px', background: '#0e372d' }} />
-                    <h3 style={{ fontSize: '15px', fontWeight: '700', color: '#111827', margin: 0 }}>
-                      {renderInlineFormatted(block.text, `h-${idx}`)}
-                    </h3>
+                  <div className="scroll-x-touch" style={{ overflowX: 'auto' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px', textAlign: 'left' }}>
+                      <thead>
+                        <tr style={{ background: '#f8f7f4', borderBottom: '1px solid #e5e5e0' }}>
+                          {block.headers.map((h, hIdx) => (
+                            <th key={hIdx} style={{ padding: '8px 12px', fontWeight: '600', color: '#111827' }}>
+                              {renderInlineFormatted(h, `th-${idx}-${hIdx}`)}
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {block.rows.map((row, rIdx) => (
+                          <tr key={rIdx} style={{ borderBottom: rIdx < block.rows.length - 1 ? '1px solid #f3f4f6' : 'none' }}>
+                            {row.map((cell, cIdx) => (
+                              <td key={cIdx} style={{ padding: '8px 12px', color: '#374151' }}>
+                                {renderInlineFormatted(cell, `td-${idx}-${rIdx}-${cIdx}`)}
+                              </td>
+                            ))}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
-                );
+                </div>
+              );
 
-              case 'paragraph':
-                return (
-                  <p key={idx} style={{ margin: 0, color: '#374151', lineHeight: '1.65' }}>
-                    {renderInlineFormatted(block.text, `p-${idx}`)}
-                  </p>
-                );
+            case 'bullet_list':
+              return (
+                <ul key={idx} style={{ margin: '4px 0 8px 0', paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  {block.items.map((item, itemIdx) => (
+                    <li key={itemIdx} style={{ color: '#4b5563', paddingLeft: '2px' }}>
+                      {renderInlineFormatted(item, `li-${idx}-${itemIdx}`)}
+                    </li>
+                  ))}
+                </ul>
+              );
 
-              case 'bullet_list':
-                return (
-                  <ul key={idx} style={{ margin: '4px 0 8px 0', paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                    {block.items.map((item, itemIdx) => (
-                      <li key={itemIdx} style={{ color: '#4b5563', paddingLeft: '2px' }}>
-                        {renderInlineFormatted(item, `li-${idx}-${itemIdx}`)}
-                      </li>
-                    ))}
-                  </ul>
-                );
-
-              case 'number_list':
-                return (
-                  <ol key={idx} style={{ margin: '4px 0 8px 0', paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                    {block.items.map((item, itemIdx) => (
-                      <li key={itemIdx} style={{ color: '#4b5563', paddingLeft: '2px' }}>
-                        {renderInlineFormatted(item, `ol-${idx}-${itemIdx}`)}
-                      </li>
-                    ))}
-                  </ol>
-                );
-
-              case 'code':
-                return (
-                  <div key={idx} style={{ margin: '8px 0', borderRadius: '8px', overflow: 'hidden', border: '1px solid #e5e5e0' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 12px', background: '#f3f2ee', borderBottom: '1px solid #e5e5e0', fontSize: '11px', color: '#6b7280' }}>
-                      <span>{block.lang}</span>
-                      <button
-                        onClick={() => handleCopyCode(block.code, idx)}
-                        style={{ background: 'transparent', border: 'none', color: '#4b5563', cursor: 'pointer', fontSize: '11px' }}
+            case 'number_list':
+              return (
+                <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: '6px', margin: '6px 0' }}>
+                  {block.items.map((item, itemIdx) => (
+                    <div
+                      key={itemIdx}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'flex-start',
+                        gap: '10px',
+                        background: '#ffffff',
+                        border: '1px solid #e5e5e0',
+                        borderRadius: '8px',
+                        padding: '10px 12px',
+                        boxShadow: '0 1px 2px rgba(0, 0, 0, 0.02)'
+                      }}
+                    >
+                      <span
+                        style={{
+                          width: '20px',
+                          height: '20px',
+                          borderRadius: '50%',
+                          background: itemIdx === 0 ? '#0e372d' : '#f3f2ee',
+                          color: itemIdx === 0 ? '#ffffff' : '#4b5563',
+                          fontSize: '11px',
+                          fontWeight: '700',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          flexShrink: 0
+                        }}
                       >
-                        {copiedIndex === idx ? '✓ Copied' : 'Copy'}
-                      </button>
+                        {itemIdx + 1}
+                      </span>
+                      <div style={{ flex: 1, fontSize: '13px', color: '#374151', lineHeight: '1.5' }}>
+                        {renderInlineFormatted(item, `ol-${idx}-${itemIdx}`)}
+                      </div>
                     </div>
-                    <pre style={{ margin: 0, padding: '12px', background: '#ffffff', color: '#1f2937', fontSize: '12.5px', overflowX: 'auto', fontFamily: 'monospace' }}>
-                      <code>{block.code}</code>
-                    </pre>
+                  ))}
+                </div>
+              );
+
+            case 'code':
+              return (
+                <div key={idx} style={{ margin: '8px 0', borderRadius: '8px', overflow: 'hidden', border: '1px solid #e5e5e0' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 12px', background: '#f3f2ee', borderBottom: '1px solid #e5e5e0', fontSize: '11px', color: '#6b7280' }}>
+                    <span>{block.lang}</span>
+                    <button
+                      onClick={() => handleCopyCode(block.code, idx)}
+                      style={{ background: 'transparent', border: 'none', color: '#4b5563', cursor: 'pointer', fontSize: '11px' }}
+                    >
+                      {copiedIndex === idx ? '✓ Copied' : 'Copy'}
+                    </button>
                   </div>
-                );
+                  <pre style={{ margin: 0, padding: '12px', background: '#ffffff', color: '#1f2937', fontSize: '12.5px', overflowX: 'auto', fontFamily: 'monospace' }}>
+                    <code>{block.code}</code>
+                  </pre>
+                </div>
+              );
 
-              case 'hr':
-                return <hr key={idx} style={{ border: 'none', borderTop: '1px solid #e5e5e0', margin: '12px 0' }} />;
+            case 'hr':
+              return <hr key={idx} style={{ border: 'none', borderTop: '1px solid #e5e5e0', margin: '12px 0' }} />;
 
-              default:
-                return null;
-            }
-          })}
-        </div>
-      )}
+            default:
+              return null;
+          }
+        })}
+      </div>
 
-      {/* Sources / Citations Row (As highlighted in the design reference) */}
+      {/* Dynamic Citations & Sources Row */}
       {(allCitationMatches.length > 0 || citations.length > 0) && (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '10px', flexWrap: 'wrap', paddingTop: '8px', borderTop: '1px solid #f3f4f6' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '10px', flexWrap: 'wrap', paddingTop: '10px', borderTop: '1px solid #f3f4f6' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '12px', fontWeight: '600', color: '#6b7280' }}>
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
             <span>Sources</span>
