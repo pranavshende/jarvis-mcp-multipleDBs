@@ -32,6 +32,7 @@ export default function JarvisChatbot() {
   // Multi-User Authentication State
   const [currentUser, setCurrentUser] = useState(null);
   const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [isAuthChecking, setIsAuthChecking] = useState(true);
 
   // Responsive Phone / Desktop Detection
   const [isMobile, setIsMobile] = useState(
@@ -277,10 +278,12 @@ export default function JarvisChatbot() {
   // Check authenticated session and load conversations on mount
   useEffect(() => {
     async function initSession() {
+      setIsAuthChecking(true);
       try {
         const auth = await fetchCurrentUser();
         if (auth && auth.user) {
           setCurrentUser(auth.user);
+          setAuthModalOpen(false);
           await loadConversations();
 
           // Restore active session messages if user was in a conversation
@@ -308,10 +311,14 @@ export default function JarvisChatbot() {
             }
           }
         } else {
+          setCurrentUser(null);
           setAuthModalOpen(true);
         }
       } catch {
+        setCurrentUser(null);
         setAuthModalOpen(true);
+      } finally {
+        setIsAuthChecking(false);
       }
     }
     initSession();
@@ -430,6 +437,7 @@ export default function JarvisChatbot() {
     setMessages([]);
     setChatSessions([]);
     setCurrentSessionId('new');
+    setShowProfileModal(false);
     setAuthModalOpen(true);
   };
 
@@ -662,6 +670,51 @@ export default function JarvisChatbot() {
   // Latest user query for workflow panel title
   const latestUserQuery =
     [...messages].reverse().find((m) => m.role === 'user')?.content || 'Active operational inquiry';
+
+  if (isAuthChecking) {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100vh',
+          width: '100vw',
+          background: '#f8f7f4',
+          color: '#1a1c19',
+          fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+          gap: '16px'
+        }}
+      >
+        <div
+          style={{
+            width: '46px',
+            height: '46px',
+            borderRadius: '13px',
+            background: '#0e372d',
+            color: '#ffffff',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: '0 8px 24px rgba(14, 55, 45, 0.22)'
+          }}
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+            <path d="M12 2L2 7l10 5 10-5-10-5z" />
+            <path d="M2 17l10 5 10-5" />
+            <path d="M2 12l10 5 10-5" />
+          </svg>
+        </div>
+        <div style={{ fontSize: '15px', fontWeight: '600', color: '#111827' }}>
+          Jarvis Enterprise
+        </div>
+        <div style={{ fontSize: '13px', color: '#6b7280' }}>
+          Verifying secure session credentials...
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -1110,13 +1163,75 @@ export default function JarvisChatbot() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            background: '#f3f2ee'
+            background: '#f3f2ee',
+            position: 'relative'
           }}
         >
+          {showProfileModal && currentUser && (
+            <div
+              style={{
+                position: 'absolute',
+                bottom: '100%',
+                left: '10px',
+                right: '10px',
+                marginBottom: '8px',
+                background: '#ffffff',
+                border: '1px solid #e5e7eb',
+                borderRadius: '14px',
+                padding: '14px',
+                boxShadow: '0 10px 25px rgba(0, 0, 0, 0.12)',
+                zIndex: 100,
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '8px'
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '11px', fontWeight: '700', color: '#0e372d', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
+                  User Account
+                </span>
+                <button
+                  onClick={(e) => { e.stopPropagation(); setShowProfileModal(false); }}
+                  style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#9ca3af', fontSize: '14px', padding: 0 }}
+                >
+                  ✕
+                </button>
+              </div>
+              <div>
+                <div style={{ fontSize: '13px', fontWeight: '600', color: '#111827' }}>
+                  {currentUser.name}
+                </div>
+                <div style={{ fontSize: '12px', color: '#6b7280' }}>
+                  {currentUser.email}
+                </div>
+                <div style={{ marginTop: '5px', display: 'inline-block', fontSize: '10.5px', background: '#ecfdf5', color: '#059669', padding: '2px 7px', borderRadius: '4px', fontWeight: '600' }}>
+                  Role: {currentUser.role || 'Executive Founder'}
+                </div>
+              </div>
+              <button
+                onClick={(e) => { e.stopPropagation(); handleLogout(); }}
+                style={{
+                  marginTop: '6px',
+                  padding: '7px',
+                  background: '#fee2e2',
+                  border: 'none',
+                  borderRadius: '8px',
+                  color: '#dc2626',
+                  fontSize: '12px',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  textAlign: 'center'
+                }}
+              >
+                Sign Out
+              </button>
+            </div>
+          )}
+
           <div
             onClick={() => {
               if (!currentUser) setAuthModalOpen(true);
-              else setShowProfileModal(true);
+              else setShowProfileModal((prev) => !prev);
             }}
             style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', flex: 1, minWidth: 0 }}
           >
@@ -1142,7 +1257,7 @@ export default function JarvisChatbot() {
                     .join('')
                     .substring(0, 2)
                     .toUpperCase()
-                : 'PS'}
+                : '?'}
             </div>
             <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               <div style={{ fontSize: '13px', fontWeight: '600', color: '#1a1c19', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
@@ -2051,10 +2166,13 @@ export default function JarvisChatbot() {
 
         {/* Authentication Modal */}
         <AuthModal
-          isOpen={authModalOpen}
-          onClose={() => setAuthModalOpen(false)}
+          isOpen={authModalOpen || (!isAuthChecking && !currentUser)}
+          onClose={() => {
+            if (currentUser) setAuthModalOpen(false);
+          }}
           onAuthSuccess={(user, initialConvId) => {
             setCurrentUser(user);
+            setAuthModalOpen(false);
             loadConversations();
             if (initialConvId) {
               handleSelectSession({ id: initialConvId });

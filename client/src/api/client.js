@@ -272,14 +272,15 @@ export async function fetchGlobalMemory(category = '') {
 // Phase 4: Gateway & Admin Control Plane APIs
 // ============================================================================
 
-const DEFAULT_ADMIN_TOKEN = 'msc_mcp_founder_sec_7a8f9b1c2d3e4f5a6b7c8d9e0f1a2b3c';
-
-function getAdminHeaders() {
-  const token = localStorage.getItem('jarvis_auth_token') || localStorage.getItem('jarvis_mcp_token') || DEFAULT_ADMIN_TOKEN;
-  return {
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${token}`
+export function getAdminHeaders() {
+  const token = localStorage.getItem('jarvis_auth_token') || localStorage.getItem('jarvis_mcp_token');
+  const headers = {
+    'Content-Type': 'application/json'
   };
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  return headers;
 }
 
 // ============================================================================
@@ -290,6 +291,7 @@ export async function signupUser(name, email, password) {
   const res = await fetch(`${GATEWAY_BASE}/api/auth/signup`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
     body: JSON.stringify({ name, email, password })
   });
   const data = await res.json();
@@ -303,6 +305,7 @@ export async function loginUser(email, password) {
   const res = await fetch(`${GATEWAY_BASE}/api/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
     body: JSON.stringify({ email, password })
   });
   const data = await res.json();
@@ -313,18 +316,29 @@ export async function loginUser(email, password) {
 }
 
 export async function logoutUser() {
+  const headers = getAdminHeaders();
   localStorage.removeItem('jarvis_auth_token');
+  localStorage.removeItem('jarvis_mcp_token');
+  localStorage.removeItem('msc_jarvis_active_chat');
+  localStorage.removeItem('msc_jarvis_current_session_id');
+  localStorage.removeItem('msc_jarvis_sessions');
   try {
     await fetch(`${GATEWAY_BASE}/api/auth/logout`, {
       method: 'POST',
-      headers: getAdminHeaders()
+      headers,
+      credentials: 'include'
     });
   } catch {}
 }
 
 export async function fetchCurrentUser() {
+  const token = localStorage.getItem('jarvis_auth_token') || localStorage.getItem('jarvis_mcp_token');
+  if (!token) {
+    throw new Error('Not authenticated: No active token found in storage.');
+  }
   const res = await fetch(`${GATEWAY_BASE}/api/auth/me`, {
-    headers: getAdminHeaders()
+    headers: getAdminHeaders(),
+    credentials: 'include'
   });
   if (!res.ok) throw new Error('Not authenticated');
   return res.json();
