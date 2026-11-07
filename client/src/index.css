@@ -6,48 +6,86 @@
   }
   body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background-color: #0b0f19;
-    color: #f1f5f9;
+    background-color: #f8f7f4;
+    color: #1a1c19;
+    -webkit-font-smoothing: antialiased;
   }
 }
 
-/* Glassmorphism & Modern Card Styling */
+/* Premium Warm Light Theme Tokens */
+:root {
+  --bg-canvas: #f8f7f4;
+  --bg-sidebar: #f3f2ee;
+  --bg-card: #ffffff;
+  --bg-card-warm: #eae5df;
+  --border-subtle: #e8e6df;
+  --border-strong: #ded9d2;
+  --brand-forest: #0e372d;
+  --brand-forest-hover: #13463a;
+  --brand-emerald: #10b981;
+  --text-primary: #1a1c19;
+  --text-secondary: #575953;
+  --text-muted: #787a74;
+}
+
+/* Glass & Card Styling */
 .card-glass {
-  background: rgba(17, 24, 39, 0.75);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #ffffff;
+  border: 1px solid #e8e6df;
   border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
 .card-glass-hover {
   transition: all 0.2s ease-in-out;
 }
 .card-glass-hover:hover {
-  border-color: rgba(99, 102, 241, 0.4);
+  border-color: #0e372d;
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 8px 20px -4px rgba(14, 55, 45, 0.08);
 }
 
 .badge-risk {
-  background: rgba(239, 68, 68, 0.15);
-  color: #f87171;
-  border: 1px solid rgba(239, 68, 68, 0.3);
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
 }
 
 .badge-success {
-  background: rgba(34, 197, 94, 0.15);
-  color: #4ade80;
-  border: 1px solid rgba(34, 197, 94, 0.3);
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid #bbf7d0;
 }
 
 .badge-info {
-  background: rgba(59, 130, 246, 0.15);
-  color: #60a5fa;
-  border: 1px solid rgba(59, 130, 246, 0.3);
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
 }
 
 .badge-warn {
-  background: rgba(245, 158, 11, 0.15);
-  color: #fbbf24;
-  border: 1px solid rgba(245, 158, 11, 0.3);
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fde68a;
+}
+
+/* Live pulsing indicator */
+.live-pulsing-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #10b981;
+  display: inline-block;
+  animation: pulse-ring 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse-ring {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(1.3);
+  }
 }

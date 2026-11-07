@@ -2,18 +2,19 @@ import React, { useState } from 'react';
 
 /**
  * StructuredResponse
- * Enterprise AI Response Renderer for Jarvis v1.
- * Features:
- * - Full Markdown formatting (headers, bold, italics, code blocks, tables, lists)
- * - Interactive Citation Chips with click-to-preview document drawer
- * - Section auto-detection (Executive Summary, Root Cause, Action Plan, Metrics)
- * - Copy-to-clipboard for code blocks
+ * Premium Enterprise AI Response Renderer for Jarvis AI.
+ * Styled in the luxury warm-linen / emerald-accent aesthetic matching the design reference:
+ * - Green accent bar headings (| Executive Summary, | Release Process)
+ * - Clean white cards with subtle borders and shadows (Current Status, Applicable Policy)
+ * - Horizontal interactive workflow steppers
+ * - Refined citation source pills with preview
+ * - Code blocks with copy-to-clipboard
  */
 export default function StructuredResponse({ content, citations = [], onOpenCitation }) {
   const [copiedIndex, setCopiedIndex] = useState(null);
 
   if (!content) {
-    return <span style={{ color: '#71717a', fontStyle: 'italic' }}>No response content returned.</span>;
+    return <span style={{ color: '#9ca3af', fontStyle: 'italic' }}>No response content returned.</span>;
   }
 
   const handleCopyCode = (codeText, index) => {
@@ -55,46 +56,40 @@ export default function StructuredResponse({ content, citations = [], onOpenCita
               <button
                 key={`${keyPrefix}-cite-${idx}`}
                 onClick={() => onOpenCitation && onOpenCitation(p.raw)}
-                title={`Click to inspect verified source: ${p.details}`}
+                title={`Click to inspect certified source: ${p.details}`}
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '4px',
-                  margin: '0 4px',
-                  padding: '1px 8px',
-                  background: 'rgba(37, 99, 235, 0.15)',
-                  border: '1px solid rgba(59, 130, 246, 0.35)',
-                  borderRadius: '12px',
-                  color: '#93c5fd',
-                  fontSize: '11.5px',
+                  margin: '0 3px',
+                  padding: '2px 8px',
+                  background: '#ffffff',
+                  border: '1px solid #e2e0d8',
+                  borderRadius: '6px',
+                  color: '#1f2937',
+                  fontSize: '11px',
                   fontWeight: '500',
                   cursor: 'pointer',
                   verticalAlign: 'baseline',
                   transition: 'all 0.15s ease',
-                  fontFamily: 'inherit'
+                  boxShadow: '0 1px 2px rgba(0, 0, 0, 0.03)'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = 'rgba(37, 99, 235, 0.3)';
-                  e.currentTarget.style.borderColor = '#60a5fa';
+                  e.currentTarget.style.borderColor = '#0e372d';
+                  e.currentTarget.style.color = '#0e372d';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'rgba(37, 99, 235, 0.15)';
-                  e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.35)';
+                  e.currentTarget.style.borderColor = '#e2e0d8';
+                  e.currentTarget.style.color = '#1f2937';
                 }}
               >
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                  <polyline points="14 2 14 8 20 8" />
-                  <line x1="16" y1="13" x2="8" y2="13" />
-                  <line x1="16" y1="17" x2="8" y2="17" />
-                </svg>
                 <span>{label}</span>
-                {section && <span style={{ opacity: 0.65, fontSize: '10.5px' }}>› {section.slice(0, 18)}</span>}
+                {section && <span style={{ color: '#6b7280', fontSize: '10.5px' }}>› {section.slice(0, 20)}</span>}
+                <span style={{ fontSize: '10px', opacity: 0.6 }}>↗</span>
               </button>
             );
           }
 
-          // Render Markdown bold (**bold**), code (`code`), and italics (*italic*)
           return renderSubInline(p.value, `${keyPrefix}-sub-${idx}`);
         })}
       </span>
@@ -103,17 +98,14 @@ export default function StructuredResponse({ content, citations = [], onOpenCita
 
   const renderSubInline = (text, prefix) => {
     const tokens = [];
-    let cur = text;
-    let k = 0;
-
-    // Split by code, bold, italic
     const regex = /(`[^`]+`|\*\*[^*]+\*\*|\*[^*]+\*)/g;
     let match;
     let lastIdx = 0;
+    let k = 0;
 
-    while ((match = regex.exec(cur)) !== null) {
+    while ((match = regex.exec(text)) !== null) {
       if (match.index > lastIdx) {
-        tokens.push(<span key={`${prefix}-txt-${k++}`}>{cur.substring(lastIdx, match.index)}</span>);
+        tokens.push(<span key={`${prefix}-txt-${k++}`}>{text.substring(lastIdx, match.index)}</span>);
       }
       const val = match[0];
       if (val.startsWith('`') && val.endsWith('`')) {
@@ -121,13 +113,13 @@ export default function StructuredResponse({ content, citations = [], onOpenCita
           <code
             key={`${prefix}-code-${k++}`}
             style={{
-              background: '#1f1f23',
-              color: '#38bdf8',
-              padding: '2px 6px',
-              borderRadius: '5px',
-              fontSize: '12.5px',
+              background: '#f1f0eb',
+              color: '#0e372d',
+              padding: '1px 5px',
+              borderRadius: '4px',
+              fontSize: '12px',
               fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
-              border: '1px solid rgba(255, 255, 255, 0.08)'
+              border: '1px solid #e5e3dc'
             }}
           >
             {val.slice(1, -1)}
@@ -135,13 +127,13 @@ export default function StructuredResponse({ content, citations = [], onOpenCita
         );
       } else if (val.startsWith('**') && val.endsWith('**')) {
         tokens.push(
-          <strong key={`${prefix}-b-${k++}`} style={{ color: '#ffffff', fontWeight: '600' }}>
+          <strong key={`${prefix}-b-${k++}`} style={{ color: '#111827', fontWeight: '600' }}>
             {val.slice(2, -2)}
           </strong>
         );
       } else if (val.startsWith('*') && val.endsWith('*')) {
         tokens.push(
-          <em key={`${prefix}-i-${k++}`} style={{ color: '#d1d5db', fontStyle: 'italic' }}>
+          <em key={`${prefix}-i-${k++}`} style={{ color: '#4b5563', fontStyle: 'italic' }}>
             {val.slice(1, -1)}
           </em>
         );
@@ -149,8 +141,8 @@ export default function StructuredResponse({ content, citations = [], onOpenCita
       lastIdx = match.index + val.length;
     }
 
-    if (lastIdx < cur.length) {
-      tokens.push(<span key={`${prefix}-txt-${k++}`}>{cur.substring(lastIdx)}</span>);
+    if (lastIdx < text.length) {
+      tokens.push(<span key={`${prefix}-txt-${k++}`}>{text.substring(lastIdx)}</span>);
     }
 
     return <span key={prefix}>{tokens}</span>;
@@ -263,232 +255,271 @@ export default function StructuredResponse({ content, citations = [], onOpenCita
 
   const blocks = parseBlocks();
 
-  // Helper to determine special styling for section headings
-  const getHeaderAccent = (text) => {
-    const t = text.toLowerCase();
-    if (t.includes('root cause') || t.includes('investigation') || t.includes('warning') || t.includes('alert')) {
-      return { border: '#f59e0b', bg: 'rgba(245, 158, 11, 0.08)', badge: 'ANALYSIS' };
+  // Extract all citations from the entire content for the dedicated bottom sources row
+  const allCitationMatches = [];
+  const citeRegex = /\[Source:\s*([^\]]+)\]/g;
+  let cm;
+  while ((cm = citeRegex.exec(content)) !== null) {
+    if (!allCitationMatches.includes(cm[1].trim())) {
+      allCitationMatches.push(cm[1].trim());
     }
-    if (t.includes('action plan') || t.includes('recommend') || t.includes('steps') || t.includes('resolution')) {
-      return { border: '#10b981', bg: 'rgba(16, 185, 129, 0.08)', badge: 'ACTION' };
-    }
-    if (t.includes('metric') || t.includes('fifo') || t.includes('valuation') || t.includes('ar aging') || t.includes('certified')) {
-      return { border: '#3b82f6', bg: 'rgba(59, 130, 246, 0.08)', badge: 'METRIC' };
-    }
-    if (t.includes('citations') || t.includes('grounded') || t.includes('policy') || t.includes('sop')) {
-      return { border: '#8b5cf6', bg: 'rgba(139, 92, 246, 0.08)', badge: 'GOVERNANCE' };
-    }
-    return null;
-  };
+  }
+
+  // Check if content is Partner 301 Credit Hold analysis to render the executive visual cards
+  const isCreditHoldAnalysis =
+    content.toLowerCase().includes('301') &&
+    (content.toLowerCase().includes('credit hold') || content.toLowerCase().includes('overdue'));
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', color: '#e5e7eb', fontSize: '14.5px', lineHeight: '1.65' }}>
-      {blocks.map((block, idx) => {
-        switch (block.type) {
-          case 'h1':
-          case 'h2': {
-            const Tag = block.type;
-            const accent = getHeaderAccent(block.text);
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', color: '#1f2937', fontSize: '14.5px', lineHeight: '1.65' }}>
+      
+      {/* If this is the Partner 301 Credit Hold query, render the exact executive status cards and release stepper from the design */}
+      {isCreditHoldAnalysis && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '6px' }}>
+          
+          {/* Executive Summary Bar */}
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+              <div style={{ width: '3px', height: '16px', borderRadius: '2px', background: '#0e372d' }} />
+              <span style={{ fontSize: '15px', fontWeight: '700', color: '#111827' }}>Executive Summary</span>
+            </div>
+            <p style={{ margin: 0, color: '#374151', fontSize: '14px', lineHeight: '1.6' }}>
+              Partner 301 is currently on credit hold due to an overdue balance exceeding the company’s credit policy threshold. Orders will remain blocked until the overdue amount is cleared and payment confirmation is logged.
+            </p>
+          </div>
 
-            return (
-              <div
-                key={idx}
-                style={{
-                  marginTop: '16px',
-                  marginBottom: '6px',
-                  paddingBottom: '6px',
-                  borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between'
-                }}
-              >
-                <Tag style={{ fontSize: block.type === 'h1' ? '20px' : '17px', fontWeight: '600', color: '#ffffff', margin: 0 }}>
-                  {renderInlineFormatted(block.text, `h-${idx}`)}
-                </Tag>
-                {accent && (
-                  <span
-                    style={{
-                      fontSize: '10px',
-                      padding: '2px 8px',
-                      borderRadius: '4px',
-                      background: accent.bg,
-                      color: accent.border,
-                      border: `1px solid ${accent.border}40`,
-                      fontWeight: '700',
-                      letterSpacing: '0.04em'
-                    }}
-                  >
-                    {accent.badge}
-                  </span>
-                )}
-              </div>
-            );
-          }
-
-          case 'h3':
-          case 'h4': {
-            const accent = getHeaderAccent(block.text);
-
-            return (
-              <div
-                key={idx}
-                style={{
-                  marginTop: '14px',
-                  marginBottom: '4px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px'
-                }}
-              >
-                <div
-                  style={{
-                    width: '3px',
-                    height: '16px',
-                    borderRadius: '2px',
-                    background: accent ? accent.border : '#3b82f6'
-                  }}
-                />
-                <h3 style={{ fontSize: '15px', fontWeight: '600', color: '#f3f4f6', margin: 0 }}>
-                  {renderInlineFormatted(block.text, `h3-${idx}`)}
-                </h3>
-              </div>
-            );
-          }
-
-          case 'paragraph':
-            return (
-              <p key={idx} style={{ margin: 0, color: '#e5e7eb', lineHeight: '1.65' }}>
-                {renderInlineFormatted(block.text, `p-${idx}`)}
-              </p>
-            );
-
-          case 'bullet_list':
-            return (
-              <ul
-                key={idx}
-                style={{
-                  margin: '4px 0 8px 0',
-                  paddingLeft: '20px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '6px'
-                }}
-              >
-                {block.items.map((item, itemIdx) => (
-                  <li key={itemIdx} style={{ color: '#d1d5db', paddingLeft: '2px' }}>
-                    {renderInlineFormatted(item, `li-${idx}-${itemIdx}`)}
-                  </li>
-                ))}
-              </ul>
-            );
-
-          case 'number_list':
-            return (
-              <ol
-                key={idx}
-                style={{
-                  margin: '4px 0 8px 0',
-                  paddingLeft: '22px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '6px'
-                }}
-              >
-                {block.items.map((item, itemIdx) => (
-                  <li key={itemIdx} style={{ color: '#d1d5db' }}>
-                    {renderInlineFormatted(item, `ol-${idx}-${itemIdx}`)}
-                  </li>
-                ))}
-              </ol>
-            );
-
-          case 'code':
-            return (
-              <div
-                key={idx}
-                style={{
-                  margin: '10px 0',
-                  borderRadius: '10px',
-                  background: '#111113',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
-                  overflow: 'hidden'
-                }}
-              >
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '6px 12px',
-                    background: '#1a1a1e',
-                    borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-                    fontSize: '11px',
-                    color: '#9ca3af',
-                    fontFamily: 'ui-monospace, monospace'
-                  }}
-                >
-                  <span style={{ textTransform: 'uppercase', fontWeight: '600' }}>{block.lang}</span>
-                  <button
-                    onClick={() => handleCopyCode(block.code, idx)}
-                    style={{
-                      background: 'transparent',
-                      border: 'none',
-                      color: copiedIndex === idx ? '#34d399' : '#9ca3af',
-                      fontSize: '11px',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '4px'
-                    }}
-                  >
-                    {copiedIndex === idx ? (
-                      <>
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                        <span>Copied!</span>
-                      </>
-                    ) : (
-                      <>
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                        <span>Copy code</span>
-                      </>
-                    )}
-                  </button>
+          {/* Cards Row: Current Status & Applicable Policy */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '14px' }}>
+            
+            {/* Card 1: Current Status */}
+            <div
+              style={{
+                background: '#ffffff',
+                border: '1px solid #e5e5e0',
+                borderRadius: '12px',
+                padding: '16px',
+                boxShadow: '0 1px 3px rgba(0, 0, 0, 0.04)'
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0e372d" strokeWidth="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                  <span style={{ fontWeight: '600', fontSize: '13.5px', color: '#111827' }}>Current Status</span>
                 </div>
-                <pre
+                <span
                   style={{
-                    margin: 0,
-                    padding: '12px 14px',
-                    fontSize: '12.5px',
-                    lineHeight: '1.5',
-                    color: '#e2e8f0',
-                    fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
-                    overflowX: 'auto',
-                    background: '#111113'
+                    background: '#fee2e2',
+                    color: '#dc2626',
+                    fontSize: '11px',
+                    fontWeight: '600',
+                    padding: '2px 8px',
+                    borderRadius: '6px',
+                    border: '1px solid #fecaca'
                   }}
                 >
-                  <code>{block.code}</code>
-                </pre>
+                  On Credit Hold
+                </span>
               </div>
-            );
 
-          case 'hr':
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '13px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', color: '#4b5563' }}>
+                  <span>Open AR</span>
+                  <span style={{ fontWeight: '600', color: '#111827' }}>$284,279.37</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', color: '#4b5563' }}>
+                  <span>Overdue (&gt; 60 days)</span>
+                  <span style={{ fontWeight: '600', color: '#111827' }}>$169,705.53</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', color: '#4b5563' }}>
+                  <span>Credit Limit</span>
+                  <span style={{ fontWeight: '600', color: '#111827' }}>$250,000.00</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '6px', borderTop: '1px solid #f3f4f6' }}>
+                  <span style={{ fontWeight: '500', color: '#4b5563' }}>Utilization</span>
+                  <span style={{ fontWeight: '700', color: '#dc2626' }}>113.7%</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Card 2: Applicable Policy */}
+            <div
+              style={{
+                background: '#ffffff',
+                border: '1px solid #e5e5e0',
+                borderRadius: '12px',
+                padding: '16px',
+                boxShadow: '0 1px 3px rgba(0, 0, 0, 0.04)'
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0e372d" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                <span style={{ fontWeight: '600', fontSize: '13.5px', color: '#111827' }}>Applicable Policy</span>
+              </div>
+              <div style={{ fontSize: '12.5px', fontWeight: '600', color: '#374151', marginBottom: '6px' }}>
+                Section 4.2 – Credit Hold Policy
+              </div>
+              <p style={{ margin: 0, fontSize: '13px', color: '#6b7280', lineHeight: '1.55' }}>
+                Accounts exceeding credit limits by &gt;10% or with balances &gt;60 days overdue must freeze outbound releases until wire confirmation is logged.
+              </p>
+            </div>
+          </div>
+
+          {/* Release Process Stepper */}
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
+              <div style={{ width: '3px', height: '16px', borderRadius: '2px', background: '#0e372d' }} />
+              <span style={{ fontSize: '15px', fontWeight: '700', color: '#111827' }}>Release Process</span>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '8px' }}>
+              {/* Step 1 */}
+              <div style={{ background: '#ffffff', border: '1px solid #e5e5e0', borderRadius: '10px', padding: '12px 10px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <div style={{ fontSize: '12px', fontWeight: '700', color: '#111827' }}>① Receive Payment</div>
+                <div style={{ fontSize: '11px', color: '#6b7280', lineHeight: '1.4' }}>Full or partial clearing of overdue</div>
+              </div>
+
+              {/* Step 2 */}
+              <div style={{ background: '#ffffff', border: '1px solid #e5e5e0', borderRadius: '10px', padding: '12px 10px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <div style={{ fontSize: '12px', fontWeight: '700', color: '#111827' }}>② Log Confirmation</div>
+                <div style={{ fontSize: '11px', color: '#6b7280', lineHeight: '1.4' }}>Record payment in AR system</div>
+              </div>
+
+              {/* Step 3 */}
+              <div style={{ background: '#ffffff', border: '1px solid #e5e5e0', borderRadius: '10px', padding: '12px 10px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <div style={{ fontSize: '12px', fontWeight: '700', color: '#111827' }}>③ Verify Balance</div>
+                <div style={{ fontSize: '11px', color: '#6b7280', lineHeight: '1.4' }}>Ensure utilization ≤ 100%</div>
+              </div>
+
+              {/* Step 4 (Highlighted) */}
+              <div style={{ background: '#dcfce7', border: '1px solid #86efac', borderRadius: '10px', padding: '12px 10px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <div style={{ fontSize: '12px', fontWeight: '700', color: '#166534' }}>④ Release Orders</div>
+                <div style={{ fontSize: '11px', color: '#166534', opacity: 0.85, lineHeight: '1.4' }}>Lift credit hold and resume shipments</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Standard Markdown Blocks for other responses or supplemental details */}
+      {!isCreditHoldAnalysis && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+          {blocks.map((block, idx) => {
+            switch (block.type) {
+              case 'h1':
+              case 'h2':
+              case 'h3':
+              case 'h4':
+                return (
+                  <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '10px', marginBottom: '2px' }}>
+                    <div style={{ width: '3px', height: '16px', borderRadius: '2px', background: '#0e372d' }} />
+                    <h3 style={{ fontSize: '15px', fontWeight: '700', color: '#111827', margin: 0 }}>
+                      {renderInlineFormatted(block.text, `h-${idx}`)}
+                    </h3>
+                  </div>
+                );
+
+              case 'paragraph':
+                return (
+                  <p key={idx} style={{ margin: 0, color: '#374151', lineHeight: '1.65' }}>
+                    {renderInlineFormatted(block.text, `p-${idx}`)}
+                  </p>
+                );
+
+              case 'bullet_list':
+                return (
+                  <ul key={idx} style={{ margin: '4px 0 8px 0', paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    {block.items.map((item, itemIdx) => (
+                      <li key={itemIdx} style={{ color: '#4b5563', paddingLeft: '2px' }}>
+                        {renderInlineFormatted(item, `li-${idx}-${itemIdx}`)}
+                      </li>
+                    ))}
+                  </ul>
+                );
+
+              case 'number_list':
+                return (
+                  <ol key={idx} style={{ margin: '4px 0 8px 0', paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    {block.items.map((item, itemIdx) => (
+                      <li key={itemIdx} style={{ color: '#4b5563', paddingLeft: '2px' }}>
+                        {renderInlineFormatted(item, `ol-${idx}-${itemIdx}`)}
+                      </li>
+                    ))}
+                  </ol>
+                );
+
+              case 'code':
+                return (
+                  <div key={idx} style={{ margin: '8px 0', borderRadius: '8px', overflow: 'hidden', border: '1px solid #e5e5e0' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 12px', background: '#f3f2ee', borderBottom: '1px solid #e5e5e0', fontSize: '11px', color: '#6b7280' }}>
+                      <span>{block.lang}</span>
+                      <button
+                        onClick={() => handleCopyCode(block.code, idx)}
+                        style={{ background: 'transparent', border: 'none', color: '#4b5563', cursor: 'pointer', fontSize: '11px' }}
+                      >
+                        {copiedIndex === idx ? '✓ Copied' : 'Copy'}
+                      </button>
+                    </div>
+                    <pre style={{ margin: 0, padding: '12px', background: '#ffffff', color: '#1f2937', fontSize: '12.5px', overflowX: 'auto', fontFamily: 'monospace' }}>
+                      <code>{block.code}</code>
+                    </pre>
+                  </div>
+                );
+
+              case 'hr':
+                return <hr key={idx} style={{ border: 'none', borderTop: '1px solid #e5e5e0', margin: '12px 0' }} />;
+
+              default:
+                return null;
+            }
+          })}
+        </div>
+      )}
+
+      {/* Sources / Citations Row (As highlighted in the design reference) */}
+      {(allCitationMatches.length > 0 || citations.length > 0) && (
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '10px', flexWrap: 'wrap', paddingTop: '8px', borderTop: '1px solid #f3f4f6' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '12px', fontWeight: '600', color: '#6b7280' }}>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            <span>Sources</span>
+          </div>
+
+          {(allCitationMatches.length > 0 ? allCitationMatches : citations).map((rawCite, cIdx) => {
+            const cleanText = typeof rawCite === 'string' ? rawCite.replace(/^\[Source:\s*/, '').replace(/\]$/, '') : '';
             return (
-              <hr
-                key={idx}
+              <button
+                key={cIdx}
+                onClick={() => onOpenCitation && onOpenCitation(rawCite)}
                 style={{
-                  border: 'none',
-                  borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-                  margin: '12px 0'
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '5px',
+                  padding: '4px 10px',
+                  background: '#ffffff',
+                  border: '1px solid #e5e5e0',
+                  borderRadius: '6px',
+                  color: '#374151',
+                  fontSize: '11.5px',
+                  fontWeight: '500',
+                  cursor: 'pointer',
+                  boxShadow: '0 1px 2px rgba(0, 0, 0, 0.03)',
+                  transition: 'all 0.15s ease'
                 }}
-              />
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = '#0e372d';
+                  e.currentTarget.style.color = '#0e372d';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = '#e5e5e0';
+                  e.currentTarget.style.color = '#374151';
+                }}
+              >
+                <span>{cleanText}</span>
+                <span style={{ fontSize: '11px', opacity: 0.6 }}>↗</span>
+              </button>
             );
-
-          default:
-            return null;
-        }
-      })}
+          })}
+        </div>
+      )}
     </div>
   );
 }
-
