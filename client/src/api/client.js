@@ -1,7 +1,8 @@
 // API client for Jarvis v1 Flask Backend (Phase 1 & Phase 2)
 
 const API_BASE = '/api';
-const GATEWAY_BASE = import.meta.env.VITE_GATEWAY_URL || '';
+const rawGateway = import.meta.env.VITE_GATEWAY_URL || '';
+const GATEWAY_BASE = rawGateway.replace(/\/api\/admin\/?$/, '');
 
 export async function fetchHealth() {
   const res = await fetch(`${API_BASE}/health/db`);
