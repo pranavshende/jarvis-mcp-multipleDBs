@@ -17,9 +17,10 @@ import { SlackService } from './integrations/slack_client.js';
 import { pool } from './config/db.js';
 
 async function resolveOrCreateConversation(userId: string, sessionId?: string, initialPrompt?: string): Promise<string> {
+  const safeUserId = await ConversationService.ensureUuid(userId);
   const isUuid = sessionId && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(sessionId);
   if (isUuid) {
-    const existing = await pool.query('SELECT id FROM public.conversations WHERE id = $1 AND user_id = $2', [sessionId, userId]);
+    const existing = await pool.query('SELECT id FROM public.conversations WHERE id = $1 AND user_id = $2', [sessionId, safeUserId]);
     if (existing.rows.length > 0) {
       if (initialPrompt) {
         await ConversationService.maybeUpdateTitleFromPrompt(sessionId!, initialPrompt);
@@ -31,7 +32,7 @@ async function resolveOrCreateConversation(userId: string, sessionId?: string, i
   const title = initialPrompt && initialPrompt.trim()
     ? (initialPrompt.length > 35 ? initialPrompt.substring(0, 35) + '...' : initialPrompt)
     : 'New Chat';
-  const newConv = await ConversationService.createConversation(userId, title);
+  const newConv = await ConversationService.createConversation(safeUserId, title);
   return newConv.id;
 }
 

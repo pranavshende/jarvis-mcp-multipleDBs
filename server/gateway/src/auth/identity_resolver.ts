@@ -32,8 +32,26 @@ export class IdentityResolver {
       return null;
     }
 
+    // Ensure userId is a valid UUID for PostgreSQL conversations & session storage
+    let resolvedUserId = record.userId;
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(resolvedUserId);
+    if (!isUuid) {
+      try {
+        const uRes = await pool.query('SELECT id FROM public.users WHERE LOWER(email) = $1 LIMIT 1', [record.corporateEmail.toLowerCase()]);
+        if (uRes.rows.length > 0) {
+          resolvedUserId = uRes.rows[0].id;
+        } else {
+          // Link to default executive founder user
+          const defaultUser = await pool.query("SELECT id FROM public.users WHERE email = 'pranav@meridian.com' LIMIT 1");
+          resolvedUserId = defaultUser.rows.length > 0 ? defaultUser.rows[0].id : 'a0000000-0000-0000-0000-000000000001';
+        }
+      } catch {
+        resolvedUserId = 'a0000000-0000-0000-0000-000000000001';
+      }
+    }
+
     return {
-      userId: record.userId,
+      userId: resolvedUserId,
       email: record.corporateEmail,
       role: record.role,
       department: record.department,

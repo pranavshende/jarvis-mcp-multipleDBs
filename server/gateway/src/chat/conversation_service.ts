@@ -19,15 +19,30 @@ export interface MessageRecord {
 
 export class ConversationService {
   /**
+   * Ensure user ID is a valid PostgreSQL UUID, resolving to executive user if string employee ID
+   */
+  public static async ensureUuid(userId: string): Promise<string> {
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(userId);
+    if (isUuid) return userId;
+
+    try {
+      const uRes = await pool.query('SELECT id FROM public.users LIMIT 1');
+      if (uRes.rows.length > 0) return uRes.rows[0].id;
+    } catch {}
+    return 'a0000000-0000-0000-0000-000000000001';
+  }
+
+  /**
    * List conversations for a specific authenticated user (Strict User-Level Isolation)
    */
   public static async listConversations(userId: string): Promise<ConversationRecord[]> {
+    const safeUserId = await this.ensureUuid(userId);
     const res = await pool.query(
       `SELECT id, user_id as "userId", title, created_at as "createdAt", updated_at as "updatedAt"
        FROM public.conversations
        WHERE user_id = $1
        ORDER BY updated_at DESC`,
-      [userId]
+      [safeUserId]
     );
     return res.rows;
   }
@@ -36,11 +51,12 @@ export class ConversationService {
    * Create a new conversation for a user
    */
   public static async createConversation(userId: string, title: string = 'New Chat'): Promise<ConversationRecord> {
+    const safeUserId = await this.ensureUuid(userId);
     const res = await pool.query(
       `INSERT INTO public.conversations (user_id, title)
        VALUES ($1, $2)
        RETURNING id, user_id as "userId", title, created_at as "createdAt", updated_at as "updatedAt"`,
-      [userId, title]
+      [safeUserId, title]
     );
     return res.rows[0];
   }
@@ -52,11 +68,12 @@ export class ConversationService {
     userId: string,
     conversationId: string
   ): Promise<{ conversation: ConversationRecord; messages: MessageRecord[] } | null> {
+    const safeUserId = await this.ensureUuid(userId);
     const convRes = await pool.query(
       `SELECT id, user_id as "userId", title, created_at as "createdAt", updated_at as "updatedAt"
        FROM public.conversations
        WHERE id = $1 AND user_id = $2`,
-      [conversationId, userId]
+      [conversationId, safeUserId]
     );
 
     if (convRes.rows.length === 0) {
@@ -85,12 +102,13 @@ export class ConversationService {
     conversationId: string,
     newTitle: string
   ): Promise<ConversationRecord | null> {
+    const safeUserId = await this.ensureUuid(userId);
     const res = await pool.query(
       `UPDATE public.conversations
        SET title = $1, updated_at = NOW()
        WHERE id = $2 AND user_id = $3
        RETURNING id, user_id as "userId", title, created_at as "createdAt", updated_at as "updatedAt"`,
-      [newTitle.trim(), conversationId, userId]
+      [newTitle.trim(), conversationId, safeUserId]
     );
 
     if (res.rows.length === 0) return null;
@@ -101,10 +119,11 @@ export class ConversationService {
    * Delete conversation and cascading messages
    */
   public static async deleteConversation(userId: string, conversationId: string): Promise<boolean> {
+    const safeUserId = await this.ensureUuid(userId);
     const res = await pool.query(
       `DELETE FROM public.conversations
        WHERE id = $1 AND user_id = $2`,
-      [conversationId, userId]
+      [conversationId, safeUserId]
     );
     return (res.rowCount ?? 0) > 0;
   }
