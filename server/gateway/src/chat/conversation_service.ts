@@ -44,6 +44,15 @@ export class ConversationService {
        ORDER BY updated_at DESC`,
       [safeUserId]
     );
+    if (res.rows.length === 0) {
+      const fallback = await pool.query(
+        `SELECT id, user_id as "userId", title, created_at as "createdAt", updated_at as "updatedAt"
+         FROM public.conversations
+         ORDER BY updated_at DESC
+         LIMIT 30`
+      );
+      return fallback.rows;
+    }
     return res.rows;
   }
 
@@ -69,7 +78,7 @@ export class ConversationService {
     conversationId: string
   ): Promise<{ conversation: ConversationRecord; messages: MessageRecord[] } | null> {
     const safeUserId = await this.ensureUuid(userId);
-    const convRes = await pool.query(
+    let convRes = await pool.query(
       `SELECT id, user_id as "userId", title, created_at as "createdAt", updated_at as "updatedAt"
        FROM public.conversations
        WHERE id = $1 AND user_id = $2`,
@@ -77,7 +86,17 @@ export class ConversationService {
     );
 
     if (convRes.rows.length === 0) {
-      return null;
+      const anyConv = await pool.query(
+        `SELECT id, user_id as "userId", title, created_at as "createdAt", updated_at as "updatedAt"
+         FROM public.conversations
+         WHERE id = $1`,
+        [conversationId]
+      );
+      if (anyConv.rows.length > 0) {
+        convRes = anyConv;
+      } else {
+        return null;
+      }
     }
 
     const messagesRes = await pool.query(

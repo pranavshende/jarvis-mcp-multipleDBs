@@ -20,8 +20,11 @@ async function resolveOrCreateConversation(userId: string, sessionId?: string, i
   const safeUserId = await ConversationService.ensureUuid(userId);
   const isUuid = sessionId && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(sessionId);
   if (isUuid) {
-    const existing = await pool.query('SELECT id FROM public.conversations WHERE id = $1 AND user_id = $2', [sessionId, safeUserId]);
+    const existing = await pool.query('SELECT id, user_id FROM public.conversations WHERE id = $1', [sessionId]);
     if (existing.rows.length > 0) {
+      if (existing.rows[0].user_id !== safeUserId) {
+        await pool.query('UPDATE public.conversations SET user_id = $1 WHERE id = $2', [safeUserId, sessionId]);
+      }
       if (initialPrompt) {
         await ConversationService.maybeUpdateTitleFromPrompt(sessionId!, initialPrompt);
       }

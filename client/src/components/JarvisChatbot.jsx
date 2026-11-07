@@ -103,26 +103,50 @@ export default function JarvisChatbot() {
     } catch {}
     return [];
   });
-  const [currentSessionId, setCurrentSessionId] = useState('new');
+  const [currentSessionId, setCurrentSessionId] = useState(() => {
+    try {
+      const saved = localStorage.getItem('msc_jarvis_current_session_id');
+      if (saved && saved !== 'new') return saved;
+    } catch {}
+    return 'new';
+  });
+  const currentSessionIdRef = useRef(currentSessionId);
   const [editingSessionId, setEditingSessionId] = useState(null);
   const [editingTitle, setEditingTitle] = useState('');
   const [sessionToDelete, setSessionToDelete] = useState(null);
 
-  // Dynamic Projects / Prompts (persisted in localStorage)
+  // Sync ref and localStorage when currentSessionId changes
+  useEffect(() => {
+    currentSessionIdRef.current = currentSessionId;
+    try {
+      localStorage.setItem('msc_jarvis_current_session_id', currentSessionId);
+    } catch {}
+  }, [currentSessionId]);
+
+  // Dynamic Projects / Prompts (clean by default - no mock files)
   const [projects, setProjects] = useState(() => {
     try {
       const saved = localStorage.getItem('msc_jarvis_projects');
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        if (Array.isArray(parsed)) {
+          const cleaned = parsed.filter(
+            (p) =>
+              p &&
+              p.id &&
+              !['proj-1', 'proj-2', 'proj-3', 'proj-4'].includes(p.id) &&
+              ![
+                'Partner Credit & AR Aging',
+                'Warehouse Intake SLA (EWR1/ONT1)',
+                'FIFO Inventory Costing',
+                'Inspection & Grading Governance'
+              ].includes(p.name)
+          );
+          return cleaned;
+        }
       }
     } catch {}
-    return [
-      { id: 'proj-1', name: 'Partner Credit & AR Aging', query: 'Why is Partner 301 on credit hold and what is their exposure?' },
-      { id: 'proj-2', name: 'Warehouse Intake SLA (EWR1/ONT1)', query: 'How many packages were received yesterday at EWR1 vs ONT1?' },
-      { id: 'proj-3', name: 'FIFO Inventory Costing', query: 'What is the FIFO cost breakdown for inventory stock?' },
-      { id: 'proj-4', name: 'Inspection & Grading Governance', query: 'What are the SOP inspection rules for return grading?' }
-    ];
+    return [];
   });
   const [isAddingProject, setIsAddingProject] = useState(false);
   const [newProjectName, setNewProjectName] = useState('');
@@ -131,6 +155,32 @@ export default function JarvisChatbot() {
 
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+
+  // Clean mock demo projects from localStorage on mount
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('msc_jarvis_projects');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          const cleaned = parsed.filter(
+            (p) =>
+              p &&
+              p.id &&
+              !['proj-1', 'proj-2', 'proj-3', 'proj-4'].includes(p.id) &&
+              ![
+                'Partner Credit & AR Aging',
+                'Warehouse Intake SLA (EWR1/ONT1)',
+                'FIFO Inventory Costing',
+                'Inspection & Grading Governance'
+              ].includes(p.name)
+          );
+          localStorage.setItem('msc_jarvis_projects', JSON.stringify(cleaned));
+          setProjects(cleaned);
+        }
+      }
+    } catch {}
+  }, []);
 
   // Save active messages to localStorage
   useEffect(() => {
@@ -194,6 +244,31 @@ export default function JarvisChatbot() {
         if (auth && auth.user) {
           setCurrentUser(auth.user);
           await loadConversations();
+
+          // Restore active session messages if user was in a conversation
+          const savedSessionId = localStorage.getItem('msc_jarvis_current_session_id');
+          if (savedSessionId && savedSessionId !== 'new') {
+            try {
+              const res = await fetchConversationMessages(savedSessionId);
+              if (res && res.messages && Array.isArray(res.messages) && res.messages.length > 0) {
+                const mapped = res.messages.map((m) => ({
+                  id: m.id,
+                  role: m.role,
+                  content: m.content,
+                  events: m.executionMetadata?.executionEvents || [],
+                  citations: m.executionMetadata?.citations || [],
+                  route: m.executionMetadata?.route || 'KNOWLEDGE + DATA',
+                  latencyMs: m.executionMetadata?.latencyMs,
+                  timestamp: new Date(m.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                }));
+                setMessages(mapped);
+                setCurrentSessionId(savedSessionId);
+                currentSessionIdRef.current = savedSessionId;
+              }
+            } catch (loadErr) {
+              console.warn('Could not restore messages for session:', savedSessionId, loadErr);
+            }
+          }
         } else {
           setAuthModalOpen(true);
         }
@@ -233,6 +308,11 @@ export default function JarvisChatbot() {
   const handleNewChat = () => {
     setActiveView('chat');
     setCurrentSessionId('new');
+    currentSessionIdRef.current = 'new';
+    try {
+      localStorage.setItem('msc_jarvis_current_session_id', 'new');
+      localStorage.removeItem('msc_jarvis_active_chat');
+    } catch {}
     setMessages([]);
     setInputQuery('');
     setLiveStreamEvents([]);
@@ -244,6 +324,10 @@ export default function JarvisChatbot() {
   const handleSelectSession = async (session) => {
     setActiveView('chat');
     setCurrentSessionId(session.id);
+    currentSessionIdRef.current = session.id;
+    try {
+      localStorage.setItem('msc_jarvis_current_session_id', session.id);
+    } catch {}
     setIsLoading(true);
     setLiveStreamEvents([]);
     try {
@@ -316,6 +400,9 @@ export default function JarvisChatbot() {
     const query = (customQuery !== undefined ? customQuery : inputQuery).trim();
     if (!query || isLoading) return;
 
+    // Use synchronous ref to ensure whole chats continue in the same session
+    const activeSessionId = currentSessionIdRef.current || currentSessionId || 'new';
+
     const userMessage = {
       id: `usr-${Date.now()}`,
       role: 'user',
@@ -349,7 +436,7 @@ export default function JarvisChatbot() {
     try {
       await queryGatewayStream(
         query,
-        currentSessionId,
+        activeSessionId,
         // On Workflow Event
         (event) => {
           collectedEvents.push(event);
@@ -380,6 +467,10 @@ export default function JarvisChatbot() {
 
           if (res.conversationId) {
             setCurrentSessionId(res.conversationId);
+            currentSessionIdRef.current = res.conversationId;
+            try {
+              localStorage.setItem('msc_jarvis_current_session_id', res.conversationId);
+            } catch {}
           }
           // Refresh conversation list from database
           loadConversations();
@@ -387,7 +478,7 @@ export default function JarvisChatbot() {
         // On Error fallback
         async (streamErr) => {
           try {
-            const res = await queryGatewayIntent(query, currentSessionId);
+            const res = await queryGatewayIntent(query, activeSessionId);
             const latency = Math.round((performance.now() - startTime) * 10) / 10;
 
             const finalBotMessage = {
@@ -409,6 +500,10 @@ export default function JarvisChatbot() {
 
             if (res.conversationId) {
               setCurrentSessionId(res.conversationId);
+              currentSessionIdRef.current = res.conversationId;
+              try {
+                localStorage.setItem('msc_jarvis_current_session_id', res.conversationId);
+              } catch {}
             }
             loadConversations();
           } catch (fallbackErr) {
@@ -636,155 +731,159 @@ export default function JarvisChatbot() {
         {/* Scrollable Projects & Recents */}
         <div style={{ flex: 1, overflowY: 'auto', padding: '12px 8px' }}>
           
-          {/* Projects Header */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              padding: '4px 10px 6px'
-            }}
-          >
-            <span style={{ fontSize: '11px', fontWeight: '700', color: '#787a74', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-              Projects
-            </span>
-            <button
-              onClick={() => setIsAddingProject(true)}
-              title="Create new project workspace"
-              style={{
-                background: 'transparent',
-                border: 'none',
-                color: '#787a74',
-                cursor: 'pointer',
-                padding: '2px 6px',
-                borderRadius: '4px',
-                fontSize: '14px',
-                lineHeight: 1
-              }}
-            >
-              +
-            </button>
-          </div>
-
-          {/* New Project Input */}
-          {isAddingProject && (
-            <div style={{ padding: '0 8px 8px' }}>
-              <input
-                type="text"
-                value={newProjectName}
-                onChange={(e) => setNewProjectName(e.target.value)}
-                onBlur={handleAddProject}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') handleAddProject();
-                  if (e.key === 'Escape') {
-                    setIsAddingProject(false);
-                    setNewProjectName('');
-                  }
-                }}
-                placeholder="New project..."
-                autoFocus
+          {/* Projects Header & List (only rendered if custom user projects exist or one is being added) */}
+          {(projects.length > 0 || isAddingProject) && (
+            <>
+              <div
                 style={{
-                  width: '100%',
-                  background: '#ffffff',
-                  border: '1px solid #0e372d',
-                  borderRadius: '5px',
-                  color: '#1a1c19',
-                  fontSize: '12px',
-                  padding: '5px 8px',
-                  outline: 'none',
-                  boxSizing: 'border-box'
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  padding: '4px 10px 6px'
                 }}
-              />
-            </div>
-          )}
-
-          {/* Projects List */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginBottom: '14px' }}>
-            {projects.map((p) => {
-              const isEditing = editingProjectId === p.id;
-              return (
-                <div
-                  key={p.id}
-                  onClick={() => {
-                    if (isEditing) return;
-                    setActiveView('chat');
-                    handleSubmit(null, p.query || `Provide an executive briefing on ${p.name}`);
-                    if (isMobile) setSidebarOpen(false);
-                  }}
-                  title={p.query || p.name}
+              >
+                <span style={{ fontSize: '11px', fontWeight: '700', color: '#787a74', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  Projects
+                </span>
+                <button
+                  onClick={() => setIsAddingProject(true)}
+                  title="Create new project workspace"
                   style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '6px 8px',
-                    borderRadius: '6px',
-                    color: '#3d3f3b',
-                    fontSize: '12px',
-                    cursor: 'pointer'
+                    background: 'transparent',
+                    border: 'none',
+                    color: '#787a74',
+                    cursor: 'pointer',
+                    padding: '2px 6px',
+                    borderRadius: '4px',
+                    fontSize: '14px',
+                    lineHeight: 1
                   }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = '#e8e6df')}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0, flex: 1 }}>
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" style={{ flexShrink: 0 }}>
-                      <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
-                    </svg>
+                  +
+                </button>
+              </div>
 
-                    {isEditing ? (
-                      <input
-                        type="text"
-                        value={editingProjectName}
-                        onChange={(e) => setEditingProjectName(e.target.value)}
-                        onBlur={() => handleRenameProject(p.id, editingProjectName)}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter') handleRenameProject(p.id, editingProjectName);
-                          if (e.key === 'Escape') setEditingProjectId(null);
-                        }}
-                        autoFocus
-                        onClick={(e) => e.stopPropagation()}
-                        style={{
-                          background: '#ffffff',
-                          border: '1px solid #0e372d',
-                          borderRadius: '4px',
-                          color: '#1a1c19',
-                          fontSize: '12px',
-                          padding: '2px 6px',
-                          outline: 'none',
-                          width: '100%'
-                        }}
-                      />
-                    ) : (
-                      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                        {p.name}
-                      </span>
-                    )}
-                  </div>
-
-                  {!isEditing && (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px', opacity: 0.6 }} onClick={(e) => e.stopPropagation()}>
-                      <button
-                        title="Rename"
-                        onClick={() => {
-                          setEditingProjectId(p.id);
-                          setEditingProjectName(p.name);
-                        }}
-                        style={{ background: 'transparent', border: 'none', color: '#6b7280', cursor: 'pointer', padding: '1px 3px', fontSize: '11px' }}
-                      >
-                        ✎
-                      </button>
-                      <button
-                        title="Delete"
-                        onClick={(e) => handleDeleteProject(p.id, e)}
-                        style={{ background: 'transparent', border: 'none', color: '#6b7280', cursor: 'pointer', padding: '1px 3px', fontSize: '11px' }}
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  )}
+              {/* New Project Input */}
+              {isAddingProject && (
+                <div style={{ padding: '0 8px 8px' }}>
+                  <input
+                    type="text"
+                    value={newProjectName}
+                    onChange={(e) => setNewProjectName(e.target.value)}
+                    onBlur={handleAddProject}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') handleAddProject();
+                      if (e.key === 'Escape') {
+                        setIsAddingProject(false);
+                        setNewProjectName('');
+                      }
+                    }}
+                    placeholder="New project..."
+                    autoFocus
+                    style={{
+                      width: '100%',
+                      background: '#ffffff',
+                      border: '1px solid #0e372d',
+                      borderRadius: '5px',
+                      color: '#1a1c19',
+                      fontSize: '12px',
+                      padding: '5px 8px',
+                      outline: 'none',
+                      boxSizing: 'border-box'
+                    }}
+                  />
                 </div>
-              );
-            })}
-          </div>
+              )}
+
+              {/* Projects List */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginBottom: '14px' }}>
+                {projects.map((p) => {
+                  const isEditing = editingProjectId === p.id;
+                  return (
+                    <div
+                      key={p.id}
+                      onClick={() => {
+                        if (isEditing) return;
+                        setActiveView('chat');
+                        handleSubmit(null, p.query || `Provide an executive briefing on ${p.name}`);
+                        if (isMobile) setSidebarOpen(false);
+                      }}
+                      title={p.query || p.name}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        padding: '6px 8px',
+                        borderRadius: '6px',
+                        color: '#3d3f3b',
+                        fontSize: '12px',
+                        cursor: 'pointer'
+                      }}
+                      onMouseEnter={(e) => (e.currentTarget.style.background = '#e8e6df')}
+                      onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0, flex: 1 }}>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" style={{ flexShrink: 0 }}>
+                          <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                        </svg>
+
+                        {isEditing ? (
+                          <input
+                            type="text"
+                            value={editingProjectName}
+                            onChange={(e) => setEditingProjectName(e.target.value)}
+                            onBlur={() => handleRenameProject(p.id, editingProjectName)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') handleRenameProject(p.id, editingProjectName);
+                              if (e.key === 'Escape') setEditingProjectId(null);
+                            }}
+                            autoFocus
+                            onClick={(e) => e.stopPropagation()}
+                            style={{
+                              background: '#ffffff',
+                              border: '1px solid #0e372d',
+                              borderRadius: '4px',
+                              color: '#1a1c19',
+                              fontSize: '12px',
+                              padding: '2px 6px',
+                              outline: 'none',
+                              width: '100%'
+                            }}
+                          />
+                        ) : (
+                          <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                            {p.name}
+                          </span>
+                        )}
+                      </div>
+
+                      {!isEditing && (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '4px', opacity: 0.6 }} onClick={(e) => e.stopPropagation()}>
+                          <button
+                            title="Rename"
+                            onClick={() => {
+                              setEditingProjectId(p.id);
+                              setEditingProjectName(p.name);
+                            }}
+                            style={{ background: 'transparent', border: 'none', color: '#6b7280', cursor: 'pointer', padding: '1px 3px', fontSize: '11px' }}
+                          >
+                            ✎
+                          </button>
+                          <button
+                            title="Delete"
+                            onClick={(e) => handleDeleteProject(p.id, e)}
+                            style={{ background: 'transparent', border: 'none', color: '#6b7280', cursor: 'pointer', padding: '1px 3px', fontSize: '11px' }}
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </>
+          )}
 
           {/* Recents */}
           <div style={{ fontSize: '11px', fontWeight: '700', color: '#787a74', padding: '4px 10px 6px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
