@@ -1,7 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { queryGatewayStream, queryGatewayIntent, fetchHealth } from '../api/client';
+import {
+  queryGatewayStream,
+  queryGatewayIntent,
+  fetchHealth,
+  fetchCurrentUser,
+  logoutUser,
+  fetchConversations,
+  fetchConversationMessages,
+  renameConversation,
+  deleteConversation
+} from '../api/client';
 import StructuredResponse from './StructuredResponse';
 import ExecutionWorkflow from './ExecutionWorkflow';
+import AuthModal from './AuthModal';
 
 // Import enterprise sub-views to consolidate everything within the chatbot
 import FounderDashboard from './FounderDashboard';
@@ -15,6 +26,10 @@ import AdminDashboard from './AdminDashboard';
 export default function JarvisChatbot() {
   // Navigation View: 'chat' | 'founder' | 'metrics' | 'knowledge' | 'alerts' | 'crosswalk' | 'sync' | 'admin'
   const [activeView, setActiveView] = useState('chat');
+
+  // Multi-User Authentication State
+  const [currentUser, setCurrentUser] = useState(null);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
 
   // Responsive Phone / Desktop Detection
   const [isMobile, setIsMobile] = useState(
@@ -166,6 +181,35 @@ export default function JarvisChatbot() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isLoading, liveStreamEvents]);
 
+  // Check authenticated session and load conversations on mount
+  useEffect(() => {
+    async function initSession() {
+      try {
+        const auth = await fetchCurrentUser();
+        if (auth && auth.user) {
+          setCurrentUser(auth.user);
+          await loadConversations();
+        } else {
+          setAuthModalOpen(true);
+        }
+      } catch {
+        setAuthModalOpen(true);
+      }
+    }
+    initSession();
+  }, []);
+
+  const loadConversations = async () => {
+    try {
+      const res = await fetchConversations();
+      if (res && res.conversations && Array.isArray(res.conversations)) {
+        setChatSessions(res.conversations);
+      }
+    } catch (e) {
+      console.warn('Failed to load conversations from db:', e);
+    }
+  };
+
   // Live health polling (Supabase DB + Redis)
   useEffect(() => {
     async function checkHealth() {
@@ -192,33 +236,74 @@ export default function JarvisChatbot() {
     if (inputRef.current) inputRef.current.focus();
   };
 
-  const handleSelectSession = (session) => {
+  const handleSelectSession = async (session) => {
     setActiveView('chat');
     setCurrentSessionId(session.id);
-    if (session.messages && session.messages.length > 0) {
-      setMessages(session.messages);
-      setShowWorkflowPanel(true);
-    } else {
+    setIsLoading(true);
+    setLiveStreamEvents([]);
+    try {
+      const res = await fetchConversationMessages(session.id);
+      if (res && res.messages && Array.isArray(res.messages)) {
+        const mapped = res.messages.map((m) => ({
+          id: m.id,
+          role: m.role,
+          content: m.content,
+          events: m.executionMetadata?.executionEvents || [],
+          citations: m.executionMetadata?.citations || [],
+          route: m.executionMetadata?.route || 'KNOWLEDGE + DATA',
+          latencyMs: m.executionMetadata?.latencyMs,
+          timestamp: new Date(m.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        }));
+        setMessages(mapped);
+      } else {
+        setMessages([]);
+      }
+    } catch (err) {
+      console.error('Failed to load messages from db:', err);
       setMessages([]);
-      setShowWorkflowPanel(false);
+    } finally {
+      setIsLoading(false);
+      if (isMobile) setSidebarOpen(false);
     }
-    if (isMobile) setSidebarOpen(false);
   };
 
-  const handleRenameSession = (id, newTitle) => {
-    if (!newTitle.trim()) return;
-    setChatSessions((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, title: newTitle.trim() } : s))
-    );
+  const handleRenameSession = async (id, newTitle) => {
+    if (!newTitle.trim()) {
+      setEditingSessionId(null);
+      return;
+    }
+    try {
+      await renameConversation(id, newTitle.trim());
+      setChatSessions((prev) =>
+        prev.map((s) => (s.id === id ? { ...s, title: newTitle.trim() } : s))
+      );
+    } catch (err) {
+      console.error('Failed to rename conversation in db:', err);
+    }
     setEditingSessionId(null);
   };
 
-  const handleDeleteSession = (id) => {
-    setChatSessions((prev) => prev.filter((s) => s.id !== id));
-    if (currentSessionId === id) {
-      handleNewChat();
+  const handleDeleteSession = async (id, e) => {
+    if (e) e.stopPropagation();
+    try {
+      await deleteConversation(id);
+      setChatSessions((prev) => prev.filter((s) => s.id !== id));
+      if (currentSessionId === id) {
+        handleNewChat();
+      }
+    } catch (err) {
+      console.error('Failed to delete conversation from db:', err);
     }
     setSessionToDelete(null);
+  };
+
+  const handleLogout = async () => {
+    await logoutUser();
+    setCurrentUser(null);
+    setMessages([]);
+    setChatSessions([]);
+    setCurrentSessionId('new');
+    setAuthModalOpen(true);
   };
 
   const handleSubmit = async (e, customQuery) => {
@@ -288,26 +373,11 @@ export default function JarvisChatbot() {
           setMessages((prev) => prev.map((m) => (m.id === pendingBotId ? finalBotMessage : m)));
           setLiveStreamEvents(finalBotMessage.events);
 
-          // Update current or new chat session
-          if (currentSessionId === 'new') {
-            const newId = `sess-${Date.now()}`;
-            const newTitle = query.length > 32 ? query.substring(0, 32) + '...' : query;
-            const newSession = {
-              id: newId,
-              title: newTitle,
-              messages: [userMessage, finalBotMessage]
-            };
-            setChatSessions((prev) => [newSession, ...prev]);
-            setCurrentSessionId(newId);
-          } else {
-            setChatSessions((prev) =>
-              prev.map((s) =>
-                s.id === currentSessionId
-                  ? { ...s, messages: [...(s.messages || []), userMessage, finalBotMessage] }
-                  : s
-              )
-            );
+          if (res.conversationId) {
+            setCurrentSessionId(res.conversationId);
           }
+          // Refresh conversation list from database
+          loadConversations();
         },
         // On Error fallback
         async (streamErr) => {
@@ -331,6 +401,11 @@ export default function JarvisChatbot() {
 
             setMessages((prev) => prev.map((m) => (m.id === pendingBotId ? finalBotMessage : m)));
             setLiveStreamEvents(finalBotMessage.events || []);
+
+            if (res.conversationId) {
+              setCurrentSessionId(res.conversationId);
+            }
+            loadConversations();
           } catch (fallbackErr) {
             const errBotMessage = {
               id: pendingBotId,
@@ -806,18 +881,22 @@ export default function JarvisChatbot() {
 
         {/* Authenticated User Profile Footer */}
         <div
-          onClick={() => setShowProfileModal(true)}
           style={{
             padding: '12px 14px',
             borderTop: '1px solid #e8e6df',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            background: '#f3f2ee',
-            cursor: 'pointer'
+            background: '#f3f2ee'
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div
+            onClick={() => {
+              if (!currentUser) setAuthModalOpen(true);
+              else setShowProfileModal(true);
+            }}
+            style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', flex: 1, minWidth: 0 }}
+          >
             <div
               style={{
                 width: '32px',
@@ -829,17 +908,67 @@ export default function JarvisChatbot() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 fontWeight: '600',
-                fontSize: '13px'
+                fontSize: '12.5px',
+                flexShrink: 0
               }}
             >
-              PS
+              {currentUser && currentUser.name
+                ? currentUser.name
+                    .split(' ')
+                    .map((n) => n[0])
+                    .join('')
+                    .substring(0, 2)
+                    .toUpperCase()
+                : 'PS'}
             </div>
-            <div>
-              <div style={{ fontSize: '13px', fontWeight: '600', color: '#1a1c19' }}>Pranav Shende</div>
-              <div style={{ fontSize: '11px', color: '#787a74' }}>Founder • Executive Access</div>
+            <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              <div style={{ fontSize: '13px', fontWeight: '600', color: '#1a1c19', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                {currentUser ? currentUser.name : 'Sign In'}
+              </div>
+              <div style={{ fontSize: '11px', color: '#787a74', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                {currentUser ? currentUser.email : 'Click to authenticate'}
+              </div>
             </div>
           </div>
-          <div style={{ color: '#787a74', fontSize: '13px' }}>•••</div>
+
+          {currentUser ? (
+            <button
+              onClick={handleLogout}
+              title="Log Out"
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: '#6b7280',
+                cursor: 'pointer',
+                padding: '4px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <polyline points="16 17 21 12 16 7" />
+                <line x1="21" y1="12" x2="9" y2="12" />
+              </svg>
+            </button>
+          ) : (
+            <button
+              onClick={() => setAuthModalOpen(true)}
+              style={{
+                background: '#0e372d',
+                border: 'none',
+                color: '#ffffff',
+                fontSize: '11px',
+                fontWeight: '600',
+                padding: '4px 8px',
+                borderRadius: '6px',
+                cursor: 'pointer'
+              }}
+            >
+              Login
+            </button>
+          )}
         </div>
       </aside>
 
@@ -1268,10 +1397,20 @@ export default function JarvisChatbot() {
                               )}
                             </div>
 
+                            {/* Integrated Glowing AI Execution Workflow Inside Conversation Thread */}
+                            {(m.isGenerating || (m.events && m.events.length > 0)) && (
+                              <ExecutionWorkflow
+                                events={m.events && m.events.length > 0 ? m.events : liveStreamEvents}
+                                isStreaming={m.isGenerating}
+                                queryTitle={latestUserQuery}
+                                inline={true}
+                              />
+                            )}
+
                             {/* Structured Response from Real AI Pipeline */}
                             {m.isGenerating && !m.content ? (
                               <div style={{ color: '#6b7280', fontStyle: 'italic', fontSize: '13.5px', padding: '6px 0' }}>
-                                Executing retrieval and dual-synthesis stages...
+                                Synthesizing grounded response with verified citations...
                               </div>
                             ) : (
                               <StructuredResponse
@@ -1290,71 +1429,6 @@ export default function JarvisChatbot() {
                 <div ref={messagesEndRef} />
               </div>
             </div>
-
-            {/* Desktop Only: Docked AI Execution Workflow Panel (100% Dynamic) */}
-            {!isMobile && showWorkflowPanel && (
-              <div
-                style={{
-                  width: '370px',
-                  padding: '24px 20px 120px 0',
-                  overflowY: 'auto',
-                  flexShrink: 0
-                }}
-              >
-                <div style={{ position: 'sticky', top: 0 }}>
-                  <ExecutionWorkflow
-                    events={liveStreamEvents}
-                    isStreaming={isLoading}
-                    queryTitle={latestUserQuery}
-                    onClose={() => setShowWorkflowPanel(false)}
-                  />
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* ===================================================================== */}
-        {/* MOBILE BOTTOM SHEET FOR WORKFLOW PANEL                                */}
-        {/* ===================================================================== */}
-        {isMobile && mobileWorkflowOpen && (
-          <div
-            onClick={() => setMobileWorkflowOpen(false)}
-            style={{
-              position: 'fixed',
-              inset: 0,
-              zIndex: 110,
-              background: 'rgba(0, 0, 0, 0.45)',
-              backdropFilter: 'blur(3px)',
-              display: 'flex',
-              alignItems: 'flex-end',
-              justifyContent: 'center'
-            }}
-          >
-            <div
-              className="mobile-bottom-sheet"
-              onClick={(e) => e.stopPropagation()}
-              style={{
-                width: '100%',
-                maxHeight: '85vh',
-                overflowY: 'auto',
-                background: '#ffffff',
-                borderTopLeftRadius: '20px',
-                borderTopRightRadius: '20px',
-                padding: '16px',
-                boxShadow: '0 -8px 30px rgba(0, 0, 0, 0.15)'
-              }}
-            >
-              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '10px' }}>
-                <div style={{ width: '40px', height: '4px', borderRadius: '2px', background: '#d1d5db' }} />
-              </div>
-              <ExecutionWorkflow
-                events={liveStreamEvents}
-                isStreaming={isLoading}
-                queryTitle={latestUserQuery}
-                onClose={() => setMobileWorkflowOpen(false)}
-              />
-            </div>
           </div>
         )}
 
@@ -1365,12 +1439,10 @@ export default function JarvisChatbot() {
           <div
             style={{
               position: 'absolute',
-              bottom: isMobile ? '10px' : '24px',
-              left: isMobile ? '10px' : (sidebarOpen ? 'calc(50% - 130px)' : '50%'),
-              right: isMobile ? '10px' : 'auto',
-              transform: isMobile ? 'none' : 'translateX(-50%)',
-              width: isMobile ? 'auto' : '90%',
-              maxWidth: isMobile ? 'none' : '720px',
+              bottom: isMobile ? '12px' : '24px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              width: isMobile ? 'calc(100% - 24px)' : 'min(760px, calc(100% - 48px))',
               zIndex: 35
             }}
           >
@@ -1483,6 +1555,19 @@ export default function JarvisChatbot() {
             </form>
           </div>
         )}
+
+        {/* Authentication Modal */}
+        <AuthModal
+          isOpen={authModalOpen}
+          onClose={() => setAuthModalOpen(false)}
+          onAuthSuccess={(user, initialConvId) => {
+            setCurrentUser(user);
+            loadConversations();
+            if (initialConvId) {
+              handleSelectSession({ id: initialConvId });
+            }
+          }}
+        />
 
       </main>
     </div>

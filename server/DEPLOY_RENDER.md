@@ -116,3 +116,4 @@ Deploy your `client` folder to **Vercel**, **Netlify**, or **Render Static Site*
    VITE_GATEWAY_URL=https://jarvis-backend.onrender.com
    ```
 2. Your frontend will now route all chat queries, SSE live workflow streams, metrics, and alerts to your deployed Render backend!
+

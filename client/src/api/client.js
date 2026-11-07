@@ -274,11 +274,105 @@ export async function fetchGlobalMemory(category = '') {
 const DEFAULT_ADMIN_TOKEN = 'msc_mcp_founder_sec_7a8f9b1c2d3e4f5a6b7c8d9e0f1a2b3c';
 
 function getAdminHeaders() {
-  const token = localStorage.getItem('jarvis_mcp_token') || DEFAULT_ADMIN_TOKEN;
+  const token = localStorage.getItem('jarvis_auth_token') || localStorage.getItem('jarvis_mcp_token') || DEFAULT_ADMIN_TOKEN;
   return {
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${token}`
   };
+}
+
+// ============================================================================
+// Multi-User Authentication & Sessions
+// ============================================================================
+
+export async function signupUser(name, email, password) {
+  const res = await fetch(`${GATEWAY_BASE}/api/auth/signup`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, email, password })
+  });
+  const data = await res.json();
+  if (data.token) {
+    localStorage.setItem('jarvis_auth_token', data.token);
+  }
+  return data;
+}
+
+export async function loginUser(email, password) {
+  const res = await fetch(`${GATEWAY_BASE}/api/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password })
+  });
+  const data = await res.json();
+  if (data.token) {
+    localStorage.setItem('jarvis_auth_token', data.token);
+  }
+  return data;
+}
+
+export async function logoutUser() {
+  localStorage.removeItem('jarvis_auth_token');
+  try {
+    await fetch(`${GATEWAY_BASE}/api/auth/logout`, {
+      method: 'POST',
+      headers: getAdminHeaders()
+    });
+  } catch {}
+}
+
+export async function fetchCurrentUser() {
+  const res = await fetch(`${GATEWAY_BASE}/api/auth/me`, {
+    headers: getAdminHeaders()
+  });
+  if (!res.ok) throw new Error('Not authenticated');
+  return res.json();
+}
+
+// ============================================================================
+// PostgreSQL Chat History & Conversations
+// ============================================================================
+
+export async function fetchConversations() {
+  const res = await fetch(`${GATEWAY_BASE}/api/conversations`, {
+    headers: getAdminHeaders()
+  });
+  if (!res.ok) throw new Error('Failed to fetch conversations');
+  return res.json();
+}
+
+export async function createConversation(title = 'New Chat') {
+  const res = await fetch(`${GATEWAY_BASE}/api/conversations`, {
+    method: 'POST',
+    headers: getAdminHeaders(),
+    body: JSON.stringify({ title })
+  });
+  return res.json();
+}
+
+export async function fetchConversationMessages(conversationId) {
+  const res = await fetch(`${GATEWAY_BASE}/api/conversations/${conversationId}`, {
+    headers: getAdminHeaders()
+  });
+  if (!res.ok) throw new Error('Failed to fetch conversation history');
+  return res.json();
+}
+
+export async function renameConversation(conversationId, title) {
+  const res = await fetch(`${GATEWAY_BASE}/api/conversations/${conversationId}`, {
+    method: 'PATCH',
+    headers: getAdminHeaders(),
+    body: JSON.stringify({ title })
+  });
+  return res.json();
+}
+
+export async function deleteConversation(conversationId) {
+  const res = await fetch(`${GATEWAY_BASE}/api/conversations/${conversationId}`, {
+    method: 'DELETE',
+    headers: getAdminHeaders()
+  });
+  return res.json();
 }
 
 export async function fetchAdminTokens() {

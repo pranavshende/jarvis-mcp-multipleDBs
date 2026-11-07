@@ -1,5 +1,6 @@
 import crypto from 'crypto';
 import { TokenService } from './token_service.js';
+import { UserAuthService } from './user_auth_service.js';
 import { UserContext } from '../security/request_context.js';
 import { pool } from '../config/db.js';
 import { UserRole } from '../config/permissions.js';
@@ -10,6 +11,22 @@ export class IdentityResolver {
     clientType: 'SLACK' | 'MCP_STREAM' | 'MCP_STDIO' | 'ADMIN_UI' | 'API' = 'API',
     requestId?: string
   ): Promise<UserContext | null> {
+    // 1. Check if token is a signed user session JWT
+    const jwtUser = UserAuthService.verifyToken(rawToken);
+    if (jwtUser) {
+      return {
+        userId: jwtUser.userId,
+        email: jwtUser.email,
+        role: 'FOUNDER' as UserRole,
+        department: 'EXECUTIVE_OFFICE',
+        allowedScopes: ['*'],
+        tokenId: `jwt-${jwtUser.userId}`,
+        requestId: requestId || crypto.randomUUID(),
+        clientType,
+      };
+    }
+
+    // 2. Fallback to API Token Service (msc_mcp_founder_sec_...)
     const record = await TokenService.validateToken(rawToken);
     if (!record) {
       return null;

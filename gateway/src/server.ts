@@ -1,16 +1,39 @@
 import Fastify, { FastifyInstance } from 'fastify';
 import cors from '@fastify/cors';
 import sensible from '@fastify/sensible';
+import fastifyCookie from '@fastify/cookie';
 import fastifyHttpProxy from '@fastify/http-proxy';
 import crypto from 'crypto';
 import { config } from './config/environment.js';
 import { authenticateRequest } from './auth/authentication.js';
+import { authRoutes } from './auth/auth_routes.js';
+import { conversationRoutes } from './chat/conversation_routes.js';
+import { ConversationService } from './chat/conversation_service.js';
 import { StreamableHttpManager } from './mcp/streamable_http.js';
 import { ToolRegistry } from './mcp/tool_registry.js';
 import { IntentRouter } from './orchestrator/intent_router.js';
 import { adminRoutes } from './admin/routes/admin_routes.js';
 import { SlackService } from './integrations/slack_client.js';
 import { pool } from './config/db.js';
+
+async function resolveOrCreateConversation(userId: string, sessionId?: string, initialPrompt?: string): Promise<string> {
+  const isUuid = sessionId && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(sessionId);
+  if (isUuid) {
+    const existing = await pool.query('SELECT id FROM public.conversations WHERE id = $1 AND user_id = $2', [sessionId, userId]);
+    if (existing.rows.length > 0) {
+      if (initialPrompt) {
+        await ConversationService.maybeUpdateTitleFromPrompt(sessionId!, initialPrompt);
+      }
+      return sessionId!;
+    }
+  }
+
+  const title = initialPrompt && initialPrompt.trim()
+    ? (initialPrompt.length > 35 ? initialPrompt.substring(0, 35) + '...' : initialPrompt)
+    : 'New Chat';
+  const newConv = await ConversationService.createConversation(userId, title);
+  return newConv.id;
+}
 
 export async function buildGatewayServer(): Promise<FastifyInstance> {
   const fastify = Fastify({
@@ -19,10 +42,22 @@ export async function buildGatewayServer(): Promise<FastifyInstance> {
   });
 
   // Plugins
-  await fastify.register(cors, { origin: '*' });
+  await fastify.register(cors, {
+    origin: true,
+    credentials: true,
+  });
+  await fastify.register(fastifyCookie, {
+    secret: process.env.COOKIE_SECRET || 'jarvis-cookie-secret-key-32charslong!',
+  });
   await fastify.register(sensible);
 
-  // 1. Public Health Endpoint
+  // 1. Authentication Routes (Signup, Login, Logout, Me)
+  await fastify.register(authRoutes);
+
+  // 2. Chat Conversation History Routes
+  await fastify.register(conversationRoutes);
+
+  // 3. Public Health Endpoint
   fastify.get('/api/health', async (_req, reply) => {
     let dbStatus = 'UNHEALTHY';
     try {
@@ -39,10 +74,10 @@ export async function buildGatewayServer(): Promise<FastifyInstance> {
     });
   });
 
-  // 2. Register MCP Streamable HTTP Transport (/mcp/stream)
+  // 4. Register MCP Streamable HTTP Transport (/mcp/stream)
   await StreamableHttpManager.registerRoutes(fastify);
 
-  // 3. Protected APIs Group (Requires Bearer Token)
+  // 5. Protected APIs Group (Requires Bearer Token or Session Cookie)
   fastify.register(async (protectedApp) => {
     protectedApp.addHook('preHandler', authenticateRequest);
 
@@ -55,8 +90,20 @@ export async function buildGatewayServer(): Promise<FastifyInstance> {
       }
 
       const user = request.userContext!;
-      const result = await IntentRouter.routeAndExecute(body.query, user, body.sessionId || 'default');
-      reply.send(result);
+      const convId = await resolveOrCreateConversation(user.userId, body.sessionId, body.query);
+      await ConversationService.persistMessage(convId, 'user', body.query);
+
+      const result = await IntentRouter.routeAndExecute(body.query, user, convId);
+
+      await ConversationService.persistMessage(convId, 'assistant', result.response, {
+        route: result.route,
+        latencyMs: result.latencyMs,
+        toolsInvoked: result.toolsInvoked,
+        executionEvents: result.executionEvents,
+        citations: result.citations,
+      });
+
+      reply.send({ ...result, conversationId: convId });
     });
 
     // Real-Time Execution Workflow Event Streaming (SSE)
@@ -68,6 +115,8 @@ export async function buildGatewayServer(): Promise<FastifyInstance> {
       }
 
       const user = request.userContext!;
+      const convId = await resolveOrCreateConversation(user.userId, body.sessionId, body.query);
+      await ConversationService.persistMessage(convId, 'user', body.query);
 
       reply.raw.writeHead(200, {
         'Content-Type': 'text/event-stream',
@@ -85,13 +134,21 @@ export async function buildGatewayServer(): Promise<FastifyInstance> {
         const result = await IntentRouter.routeAndExecute(
           body.query,
           user,
-          body.sessionId || 'default',
+          convId,
           (event) => {
             sendSse('workflow_event', event);
           }
         );
 
-        sendSse('complete', result);
+        await ConversationService.persistMessage(convId, 'assistant', result.response, {
+          route: result.route,
+          latencyMs: result.latencyMs,
+          toolsInvoked: result.toolsInvoked,
+          executionEvents: result.executionEvents,
+          citations: result.citations,
+        });
+
+        sendSse('complete', { ...result, conversationId: convId });
         reply.raw.end();
       } catch (err: any) {
         sendSse('error', { error: err.message });

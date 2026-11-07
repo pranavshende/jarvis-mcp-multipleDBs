@@ -45,3 +45,4 @@ if [ -f "dist/server.js" ]; then
 else
   exec npm start
 fi
+

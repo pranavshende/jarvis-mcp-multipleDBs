@@ -6,18 +6,23 @@ export async function authenticateRequest(
   reply: FastifyReply
 ): Promise<void> {
   const startTime = performance.now();
-  const authHeader = request.headers.authorization;
+  let rawToken: string | null = null;
 
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+  const authHeader = request.headers.authorization;
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    rawToken = authHeader.substring(7).trim();
+  } else if ((request as any).cookies?.jarvis_session) {
+    rawToken = (request as any).cookies.jarvis_session;
+  }
+
+  if (!rawToken) {
     reply.status(401).send({
       error: 'UNAUTHORIZED',
-      message: 'Missing or malformed Authorization header. Expected Bearer token.',
+      message: 'Missing or malformed Authorization header or session cookie.',
       latencyMs: Math.round((performance.now() - startTime) * 100) / 100,
     });
     return;
   }
-
-  const rawToken = authHeader.substring(7).trim();
   const clientTypeHeader = (request.headers['x-jarvis-client'] as string) || 'API';
   const clientType = ['SLACK', 'MCP_STREAM', 'MCP_STDIO', 'ADMIN_UI', 'API'].includes(clientTypeHeader)
     ? (clientTypeHeader as any)

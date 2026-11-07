@@ -42,3 +42,4 @@ ENV PORT=10000
 EXPOSE 10000
 
 CMD ["/bin/bash", "start.sh"]
+
