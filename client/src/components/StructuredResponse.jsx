@@ -289,7 +289,7 @@ export default function StructuredResponse({ content, citations = [], onOpenCita
           </div>
 
           {/* Cards Row: Current Status & Applicable Policy */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '14px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))', gap: '14px' }}>
             
             {/* Card 1: Current Status */}
             <div
@@ -371,27 +371,27 @@ export default function StructuredResponse({ content, citations = [], onOpenCita
               <span style={{ fontSize: '15px', fontWeight: '700', color: '#111827' }}>Release Process</span>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '8px' }}>
+            <div className="scroll-x-touch" style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '4px' }}>
               {/* Step 1 */}
-              <div style={{ background: '#ffffff', border: '1px solid #e5e5e0', borderRadius: '10px', padding: '12px 10px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <div style={{ minWidth: '130px', flex: '1 1 0', background: '#ffffff', border: '1px solid #e5e5e0', borderRadius: '10px', padding: '12px 10px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
                 <div style={{ fontSize: '12px', fontWeight: '700', color: '#111827' }}>① Receive Payment</div>
                 <div style={{ fontSize: '11px', color: '#6b7280', lineHeight: '1.4' }}>Full or partial clearing of overdue</div>
               </div>
 
               {/* Step 2 */}
-              <div style={{ background: '#ffffff', border: '1px solid #e5e5e0', borderRadius: '10px', padding: '12px 10px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <div style={{ minWidth: '130px', flex: '1 1 0', background: '#ffffff', border: '1px solid #e5e5e0', borderRadius: '10px', padding: '12px 10px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
                 <div style={{ fontSize: '12px', fontWeight: '700', color: '#111827' }}>② Log Confirmation</div>
                 <div style={{ fontSize: '11px', color: '#6b7280', lineHeight: '1.4' }}>Record payment in AR system</div>
               </div>
 
               {/* Step 3 */}
-              <div style={{ background: '#ffffff', border: '1px solid #e5e5e0', borderRadius: '10px', padding: '12px 10px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <div style={{ minWidth: '130px', flex: '1 1 0', background: '#ffffff', border: '1px solid #e5e5e0', borderRadius: '10px', padding: '12px 10px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
                 <div style={{ fontSize: '12px', fontWeight: '700', color: '#111827' }}>③ Verify Balance</div>
                 <div style={{ fontSize: '11px', color: '#6b7280', lineHeight: '1.4' }}>Ensure utilization ≤ 100%</div>
               </div>
 
               {/* Step 4 (Highlighted) */}
-              <div style={{ background: '#dcfce7', border: '1px solid #86efac', borderRadius: '10px', padding: '12px 10px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <div style={{ minWidth: '130px', flex: '1 1 0', background: '#dcfce7', border: '1px solid #86efac', borderRadius: '10px', padding: '12px 10px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
                 <div style={{ fontSize: '12px', fontWeight: '700', color: '#166534' }}>④ Release Orders</div>
                 <div style={{ fontSize: '11px', color: '#166534', opacity: 0.85, lineHeight: '1.4' }}>Lift credit hold and resume shipments</div>
               </div>

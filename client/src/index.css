@@ -89,3 +89,44 @@
     transform: scale(1.3);
   }
 }
+
+/* Responsive & Mobile Enhancements */
+@media (max-width: 768px) {
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+  }
+
+  /* Responsive Grid Adjustments */
+  .grid-responsive-2 {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .grid-responsive-4 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* Bottom sheet slide-up animation */
+  @keyframes slideUp {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  .mobile-bottom-sheet {
+    animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  /* Horizontal scroll with momentum */
+  .scroll-x-touch {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .scroll-x-touch::-webkit-scrollbar {
+    display: none;
+  }
+}

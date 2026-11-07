@@ -59,7 +59,7 @@ export default function FounderDashboard() {
               </span>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px', marginBottom: '16px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))', gap: '16px', marginBottom: '16px' }}>
               {packagesData && packagesData.map((fac) => (
                 <div key={fac.facility_code} style={{ background: '#f8f7f4', padding: '16px', borderRadius: '10px', border: '1px solid #e8e6df' }}>
                   <div style={{ fontSize: '12px', color: '#6b7280', fontWeight: '500' }}>{fac.facility_name} ({fac.facility_code})</div>
@@ -94,7 +94,7 @@ export default function FounderDashboard() {
               </span>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px', marginBottom: '16px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 200px), 1fr))', gap: '16px', marginBottom: '16px' }}>
               <div style={{ background: '#f8f7f4', padding: '16px', borderRadius: '10px', border: '1px solid #e8e6df' }}>
                 <div style={{ fontSize: '12px', color: '#6b7280' }}>September Gross Revenue</div>
                 <div style={{ fontSize: '22px', fontWeight: '700', color: '#111827', margin: '4px 0' }}>$1,852,586.39</div>
@@ -138,7 +138,7 @@ export default function FounderDashboard() {
               </span>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '16px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: '16px' }}>
               {/* Anomaly 1 */}
               <div style={{ background: '#fff5f5', padding: '18px', borderRadius: '10px', border: '1px solid #fecaca' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

@@ -16,6 +16,27 @@ export default function JarvisChatbot() {
   // Navigation View: 'chat' | 'founder' | 'metrics' | 'knowledge' | 'alerts' | 'crosswalk' | 'sync' | 'admin'
   const [activeView, setActiveView] = useState('chat');
 
+  // Responsive Phone / Desktop Detection
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== 'undefined' ? window.innerWidth < 768 : false
+  );
+  const [mobileWorkflowOpen, setMobileWorkflowOpen] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      if (mobile) {
+        setSidebarOpen(false);
+      } else {
+        setSidebarOpen(true);
+      }
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   // Initial seed message matching the luxury reference screenshot
   const initialDemoMessages = [
     {
@@ -53,7 +74,7 @@ export default function JarvisChatbot() {
   const [inputQuery, setInputQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [liveStreamEvents, setLiveStreamEvents] = useState([]);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isDeepThink, setIsDeepThink] = useState(false);
   const [showWorkflowPanel, setShowWorkflowPanel] = useState(true);
   const [activeCitation, setActiveCitation] = useState(null);
@@ -172,7 +193,7 @@ export default function JarvisChatbot() {
         const res = await fetchHealth();
         setDbStatus(res.status === 'HEALTHY' ? 'HEALTHY' : 'DEGRADED');
       } catch {
-        setDbStatus('HEALTHY'); // fallback operational mode
+        setDbStatus('HEALTHY');
       }
     }
     checkHealth();
@@ -187,6 +208,7 @@ export default function JarvisChatbot() {
     setInputQuery('');
     setLiveStreamEvents([]);
     setShowWorkflowPanel(false);
+    if (isMobile) setSidebarOpen(false);
     if (inputRef.current) inputRef.current.focus();
   };
 
@@ -196,7 +218,6 @@ export default function JarvisChatbot() {
     if (session.messages && session.messages.length > 0) {
       setMessages(session.messages);
     } else {
-      // Load relevant analysis
       setMessages([
         {
           id: `u-${session.id}`,
@@ -216,6 +237,7 @@ export default function JarvisChatbot() {
       ]);
     }
     setShowWorkflowPanel(true);
+    if (isMobile) setSidebarOpen(false);
   };
 
   const handleRenameSession = (id, newTitle) => {
@@ -363,13 +385,6 @@ export default function JarvisChatbot() {
     }
   };
 
-  const samplePrompts = [
-    'Why is Partner 301 on credit hold and what is the process to release it?',
-    'What are the Gold partner credit terms and payment policies?',
-    'How many packages were received yesterday at EWR1 vs ONT1?',
-    'What are the SOP inspection rules for return grading?'
-  ];
-
   const filteredSessions = chatSessions.filter((s) =>
     s.title.toLowerCase().includes(searchFilter.toLowerCase())
   );
@@ -383,30 +398,53 @@ export default function JarvisChatbot() {
         background: '#f8f7f4',
         color: '#1a1c19',
         fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        position: 'relative'
       }}
     >
+      {/* Mobile Backdrop Overlay */}
+      {isMobile && sidebarOpen && (
+        <div
+          onClick={() => setSidebarOpen(false)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0, 0, 0, 0.4)',
+            backdropFilter: 'blur(3px)',
+            zIndex: 90
+          }}
+        />
+      )}
+
       {/* ========================================================================= */}
-      {/* 1. FIXED COLLAPSIBLE SIDEBAR (Warm Ivory / Minimalist)                     */}
+      {/* 1. SIDEBAR (Collapsible Drawer on Mobile, Fixed Sidebar on Desktop)         */}
       {/* ========================================================================= */}
       <aside
         style={{
-          width: sidebarOpen ? '260px' : '0px',
-          transition: 'width 0.22s cubic-bezier(0.4, 0, 0.2, 1)',
+          width: isMobile ? '280px' : (sidebarOpen ? '260px' : '0px'),
+          transition: 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), width 0.22s ease',
           background: '#f3f2ee',
           display: 'flex',
           flexDirection: 'column',
           borderRight: '1px solid #e8e6df',
           overflow: 'hidden',
           flexShrink: 0,
-          position: 'relative',
-          zIndex: 40
+          position: isMobile ? 'fixed' : 'relative',
+          top: 0,
+          bottom: 0,
+          left: 0,
+          zIndex: 100,
+          transform: isMobile ? (sidebarOpen ? 'translateX(0)' : 'translateX(-100%)') : 'none',
+          boxShadow: isMobile && sidebarOpen ? '8px 0 30px rgba(0, 0, 0, 0.2)' : 'none'
         }}
       >
         {/* Brand Header */}
         <div style={{ padding: '16px 14px 10px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div
-            onClick={() => setActiveView('chat')}
+            onClick={() => {
+              setActiveView('chat');
+              if (isMobile) setSidebarOpen(false);
+            }}
             style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '700', fontSize: '16px', color: '#1a1c19', cursor: 'pointer' }}
           >
             {/* Green Leaf Brand Icon */}
@@ -426,10 +464,10 @@ export default function JarvisChatbot() {
             </button>
             <button
               onClick={() => setSidebarOpen(false)}
-              title="Collapse sidebar"
+              title="Close sidebar"
               style={{ background: 'transparent', border: 'none', color: '#787a74', cursor: 'pointer', padding: '6px', borderRadius: '6px' }}
             >
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
           </div>
         </div>
@@ -458,7 +496,7 @@ export default function JarvisChatbot() {
           </div>
         )}
 
-        {/* New Chat Button (Dark Forest Green Pill) */}
+        {/* New Chat Button */}
         <div style={{ padding: '6px 12px 10px' }}>
           <button
             onClick={handleNewChat}
@@ -467,7 +505,7 @@ export default function JarvisChatbot() {
               display: 'flex',
               alignItems: 'center',
               gap: '8px',
-              padding: '9px 12px',
+              padding: '10px 12px',
               background: '#0e372d',
               color: '#ffffff',
               border: 'none',
@@ -487,7 +525,7 @@ export default function JarvisChatbot() {
           </button>
         </div>
 
-        {/* Enterprise Navigation Links */}
+        {/* Navigation Links */}
         <div style={{ padding: '0 8px', display: 'flex', flexDirection: 'column', gap: '2px' }}>
           {[
             { id: 'chat', label: 'Conversational Intelligence', icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> },
@@ -503,12 +541,15 @@ export default function JarvisChatbot() {
             return (
               <button
                 key={item.id}
-                onClick={() => setActiveView(item.id)}
+                onClick={() => {
+                  setActiveView(item.id);
+                  if (isMobile) setSidebarOpen(false);
+                }}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
                   gap: '10px',
-                  padding: '7px 10px',
+                  padding: '8px 10px',
                   background: isSelected ? '#e5e3dc' : 'transparent',
                   border: 'none',
                   borderRadius: '6px',
@@ -518,12 +559,6 @@ export default function JarvisChatbot() {
                   cursor: 'pointer',
                   textAlign: 'left',
                   transition: 'all 0.15s ease'
-                }}
-                onMouseEnter={(e) => {
-                  if (!isSelected) e.currentTarget.style.background = '#ebeae4';
-                }}
-                onMouseLeave={(e) => {
-                  if (!isSelected) e.currentTarget.style.background = 'transparent';
                 }}
               >
                 <span style={{ color: isSelected ? '#0e372d' : '#787a74' }}>{item.icon}</span>
@@ -536,7 +571,7 @@ export default function JarvisChatbot() {
         {/* Scrollable Projects & Recents */}
         <div style={{ flex: 1, overflowY: 'auto', padding: '12px 8px' }}>
           
-          {/* Projects / Prompts Header */}
+          {/* Projects Header */}
           <div
             style={{
               display: 'flex',
@@ -560,14 +595,6 @@ export default function JarvisChatbot() {
                 borderRadius: '4px',
                 fontSize: '14px',
                 lineHeight: 1
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.color = '#1a1c19';
-                e.currentTarget.style.background = '#e5e3dc';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.color = '#787a74';
-                e.currentTarget.style.background = 'transparent';
               }}
             >
               +
@@ -617,6 +644,7 @@ export default function JarvisChatbot() {
                     if (isEditing) return;
                     setActiveView('chat');
                     setInputQuery(p.query || `Provide an executive briefing on ${p.name}`);
+                    if (isMobile) setSidebarOpen(false);
                     if (inputRef.current) inputRef.current.focus();
                   }}
                   title={p.query || p.name}
@@ -798,8 +826,6 @@ export default function JarvisChatbot() {
             background: '#f3f2ee',
             cursor: 'pointer'
           }}
-          onMouseEnter={(e) => (e.currentTarget.style.background = '#ebeae4')}
-          onMouseLeave={(e) => (e.currentTarget.style.background = '#f3f2ee')}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <div
@@ -828,18 +854,18 @@ export default function JarvisChatbot() {
       </aside>
 
       {/* ========================================================================= */}
-      {/* 2. MAIN APPLICATION CANVAS (Warm Linen / Fluid Stepper / Live Drawer)     */}
+      {/* 2. MAIN APPLICATION CANVAS (Fully Phone & Desktop Responsive)             */}
       {/* ========================================================================= */}
       <main style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%', position: 'relative', background: '#f8f7f4', overflow: 'hidden' }}>
         
-        {/* Artistic generative background contour lines (Matching design reference) */}
+        {/* Artistic generative background contour lines */}
         <svg
           style={{
             position: 'absolute',
             top: 0,
             left: 0,
-            width: '460px',
-            height: '460px',
+            width: isMobile ? '280px' : '460px',
+            height: isMobile ? '280px' : '460px',
             pointerEvents: 'none',
             zIndex: 0,
             opacity: 0.55
@@ -850,13 +876,12 @@ export default function JarvisChatbot() {
           <path d="M-50,80 C120,40 180,180 240,120 C300,60 380,220 520,180" stroke="#ded8cd" strokeWidth="1.2" />
           <path d="M-60,140 C100,100 160,240 230,190 C300,140 370,280 530,250" stroke="#e5dfd4" strokeWidth="1" />
           <path d="M-40,200 C110,170 170,300 250,260 C330,220 400,340 540,320" stroke="#eae4d9" strokeWidth="0.8" />
-          <path d="M-80,20 C80,-10 140,120 210,70 C280,20 350,160 490,130" stroke="#ded8cd" strokeWidth="0.9" />
         </svg>
 
         {/* Top Header Bar */}
         <header
           style={{
-            padding: '12px 20px',
+            padding: isMobile ? '10px 14px' : '12px 20px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
@@ -866,19 +891,34 @@ export default function JarvisChatbot() {
             zIndex: 30
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            {!sidebarOpen && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '8px' : '12px' }}>
+            {/* Hamburger Button for Mobile / Collapsed Desktop */}
+            {(!sidebarOpen || isMobile) && (
               <button
                 onClick={() => setSidebarOpen(true)}
-                title="Open sidebar"
-                style={{ background: 'transparent', border: 'none', color: '#787a74', cursor: 'pointer', padding: '6px', borderRadius: '6px' }}
+                title="Open menu"
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: '#1a1c19',
+                  cursor: 'pointer',
+                  padding: '4px',
+                  borderRadius: '6px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
               >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                  <line x1="3" y1="12" x2="21" y2="12" />
+                  <line x1="3" y1="6" x2="21" y2="6" />
+                  <line x1="3" y1="18" x2="21" y2="18" />
+                </svg>
               </button>
             )}
 
-            <span style={{ fontSize: '14px', fontWeight: '700', color: '#1a1c19' }}>
-              Jarvis 1.0 Enterprise
+            <span style={{ fontSize: isMobile ? '13.5px' : '14px', fontWeight: '700', color: '#1a1c19' }}>
+              {isMobile ? 'Jarvis AI' : 'Jarvis 1.0 Enterprise'}
             </span>
 
             {/* Model Selector Dropdown Pill */}
@@ -888,12 +928,12 @@ export default function JarvisChatbot() {
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '6px',
+                  gap: '5px',
                   cursor: 'pointer',
                   color: '#1a1c19',
-                  fontSize: '12.5px',
+                  fontSize: isMobile ? '11.5px' : '12.5px',
                   fontWeight: '500',
-                  padding: '3px 10px',
+                  padding: isMobile ? '2px 8px' : '3px 10px',
                   borderRadius: '16px',
                   background: '#ffffff',
                   border: '1px solid #e2e0d8',
@@ -916,7 +956,7 @@ export default function JarvisChatbot() {
                     borderRadius: '8px',
                     boxShadow: '0 8px 24px rgba(0, 0, 0, 0.1)',
                     padding: '6px',
-                    width: '220px',
+                    width: '200px',
                     zIndex: 50
                   }}
                 >
@@ -928,7 +968,7 @@ export default function JarvisChatbot() {
                         padding: '8px 10px',
                         borderRadius: '6px',
                         cursor: 'pointer',
-                        fontSize: '12.5px',
+                        fontSize: '12px',
                         fontWeight: selectedModel === m ? '600' : '400',
                         color: selectedModel === m ? '#0e372d' : '#374151',
                         background: selectedModel === m ? '#e8f5ec' : 'transparent'
@@ -943,61 +983,107 @@ export default function JarvisChatbot() {
           </div>
 
           {/* Right Status Indicators */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '6px' : '10px' }}>
             
             {/* DB Health Pill */}
             <span
+              title="DB Connected - Redis Active"
               style={{
-                fontSize: '11.5px',
-                padding: '4px 10px',
+                fontSize: isMobile ? '11px' : '11.5px',
+                padding: isMobile ? '3px 8px' : '4px 10px',
                 borderRadius: '16px',
                 background: dbStatus === 'HEALTHY' ? '#e8f5ec' : '#fee2e2',
                 color: dbStatus === 'HEALTHY' ? '#166534' : '#dc2626',
                 border: `1px solid ${dbStatus === 'HEALTHY' ? '#bbf7d0' : '#fecaca'}`,
                 display: 'flex',
                 alignItems: 'center',
-                gap: '6px',
-                fontWeight: '500'
+                gap: '5px',
+                fontWeight: '600'
               }}
             >
               <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: dbStatus === 'HEALTHY' ? '#16a34a' : '#ef4444' }} />
-              {dbStatus === 'HEALTHY' ? 'DB Connected - Redis Active' : 'System Degraded'}
+              {!isMobile && (dbStatus === 'HEALTHY' ? 'DB Connected - Redis Active' : 'System Degraded')}
+              {isMobile && 'Live'}
             </span>
 
-            {/* Chunks Pill */}
-            <span
-              style={{
-                fontSize: '11.5px',
-                padding: '4px 10px',
-                borderRadius: '16px',
-                background: '#fef3c7',
-                color: '#92400e',
-                border: '1px solid #fde68a',
-                fontWeight: '500'
-              }}
-            >
-              ⚡ 746 Chunks Indexed
-            </span>
+            {/* Desktop Only: Chunks Pill */}
+            {!isMobile && (
+              <span
+                style={{
+                  fontSize: '11.5px',
+                  padding: '4px 10px',
+                  borderRadius: '16px',
+                  background: '#fef3c7',
+                  color: '#92400e',
+                  border: '1px solid #fde68a',
+                  fontWeight: '500'
+                }}
+              >
+                ⚡ 746 Chunks
+              </span>
+            )}
 
-            {/* Operations Dashboard Button */}
-            <button
-              onClick={() => setActiveView(activeView === 'founder' ? 'chat' : 'founder')}
-              style={{
-                background: '#18181b',
-                border: 'none',
-                color: '#ffffff',
-                padding: '6px 14px',
-                borderRadius: '8px',
-                fontSize: '12px',
-                fontWeight: '500',
-                cursor: 'pointer',
-                transition: 'all 0.15s ease'
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = '#27272a')}
-              onMouseLeave={(e) => (e.currentTarget.style.background = '#18181b')}
-            >
-              Operations Dashboard ↗
-            </button>
+            {/* Mobile Only: Workflow Sheet Toggle Button */}
+            {isMobile && activeView === 'chat' && (
+              <button
+                onClick={() => setMobileWorkflowOpen(true)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                  background: '#0e372d',
+                  color: '#ffffff',
+                  border: 'none',
+                  borderRadius: '14px',
+                  padding: '4px 10px',
+                  fontSize: '11.5px',
+                  fontWeight: '600',
+                  cursor: 'pointer'
+                }}
+              >
+                <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#4ade80' }} />
+                Workflow
+              </button>
+            )}
+
+            {/* Operations Dashboard Button (Desktop or icon on mobile) */}
+            {!isMobile ? (
+              <button
+                onClick={() => setActiveView(activeView === 'founder' ? 'chat' : 'founder')}
+                style={{
+                  background: '#18181b',
+                  border: 'none',
+                  color: '#ffffff',
+                  padding: '6px 14px',
+                  borderRadius: '8px',
+                  fontSize: '12px',
+                  fontWeight: '500',
+                  cursor: 'pointer',
+                  transition: 'all 0.15s ease'
+                }}
+              >
+                Operations Dashboard ↗
+              </button>
+            ) : (
+              <button
+                onClick={() => setActiveView(activeView === 'founder' ? 'chat' : 'founder')}
+                title="Operations Dashboard"
+                style={{
+                  background: '#18181b',
+                  border: 'none',
+                  color: '#ffffff',
+                  width: '28px',
+                  height: '28px',
+                  borderRadius: '7px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer'
+                }}
+              >
+                ↗
+              </button>
+            )}
           </div>
         </header>
 
@@ -1005,7 +1091,7 @@ export default function JarvisChatbot() {
         {/* SUBVIEW CONTAINER (If activeView !== 'chat')                          */}
         {/* ===================================================================== */}
         {activeView !== 'chat' ? (
-          <div style={{ flex: 1, overflowY: 'auto', padding: '16px', zIndex: 1 }}>
+          <div style={{ flex: 1, overflowY: 'auto', padding: isMobile ? '12px' : '16px', zIndex: 1 }}>
             {activeView === 'founder' && <FounderDashboard />}
             {activeView === 'knowledge' && <KnowledgeBase />}
             {activeView === 'alerts' && <AlertCenter />}
@@ -1016,13 +1102,21 @@ export default function JarvisChatbot() {
           </div>
         ) : (
           /* =================================================================== */
-          /* CONVERSATIONAL CHATBOT CANVAS (Split View: Chat Stream + Workflow)   */
+          /* CONVERSATIONAL CHATBOT CANVAS                                       */
           /* =================================================================== */
           <div style={{ flex: 1, display: 'flex', height: '100%', overflow: 'hidden', position: 'relative', zIndex: 1 }}>
             
-            {/* Left/Center: Conversation Stream */}
-            <div style={{ flex: 1, overflowY: 'auto', padding: '24px 24px 120px 32px', display: 'flex', flexDirection: 'column' }}>
-              <div style={{ width: '100%', maxWidth: '820px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+            {/* Conversation Stream */}
+            <div
+              style={{
+                flex: 1,
+                overflowY: 'auto',
+                padding: isMobile ? '16px 12px 100px 12px' : '24px 24px 120px 32px',
+                display: 'flex',
+                flexDirection: 'column'
+              }}
+            >
+              <div style={{ width: '100%', maxWidth: '820px', display: 'flex', flexDirection: 'column', gap: isMobile ? '18px' : '24px' }}>
                 
                 {messages.map((m) => (
                   <div
@@ -1036,21 +1130,21 @@ export default function JarvisChatbot() {
                   >
                     {/* USER MESSAGE BUBBLE */}
                     {m.role === 'user' ? (
-                      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', maxWidth: '80%' }}>
+                      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', maxWidth: isMobile ? '90%' : '80%' }}>
                         <div
                           style={{
                             background: '#ebe5df',
                             border: '1px solid #ded9d2',
                             borderRadius: '16px',
-                            padding: '12px 18px',
-                            fontSize: '14.5px',
+                            padding: isMobile ? '10px 14px' : '12px 18px',
+                            fontSize: isMobile ? '13.5px' : '14.5px',
                             color: '#1f211e',
                             lineHeight: '1.55',
                             boxShadow: '0 1px 3px rgba(0, 0, 0, 0.03)'
                           }}
                         >
                           <div>{m.content}</div>
-                          <div style={{ textAlign: 'right', fontSize: '11px', color: '#787a74', marginTop: '4px' }}>
+                          <div style={{ textAlign: 'right', fontSize: '10.5px', color: '#787a74', marginTop: '4px' }}>
                             {m.timestamp || '10:24 AM'}
                           </div>
                         </div>
@@ -1058,8 +1152,8 @@ export default function JarvisChatbot() {
                         {/* User Avatar */}
                         <div
                           style={{
-                            width: '32px',
-                            height: '32px',
+                            width: isMobile ? '28px' : '32px',
+                            height: isMobile ? '28px' : '32px',
                             borderRadius: '50%',
                             background: '#0e372d',
                             color: '#ffffff',
@@ -1067,7 +1161,7 @@ export default function JarvisChatbot() {
                             alignItems: 'center',
                             justifyContent: 'center',
                             fontWeight: '600',
-                            fontSize: '12px',
+                            fontSize: isMobile ? '11px' : '12px',
                             flexShrink: 0
                           }}
                         >
@@ -1076,12 +1170,12 @@ export default function JarvisChatbot() {
                       </div>
                     ) : (
                       /* ASSISTANT MESSAGE CONTAINER */
-                      <div style={{ display: 'flex', gap: '14px', width: '100%' }}>
+                      <div style={{ display: 'flex', gap: isMobile ? '10px' : '14px', width: '100%' }}>
                         {/* Jarvis Avatar */}
                         <div
                           style={{
-                            width: '32px',
-                            height: '32px',
+                            width: isMobile ? '28px' : '32px',
+                            height: isMobile ? '28px' : '32px',
                             borderRadius: '50%',
                             background: '#111827',
                             color: '#ffffff',
@@ -1089,7 +1183,7 @@ export default function JarvisChatbot() {
                             alignItems: 'center',
                             justifyContent: 'center',
                             fontWeight: 'bold',
-                            fontSize: '13px',
+                            fontSize: isMobile ? '12px' : '13px',
                             flexShrink: 0
                           }}
                         >
@@ -1101,11 +1195,11 @@ export default function JarvisChatbot() {
                           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
                             <span
                               style={{
-                                fontSize: '11px',
+                                fontSize: '10.5px',
                                 color: '#6d28d9',
                                 background: '#ede9fe',
                                 border: '1px solid #ddd6fe',
-                                padding: '2px 8px',
+                                padding: '2px 7px',
                                 borderRadius: '4px',
                                 fontWeight: '700',
                                 letterSpacing: '0.04em'
@@ -1120,7 +1214,7 @@ export default function JarvisChatbot() {
                           </div>
 
                           {/* Assistant Response Text */}
-                          <div style={{ fontSize: '14.5px', color: '#1f2937', lineHeight: '1.6', marginBottom: '10px' }}>
+                          <div style={{ fontSize: isMobile ? '13.5px' : '14.5px', color: '#1f2937', lineHeight: '1.6', marginBottom: '10px' }}>
                             {m.content}
                           </div>
 
@@ -1140,8 +1234,8 @@ export default function JarvisChatbot() {
               </div>
             </div>
 
-            {/* Right: Docked AI Execution Workflow Panel (Matching design reference) */}
-            {showWorkflowPanel && (
+            {/* Desktop Only: Docked AI Execution Workflow Panel */}
+            {!isMobile && showWorkflowPanel && (
               <div
                 style={{
                   width: '370px',
@@ -1164,17 +1258,62 @@ export default function JarvisChatbot() {
         )}
 
         {/* ===================================================================== */}
-        {/* 3. BOTTOM FLOATING CHAT INPUT BAR (Luxury White Pill)                */}
+        {/* MOBILE BOTTOM SHEET FOR WORKFLOW PANEL                                */}
+        {/* ===================================================================== */}
+        {isMobile && mobileWorkflowOpen && (
+          <div
+            onClick={() => setMobileWorkflowOpen(false)}
+            style={{
+              position: 'fixed',
+              inset: 0,
+              zIndex: 110,
+              background: 'rgba(0, 0, 0, 0.45)',
+              backdropFilter: 'blur(3px)',
+              display: 'flex',
+              alignItems: 'flex-end',
+              justifyContent: 'center'
+            }}
+          >
+            <div
+              className="mobile-bottom-sheet"
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                width: '100%',
+                maxHeight: '85vh',
+                overflowY: 'auto',
+                background: '#ffffff',
+                borderTopLeftRadius: '20px',
+                borderTopRightRadius: '20px',
+                padding: '16px',
+                boxShadow: '0 -8px 30px rgba(0, 0, 0, 0.15)'
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '10px' }}>
+                <div style={{ width: '40px', height: '4px', borderRadius: '2px', background: '#d1d5db' }} />
+              </div>
+              <ExecutionWorkflow
+                events={liveStreamEvents}
+                isStreaming={isLoading}
+                queryTitle={messages[messages.length - 2]?.content || 'Investigating Partner 301 credit hold and release process.'}
+                onClose={() => setMobileWorkflowOpen(false)}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* ===================================================================== */}
+        {/* 3. BOTTOM FLOATING CHAT INPUT BAR (Phone & Desktop Responsive)       */}
         {/* ===================================================================== */}
         {activeView === 'chat' && (
           <div
             style={{
               position: 'absolute',
-              bottom: '24px',
-              left: sidebarOpen ? 'calc(50% - 130px)' : '50%',
-              transform: 'translateX(-50%)',
-              width: '90%',
-              maxWidth: '720px',
+              bottom: isMobile ? '10px' : '24px',
+              left: isMobile ? '10px' : (sidebarOpen ? 'calc(50% - 130px)' : '50%'),
+              right: isMobile ? '10px' : 'auto',
+              transform: isMobile ? 'none' : 'translateX(-50%)',
+              width: isMobile ? 'auto' : '90%',
+              maxWidth: isMobile ? 'none' : '720px',
               zIndex: 35
             }}
           >
@@ -1185,9 +1324,9 @@ export default function JarvisChatbot() {
                 alignItems: 'center',
                 background: '#ffffff',
                 borderRadius: '32px',
-                padding: '6px 10px 6px 12px',
+                padding: isMobile ? '4px 6px 4px 10px' : '6px 10px 6px 12px',
                 border: '1px solid #ded9d2',
-                boxShadow: '0 8px 30px rgba(0, 0, 0, 0.06)'
+                boxShadow: '0 8px 30px rgba(0, 0, 0, 0.08)'
               }}
             >
               {/* Add tools / context button */}
@@ -1196,8 +1335,8 @@ export default function JarvisChatbot() {
                 onClick={() => {}}
                 title="Add context or files"
                 style={{
-                  width: '32px',
-                  height: '32px',
+                  width: isMobile ? '28px' : '32px',
+                  height: isMobile ? '28px' : '32px',
                   borderRadius: '50%',
                   background: '#f3f2ee',
                   border: 'none',
@@ -1206,7 +1345,8 @@ export default function JarvisChatbot() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   cursor: 'pointer',
-                  fontSize: '16px'
+                  fontSize: isMobile ? '14px' : '16px',
+                  flexShrink: 0
                 }}
               >
                 +
@@ -1225,14 +1365,15 @@ export default function JarvisChatbot() {
                   background: 'transparent',
                   border: 'none',
                   color: '#1a1c19',
-                  padding: '8px 14px',
-                  fontSize: '14.5px',
+                  padding: isMobile ? '6px 10px' : '8px 14px',
+                  fontSize: isMobile ? '13.5px' : '14.5px',
                   outline: 'none',
-                  fontFamily: 'inherit'
+                  fontFamily: 'inherit',
+                  minWidth: 0
                 }}
               />
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '5px' : '8px' }}>
                 {/* Think reasoning toggle */}
                 <button
                   type="button"
@@ -1241,27 +1382,28 @@ export default function JarvisChatbot() {
                     display: 'flex',
                     alignItems: 'center',
                     gap: '4px',
-                    padding: '4px 10px',
+                    padding: isMobile ? '3px 8px' : '4px 10px',
                     borderRadius: '16px',
                     background: isDeepThink ? '#e8f5ec' : '#f3f2ee',
                     color: isDeepThink ? '#0e372d' : '#52525b',
                     border: 'none',
-                    fontSize: '12px',
+                    fontSize: isMobile ? '11px' : '12px',
                     fontWeight: '500',
-                    cursor: 'pointer'
+                    cursor: 'pointer',
+                    whiteSpace: 'nowrap'
                   }}
                 >
                   <span>⭘</span>
                   <span>Think</span>
                 </button>
 
-                {/* Submit button (Dark forest green circle with upward white arrow) */}
+                {/* Submit button */}
                 <button
                   type="submit"
                   disabled={!inputQuery.trim() || isLoading}
                   style={{
-                    width: '36px',
-                    height: '36px',
+                    width: isMobile ? '32px' : '36px',
+                    height: isMobile ? '32px' : '36px',
                     borderRadius: '50%',
                     background: '#0e372d',
                     border: 'none',
@@ -1271,10 +1413,14 @@ export default function JarvisChatbot() {
                     justifyContent: 'center',
                     cursor: inputQuery.trim() && !isLoading ? 'pointer' : 'default',
                     opacity: inputQuery.trim() && !isLoading ? 1 : 0.6,
-                    transition: 'opacity 0.15s ease'
+                    transition: 'opacity 0.15s ease',
+                    flexShrink: 0
                   }}
                 >
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                  <svg width={isMobile ? '13' : '15'} height={isMobile ? '13' : '15'} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <line x1="12" y1="19" x2="12" y2="5"/>
+                    <polyline points="5 12 12 5 19 12"/>
+                  </svg>
                 </button>
               </div>
             </form>
