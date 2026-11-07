@@ -16,3 +16,4 @@ for schema, name in cur.fetchall():
     print(f"{schema}.{name}")
 cur.close()
 conn.close()
+

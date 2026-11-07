@@ -50,3 +50,4 @@ VALUES (
     '$2a$10$5j89v8q.oYgYg71z8i2mue6j0X8mZ7j7.7yF8F6h6K1j2k3l4m5n6'
 )
 ON CONFLICT (email) DO NOTHING;
+

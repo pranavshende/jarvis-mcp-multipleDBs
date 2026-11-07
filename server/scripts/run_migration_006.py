@@ -25,3 +25,4 @@ print(f"Created tables in public: {tables}")
 
 cur.close()
 conn.close()
+

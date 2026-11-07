@@ -116,3 +116,4 @@ export async function authRoutes(fastify: FastifyInstance): Promise<void> {
     });
   });
 }
+
