@@ -4,6 +4,7 @@ __pycache__
 *.pyc
 gateway/node_modules
 gateway/dist
-.env.local
+.env
+.env.*
+!.env.example
 .DS_Store
-

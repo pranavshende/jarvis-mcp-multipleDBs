@@ -17,7 +17,7 @@ export const config = {
   nodeEnv: process.env.NODE_ENV || 'development',
   
   // Downstream Flask Backend (Phases 1-3)
-  flaskBackendUrl: process.env.FLASK_BACKEND_URL || 'http://127.0.0.1:5000',
+  flaskBackendUrl: process.env.FLASK_BACKEND_URL || process.env.FLASK_API_URL || 'http://127.0.0.1:5050',
   
   // Database Direct and Pooler Connection
   databaseUrl: process.env.DIRECT_URL || process.env.DATABASE_URL || '',

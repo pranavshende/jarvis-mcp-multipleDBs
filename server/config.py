@@ -23,9 +23,9 @@ _env = load_env()
 
 DATABASE_URL = os.environ.get("DATABASE_URL", _env.get("DATABASE_URL", ""))
 DIRECT_URL = os.environ.get("DIRECT_URL", _env.get("DIRECT_URL", ""))
-PORT = int(os.environ.get("FLASK_PORT", 5000))
-HOST = os.environ.get("HOST", "0.0.0.0")
-DEBUG = os.environ.get("DEBUG", "False").lower() in ("true", "1", "yes")
+PORT = int(os.environ.get("FLASK_PORT", _env.get("FLASK_PORT", 5050)))
+HOST = os.environ.get("HOST", _env.get("HOST", "0.0.0.0"))
+DEBUG = os.environ.get("DEBUG", _env.get("DEBUG", "False")).lower() in ("true", "1", "yes")
 
 # Database Pooling Configuration
 DB_MIN_CONN = int(os.environ.get("DB_MIN_CONN", 2))

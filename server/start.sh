@@ -5,17 +5,25 @@ echo "=================================================="
 echo "🚀 Starting Jarvis v1 Enterprise Backend on Render"
 echo "=================================================="
 
-# Export Internal Flask configuration
-export FLASK_PORT=5000
-export FLASK_BACKEND_URL="http://127.0.0.1:5000"
-export HOST="127.0.0.1"
+# 1. Determine Public Web Port for Fastify Gateway
+# Render injects $PORT for external internet traffic (defaults to 10000 on Render)
+PUBLIC_PORT="${PORT:-10000}"
+export PORT="${PUBLIC_PORT}"
+export GATEWAY_PORT="${PUBLIC_PORT}"
 export GATEWAY_HOST="0.0.0.0"
 
-# Render injects $PORT for external traffic; map to Gateway
-export PORT="${PORT:-4000}"
-export GATEWAY_PORT="${PORT}"
+# 2. Assign dedicated internal loopback port for Flask (must never collide with Gateway $PORT)
+if [ "${PUBLIC_PORT}" = "5050" ]; then
+  INTERNAL_FLASK_PORT=5055
+else
+  INTERNAL_FLASK_PORT=5050
+fi
 
-echo "📊 Starting Python Flask Analytics & RAG Engine on port ${FLASK_PORT}..."
+export FLASK_PORT="${INTERNAL_FLASK_PORT}"
+export FLASK_BACKEND_URL="http://127.0.0.1:${INTERNAL_FLASK_PORT}"
+export HOST="127.0.0.1"
+
+echo "📊 Starting Python Flask Analytics & RAG Engine on internal port ${FLASK_PORT}..."
 python app.py &
 FLASK_PID=$!
 
@@ -30,8 +38,8 @@ trap cleanup SIGTERM SIGINT
 # Wait for Flask engine to report healthy
 echo "⏳ Waiting for Flask engine to initialize..."
 for i in $(seq 1 30); do
-  if curl -s "http://127.0.0.1:${FLASK_PORT}/api/health" > /dev/null 2>&1; then
-    echo "✅ Flask engine is online and healthy!"
+  if curl -s "http://127.0.0.1:${FLASK_PORT}/api/health/db" > /dev/null 2>&1 || curl -s "http://127.0.0.1:${FLASK_PORT}/" > /dev/null 2>&1; then
+    echo "✅ Flask engine is online and healthy on internal port ${FLASK_PORT}!"
     break
   fi
   sleep 1
@@ -45,4 +53,3 @@ if [ -f "dist/server.js" ]; then
 else
   exec npm start
 fi
-
