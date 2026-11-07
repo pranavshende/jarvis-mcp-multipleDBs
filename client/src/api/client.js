@@ -4,6 +4,18 @@ const rawGateway = import.meta.env.VITE_GATEWAY_URL || '';
 const GATEWAY_BASE = rawGateway.replace(/\/api\/admin\/?$/, '').replace(/\/$/, '');
 const API_BASE = GATEWAY_BASE ? `${GATEWAY_BASE}/api` : '/api';
 
+async function safeJson(res, defaultMsg = 'Request failed') {
+  const text = await res.text();
+  try {
+    return JSON.parse(text);
+  } catch {
+    if (!res.ok) {
+      throw new Error(`${defaultMsg} (HTTP ${res.status}): ${text.substring(0, 100)}`);
+    }
+    return { message: text };
+  }
+}
+
 export async function fetchHealth() {
   const res = await fetch(`${API_BASE}/health/db`);
   return res.json();
@@ -379,7 +391,7 @@ export async function renameConversation(conversationId, title) {
     headers: getAdminHeaders(),
     body: JSON.stringify({ title })
   });
-  return res.json();
+  return safeJson(res, 'Failed to rename conversation');
 }
 
 export async function deleteConversation(conversationId) {
@@ -387,52 +399,52 @@ export async function deleteConversation(conversationId) {
     method: 'DELETE',
     headers: getAdminHeaders()
   });
-  return res.json();
+  return safeJson(res, 'Failed to delete conversation');
 }
 
 export async function fetchAdminTokens() {
-  const res = await fetch('/api/admin/tokens', { headers: getAdminHeaders() });
-  return res.json();
+  const res = await fetch(`${GATEWAY_BASE}/api/admin/tokens`, { headers: getAdminHeaders() });
+  return safeJson(res, 'Failed to fetch tokens');
 }
 
 export async function createAdminToken(tokenData) {
-  const res = await fetch('/api/admin/tokens', {
+  const res = await fetch(`${GATEWAY_BASE}/api/admin/tokens`, {
     method: 'POST',
     headers: getAdminHeaders(),
     body: JSON.stringify(tokenData)
   });
-  return res.json();
+  return safeJson(res, 'Failed to create token');
 }
 
 export async function revokeAdminToken(tokenId) {
-  const res = await fetch(`/api/admin/tokens/${tokenId}/revoke`, {
+  const res = await fetch(`${GATEWAY_BASE}/api/admin/tokens/${tokenId}/revoke`, {
     method: 'POST',
     headers: getAdminHeaders()
   });
-  return res.json();
+  return safeJson(res, 'Failed to revoke token');
 }
 
 export async function rotateAdminToken(tokenId) {
-  const res = await fetch(`/api/admin/tokens/${tokenId}/rotate`, {
+  const res = await fetch(`${GATEWAY_BASE}/api/admin/tokens/${tokenId}/rotate`, {
     method: 'POST',
     headers: getAdminHeaders()
   });
-  return res.json();
+  return safeJson(res, 'Failed to rotate token');
 }
 
 export async function fetchAdminModels() {
-  const res = await fetch('/api/admin/models', { headers: getAdminHeaders() });
-  return res.json();
+  const res = await fetch(`${GATEWAY_BASE}/api/admin/models`, { headers: getAdminHeaders() });
+  return safeJson(res, 'Failed to fetch models');
 }
 
 export async function fetchAdminSpend(days = 30) {
-  const res = await fetch(`/api/admin/models/spend?days=${days}`, { headers: getAdminHeaders() });
-  return res.json();
+  const res = await fetch(`${GATEWAY_BASE}/api/admin/models/spend?days=${days}`, { headers: getAdminHeaders() });
+  return safeJson(res, 'Failed to fetch spend');
 }
 
 export async function fetchAdminHealth() {
-  const res = await fetch('/api/admin/health', { headers: getAdminHeaders() });
-  return res.json();
+  const res = await fetch(`${GATEWAY_BASE}/api/admin/health`, { headers: getAdminHeaders() });
+  return safeJson(res, 'Failed to fetch health');
 }
 
 export async function queryGatewayIntent(queryText, sessionId = 'default', signal = null) {
@@ -541,78 +553,78 @@ export async function queryGatewayStream(queryText, sessionId = 'default', onWor
 // ============================================================================
 
 export async function fetchAdminEvaluationSummary() {
-  const res = await fetch('/api/admin/evaluation/summary', { headers: getAdminHeaders() });
-  return res.json();
+  const res = await fetch(`${GATEWAY_BASE}/api/admin/evaluation/summary`, { headers: getAdminHeaders() });
+  return safeJson(res, 'Failed to fetch evaluation summary');
 }
 
 export async function fetchAdminEvaluationRuns() {
-  const res = await fetch('/api/admin/evaluation/runs', { headers: getAdminHeaders() });
-  return res.json();
+  const res = await fetch(`${GATEWAY_BASE}/api/admin/evaluation/runs`, { headers: getAdminHeaders() });
+  return safeJson(res, 'Failed to fetch evaluation runs');
 }
 
 export async function fetchAdminEvaluationScenarios() {
-  const res = await fetch('/api/admin/evaluation/scenarios', { headers: getAdminHeaders() });
-  return res.json();
+  const res = await fetch(`${GATEWAY_BASE}/api/admin/evaluation/scenarios`, { headers: getAdminHeaders() });
+  return safeJson(res, 'Failed to fetch evaluation scenarios');
 }
 
 export async function fetchAdminCacheStats() {
-  const res = await fetch('/api/admin/cache/stats', { headers: getAdminHeaders() });
-  return res.json();
+  const res = await fetch(`${GATEWAY_BASE}/api/admin/cache/stats`, { headers: getAdminHeaders() });
+  return safeJson(res, 'Failed to fetch cache stats');
 }
 
 export async function fetchAdminCacheEntries() {
-  const res = await fetch('/api/admin/cache/entries', { headers: getAdminHeaders() });
-  return res.json();
+  const res = await fetch(`${GATEWAY_BASE}/api/admin/cache/entries`, { headers: getAdminHeaders() });
+  return safeJson(res, 'Failed to fetch cache entries');
 }
 
 export async function invalidateAdminCache(scope = 'ALL', targetValue = null) {
-  const res = await fetch('/api/admin/cache/invalidate', {
+  const res = await fetch(`${GATEWAY_BASE}/api/admin/cache/invalidate`, {
     method: 'POST',
     headers: getAdminHeaders(),
     body: JSON.stringify({ scope, targetValue })
   });
-  return res.json();
+  return safeJson(res, 'Failed to invalidate cache');
 }
 
 export async function fetchAdminBudgets() {
-  const res = await fetch('/api/admin/models/budgets', { headers: getAdminHeaders() });
-  return res.json();
+  const res = await fetch(`${GATEWAY_BASE}/api/admin/models/budgets`, { headers: getAdminHeaders() });
+  return safeJson(res, 'Failed to fetch budgets');
 }
 
 export async function fetchAdminModelUsage() {
-  const res = await fetch('/api/admin/models/usage', { headers: getAdminHeaders() });
-  return res.json();
+  const res = await fetch(`${GATEWAY_BASE}/api/admin/models/usage`, { headers: getAdminHeaders() });
+  return safeJson(res, 'Failed to fetch model usage');
 }
 
 export async function fetchAdminDLQ() {
-  const res = await fetch('/api/admin/dlq', { headers: getAdminHeaders() });
-  return res.json();
+  const res = await fetch(`${GATEWAY_BASE}/api/admin/dlq`, { headers: getAdminHeaders() });
+  return safeJson(res, 'Failed to fetch DLQ overview');
 }
 
 export async function retryAdminDLQJob(jobId, reason = 'Admin Dashboard manual retry') {
-  const res = await fetch(`/api/admin/dlq/${encodeURIComponent(jobId)}/retry`, {
+  const res = await fetch(`${GATEWAY_BASE}/api/admin/dlq/${encodeURIComponent(jobId)}/retry`, {
     method: 'POST',
     headers: getAdminHeaders(),
     body: JSON.stringify({ reason })
   });
-  return res.json();
+  return safeJson(res, 'Failed to retry DLQ job');
 }
 
 export async function dismissAdminDLQJob(jobId, reason = 'Admin Dashboard manual dismiss') {
-  const res = await fetch(`/api/admin/dlq/${encodeURIComponent(jobId)}/dismiss`, {
+  const res = await fetch(`${GATEWAY_BASE}/api/admin/dlq/${encodeURIComponent(jobId)}/dismiss`, {
     method: 'POST',
     headers: getAdminHeaders(),
     body: JSON.stringify({ reason })
   });
-  return res.json();
+  return safeJson(res, 'Failed to dismiss DLQ job');
 }
 
 export async function fetchAdminRedTeamResults() {
-  const res = await fetch('/api/admin/security/redteam', { headers: getAdminHeaders() });
-  return res.json();
+  const res = await fetch(`${GATEWAY_BASE}/api/admin/security/redteam`, { headers: getAdminHeaders() });
+  return safeJson(res, 'Failed to fetch red team results');
 }
 
 export async function fetchAdminSecurityEvents() {
-  const res = await fetch('/api/admin/security/events', { headers: getAdminHeaders() });
-  return res.json();
+  const res = await fetch(`${GATEWAY_BASE}/api/admin/security/events`, { headers: getAdminHeaders() });
+  return safeJson(res, 'Failed to fetch security events');
 }

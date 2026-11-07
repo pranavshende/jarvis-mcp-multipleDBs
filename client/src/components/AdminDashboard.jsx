@@ -30,7 +30,7 @@ import {
 } from '../api/client';
 
 export default function AdminDashboard() {
-  const [activeSection, setActiveSection] = useState('overview');
+  const [activeSection, setActiveSection] = useState('tokens');
   const [tokens, setTokens] = useState([]);
   const [models, setModels] = useState(null);
   const [spend, setSpend] = useState([]);
@@ -57,14 +57,16 @@ export default function AdminDashboard() {
   const [redteamData, setRedteamData] = useState(null);
   const [securityEvents, setSecurityEvents] = useState([]);
 
-  // New Token Modal
-  const [showTokenModal, setShowTokenModal] = useState(false);
+  // New Token Modal (Open by default on MCP page)
+  const [showTokenModal, setShowTokenModal] = useState(true);
   const [newTokenResult, setNewTokenResult] = useState(null);
-  const [formUserId, setFormUserId] = useState('');
-  const [formEmail, setFormEmail] = useState('');
-  const [formTokenName, setFormTokenName] = useState('');
-  const [formRole, setFormRole] = useState('ROLE_EMPLOYEE');
-  const [formDepartment, setFormDepartment] = useState('OPERATIONS');
+  const [tokenCopied, setTokenCopied] = useState(false);
+  const [configCopied, setConfigCopied] = useState(false);
+  const [formUserId, setFormUserId] = useState('EMP-001');
+  const [formEmail, setFormEmail] = useState('pranav@meridian.com');
+  const [formTokenName, setFormTokenName] = useState('Claude Desktop MCP Integration');
+  const [formRole, setFormRole] = useState('ROLE_FOUNDER');
+  const [formDepartment, setFormDepartment] = useState('EXECUTIVE');
 
   // Interactive Query Console
   const [consoleQuery, setConsoleQuery] = useState('');
@@ -338,8 +340,8 @@ export default function AdminDashboard() {
       {/* Nav Tabs */}
       <div style={{ display: 'flex', gap: '8px', borderBottom: '1px solid #e5e5e0', marginBottom: '20px', overflowX: 'auto', paddingBottom: '4px' }}>
         {[
-          { id: 'overview', label: '1. Executive Overview & Test Console' },
-          { id: 'tokens', label: '2. User & Token Management' },
+          { id: 'tokens', label: '1. User & Token Management (MCP Bearer Tokens)' },
+          { id: 'overview', label: '2. Executive Overview & Test Console' },
           { id: 'spend', label: '3. Model Router & Budgets' },
           { id: 'evaluation', label: '4. Continuous Evaluation Center' },
           { id: 'cache', label: '5. Semantic Cache Analytics' },
@@ -447,76 +449,211 @@ export default function AdminDashboard() {
       {activeSection === 'tokens' && (
         <div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-            <h3 style={{ fontSize: '16px', fontWeight: '700', margin: 0, color: '#111827' }}>Provisioned Employee MCP Bearer Tokens</h3>
+            <div>
+              <h3 style={{ fontSize: '18px', fontWeight: '700', margin: 0, color: '#111827' }}>
+                🔑 User & Token Management — MCP Integrations
+              </h3>
+              <p style={{ margin: '4px 0 0', fontSize: '13px', color: '#6b7280' }}>
+                Provision Model Context Protocol (MCP) Bearer tokens to connect external AI tools (Claude Desktop, Cursor, Custom Agents).
+              </p>
+            </div>
             <button
               onClick={() => setShowTokenModal(!showTokenModal)}
               style={{ padding: '8px 14px', background: '#0e372d', color: '#fff', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '13px', fontWeight: '500' }}
             >
-              {showTokenModal ? 'Cancel' : '+ Provision New Token'}
+              {showTokenModal ? 'Hide Token Form' : '+ Issue New MCP Token'}
             </button>
           </div>
 
           {showTokenModal && (
-            <div style={{ background: '#ffffff', padding: '20px', borderRadius: '12px', border: '1px solid #e5e5e0', marginBottom: '20px', boxShadow: '0 1px 3px rgba(0,0,0,0.03)' }}>
-              <h4 style={{ margin: '0 0 12px 0', fontSize: '14px', color: '#111827', fontWeight: '600' }}>Provision New Employee Token</h4>
+            <div style={{ background: '#ffffff', padding: '22px', borderRadius: '12px', border: '1.5px solid #0e372d', marginBottom: '24px', boxShadow: '0 4px 12px rgba(14, 55, 45, 0.08)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '14px' }}>
+                <div>
+                  <h4 style={{ margin: '0 0 4px 0', fontSize: '15px', color: '#0e372d', fontWeight: '700' }}>
+                    ⚡ Create MCP Bearer Token for External Integration
+                  </h4>
+                  <span style={{ fontSize: '12.5px', color: '#6b7280' }}>
+                    Select a preset or enter employee credentials to generate a secure RBAC-scoped integration key:
+                  </span>
+                </div>
+                <div style={{ display: 'flex', gap: '6px' }}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFormUserId('EMP-001');
+                      setFormEmail('pranav@meridian.com');
+                      setFormTokenName('Claude Desktop Integration');
+                      setFormRole('ROLE_FOUNDER');
+                      setFormDepartment('EXECUTIVE');
+                    }}
+                    style={{ fontSize: '11px', padding: '4px 8px', background: '#f3f4f6', border: '1px solid #d1d5db', borderRadius: '6px', cursor: 'pointer', fontWeight: '600' }}
+                  >
+                    Preset: Claude Desktop
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFormUserId('EMP-001');
+                      setFormEmail('pranav@meridian.com');
+                      setFormTokenName('Cursor IDE Integration');
+                      setFormRole('ROLE_FOUNDER');
+                      setFormDepartment('EXECUTIVE');
+                    }}
+                    style={{ fontSize: '11px', padding: '4px 8px', background: '#f3f4f6', border: '1px solid #d1d5db', borderRadius: '6px', cursor: 'pointer', fontWeight: '600' }}
+                  >
+                    Preset: Cursor IDE
+                  </button>
+                </div>
+              </div>
+
               <form onSubmit={handleCreateToken} style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
-                <input
-                  type="text"
-                  placeholder="User ID (e.g. EMP-006)"
-                  value={formUserId}
-                  onChange={e => setFormUserId(e.target.value)}
-                  required
-                  style={{ padding: '10px 12px', background: '#ffffff', border: '1px solid #ded9d2', borderRadius: '6px', color: '#111827', fontSize: '13px' }}
-                />
-                <input
-                  type="email"
-                  placeholder="Corporate Email"
-                  value={formEmail}
-                  onChange={e => setFormEmail(e.target.value)}
-                  required
-                  style={{ padding: '10px 12px', background: '#ffffff', border: '1px solid #ded9d2', borderRadius: '6px', color: '#111827', fontSize: '13px' }}
-                />
-                <input
-                  type="text"
-                  placeholder="Token Name / Description"
-                  value={formTokenName}
-                  onChange={e => setFormTokenName(e.target.value)}
-                  required
-                  style={{ padding: '10px 12px', background: '#ffffff', border: '1px solid #ded9d2', borderRadius: '6px', color: '#111827', fontSize: '13px' }}
-                />
-                <select
-                  value={formRole}
-                  onChange={e => setFormRole(e.target.value)}
-                  style={{ padding: '10px 12px', background: '#ffffff', border: '1px solid #ded9d2', borderRadius: '6px', color: '#111827', fontSize: '13px' }}
-                >
-                  <option value="ROLE_EMPLOYEE">ROLE_EMPLOYEE</option>
-                  <option value="ROLE_SALES">ROLE_SALES</option>
-                  <option value="ROLE_WAREHOUSE">ROLE_WAREHOUSE</option>
-                  <option value="ROLE_FINANCE">ROLE_FINANCE</option>
-                  <option value="ROLE_EXECUTIVE">ROLE_EXECUTIVE</option>
-                  <option value="ROLE_FOUNDER">ROLE_FOUNDER</option>
-                </select>
-                <select
-                  value={formDepartment}
-                  onChange={e => setFormDepartment(e.target.value)}
-                  style={{ padding: '10px 12px', background: '#ffffff', border: '1px solid #ded9d2', borderRadius: '6px', color: '#111827', fontSize: '13px' }}
-                >
-                  <option value="OPERATIONS">OPERATIONS</option>
-                  <option value="FINANCE">FINANCE</option>
-                  <option value="SALES">SALES</option>
-                  <option value="EXECUTIVE">EXECUTIVE</option>
-                </select>
-                <button
-                  type="submit"
-                  style={{ padding: '10px 16px', background: '#16a34a', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '500', fontSize: '13px' }}
-                >
-                  Issue Token
-                </button>
+                <div>
+                  <label style={{ display: 'block', fontSize: '11.5px', fontWeight: '600', color: '#374151', marginBottom: '4px' }}>
+                    User ID
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="User ID (e.g. EMP-001)"
+                    value={formUserId}
+                    onChange={e => setFormUserId(e.target.value)}
+                    required
+                    style={{ width: '100%', boxSizing: 'border-box', padding: '9px 12px', background: '#ffffff', border: '1px solid #ded9d2', borderRadius: '6px', color: '#111827', fontSize: '13px' }}
+                  />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '11.5px', fontWeight: '600', color: '#374151', marginBottom: '4px' }}>
+                    Corporate Email
+                  </label>
+                  <input
+                    type="email"
+                    placeholder="e.g. pranav@meridian.com"
+                    value={formEmail}
+                    onChange={e => setFormEmail(e.target.value)}
+                    required
+                    style={{ width: '100%', boxSizing: 'border-box', padding: '9px 12px', background: '#ffffff', border: '1px solid #ded9d2', borderRadius: '6px', color: '#111827', fontSize: '13px' }}
+                  />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '11.5px', fontWeight: '600', color: '#374151', marginBottom: '4px' }}>
+                    Token Name / Client Label
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Claude Desktop Integration"
+                    value={formTokenName}
+                    onChange={e => setFormTokenName(e.target.value)}
+                    required
+                    style={{ width: '100%', boxSizing: 'border-box', padding: '9px 12px', background: '#ffffff', border: '1px solid #ded9d2', borderRadius: '6px', color: '#111827', fontSize: '13px' }}
+                  />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '11.5px', fontWeight: '600', color: '#374151', marginBottom: '4px' }}>
+                    RBAC Role Permission
+                  </label>
+                  <select
+                    value={formRole}
+                    onChange={e => setFormRole(e.target.value)}
+                    style={{ width: '100%', boxSizing: 'border-box', padding: '9px 12px', background: '#ffffff', border: '1px solid #ded9d2', borderRadius: '6px', color: '#111827', fontSize: '13px' }}
+                  >
+                    <option value="ROLE_FOUNDER">ROLE_FOUNDER (Full Wildcard Access)</option>
+                    <option value="ROLE_EXECUTIVE">ROLE_EXECUTIVE</option>
+                    <option value="ROLE_FINANCE">ROLE_FINANCE</option>
+                    <option value="ROLE_SALES">ROLE_SALES</option>
+                    <option value="ROLE_OPERATIONS">ROLE_OPERATIONS</option>
+                    <option value="ROLE_WAREHOUSE">ROLE_WAREHOUSE</option>
+                    <option value="ROLE_EMPLOYEE">ROLE_EMPLOYEE</option>
+                  </select>
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '11.5px', fontWeight: '600', color: '#374151', marginBottom: '4px' }}>
+                    Department
+                  </label>
+                  <select
+                    value={formDepartment}
+                    onChange={e => setFormDepartment(e.target.value)}
+                    style={{ width: '100%', boxSizing: 'border-box', padding: '9px 12px', background: '#ffffff', border: '1px solid #ded9d2', borderRadius: '6px', color: '#111827', fontSize: '13px' }}
+                  >
+                    <option value="EXECUTIVE">EXECUTIVE</option>
+                    <option value="OPERATIONS">OPERATIONS</option>
+                    <option value="FINANCE">FINANCE</option>
+                    <option value="SALES">SALES</option>
+                  </select>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'flex-end' }}>
+                  <button
+                    type="submit"
+                    style={{ width: '100%', padding: '10px 16px', background: '#16a34a', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '600', fontSize: '13px', boxShadow: '0 2px 4px rgba(22, 163, 74, 0.25)' }}
+                  >
+                    🔑 Issue MCP Bearer Token
+                  </button>
+                </div>
               </form>
+
               {newTokenResult && (
-                <div style={{ marginTop: '14px', padding: '12px', background: '#e8f5ec', borderRadius: '6px', border: '1px solid #bbf7d0' }}>
-                  <div style={{ color: '#166534', fontWeight: '600', fontSize: '12px' }}>Token Created! Copy Secret Immediately:</div>
-                  <code style={{ display: 'block', marginTop: '6px', wordBreak: 'break-all', color: '#0e372d', fontWeight: '600' }}>{newTokenResult}</code>
+                <div style={{ marginTop: '18px', padding: '16px', background: '#f0fdf4', borderRadius: '10px', border: '1.5px solid #86efac' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <div style={{ color: '#166534', fontWeight: '700', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <span>✓</span> MCP Bearer Token Generated Successfully!
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        navigator.clipboard.writeText(newTokenResult);
+                        setTokenCopied(true);
+                        setTimeout(() => setTokenCopied(false), 2000);
+                      }}
+                      style={{ padding: '4px 10px', background: '#15803d', color: '#fff', border: 'none', borderRadius: '6px', fontSize: '11.5px', fontWeight: '600', cursor: 'pointer' }}
+                    >
+                      {tokenCopied ? 'Copied ✓' : '📋 Copy Token'}
+                    </button>
+                  </div>
+                  <code style={{ display: 'block', padding: '8px 12px', background: '#ffffff', borderRadius: '6px', border: '1px solid #bbf7d0', wordBreak: 'break-all', color: '#0e372d', fontWeight: '600', fontSize: '12px' }}>
+                    {newTokenResult}
+                  </code>
+
+                  {/* External Tool Config Snippet */}
+                  <div style={{ marginTop: '14px', paddingTop: '12px', borderTop: '1px solid #bbf7d0' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                      <span style={{ fontSize: '12px', fontWeight: '600', color: '#166534' }}>
+                        🔌 Claude Desktop Config Snippet (`claude_desktop_config.json`):
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const configSnippet = JSON.stringify({
+                            mcpServers: {
+                              "jarvis-enterprise": {
+                                command: "node",
+                                args: ["d:/eigi.ai/server/gateway/dist/mcp/stdio_server.js"],
+                                env: {
+                                  JARVIS_BEARER_TOKEN: newTokenResult
+                                }
+                              }
+                            }
+                          }, null, 2);
+                          navigator.clipboard.writeText(configSnippet);
+                          setConfigCopied(true);
+                          setTimeout(() => setConfigCopied(false), 2000);
+                        }}
+                        style={{ padding: '3px 8px', background: '#ffffff', border: '1px solid #86efac', color: '#166534', borderRadius: '5px', fontSize: '11px', fontWeight: '600', cursor: 'pointer' }}
+                      >
+                        {configCopied ? 'Config Copied ✓' : '📋 Copy Claude Config'}
+                      </button>
+                    </div>
+                    <pre style={{ margin: 0, padding: '10px', background: '#1e293b', color: '#e2e8f0', borderRadius: '6px', fontSize: '11.5px', overflowX: 'auto', fontFamily: 'monospace' }}>
+{JSON.stringify({
+  mcpServers: {
+    "jarvis-enterprise": {
+      command: "node",
+      args: ["d:/eigi.ai/server/gateway/dist/mcp/stdio_server.js"],
+      env: {
+        JARVIS_BEARER_TOKEN: newTokenResult
+      }
+    }
+  }
+}, null, 2)}
+                    </pre>
+                  </div>
                 </div>
               )}
             </div>

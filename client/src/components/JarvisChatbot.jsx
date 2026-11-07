@@ -2164,6 +2164,89 @@ export default function JarvisChatbot() {
           </div>
         )}
 
+        {/* Delete Conversation Confirmation Modal */}
+        {sessionToDelete && (
+          <div
+            style={{
+              position: 'fixed',
+              inset: 0,
+              backgroundColor: 'rgba(15, 23, 42, 0.65)',
+              backdropFilter: 'blur(4px)',
+              zIndex: 10000,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '16px'
+            }}
+            onClick={() => setSessionToDelete(null)}
+          >
+            <div
+              style={{
+                background: '#ffffff',
+                borderRadius: '16px',
+                padding: '24px',
+                maxWidth: '400px',
+                width: '100%',
+                boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.2)',
+                border: '1px solid #e5e7eb'
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+                <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: '#fee2e2', color: '#dc2626', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px' }}>
+                  🗑️
+                </div>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: '16px', fontWeight: '700', color: '#111827' }}>
+                    Delete Conversation?
+                  </h3>
+                  <span style={{ fontSize: '12px', color: '#6b7280' }}>
+                    This permanently removes this conversation history.
+                  </span>
+                </div>
+              </div>
+              <p style={{ margin: '0 0 20px 0', fontSize: '13px', color: '#374151', lineHeight: 1.5, background: '#f9fafb', padding: '10px 14px', borderRadius: '8px', border: '1px solid #f3f4f6', wordBreak: 'break-word' }}>
+                "{sessionToDelete.title}"
+              </p>
+              <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
+                <button
+                  type="button"
+                  onClick={() => setSessionToDelete(null)}
+                  style={{
+                    padding: '8px 16px',
+                    background: '#f3f4f6',
+                    border: 'none',
+                    borderRadius: '8px',
+                    color: '#374151',
+                    fontSize: '13px',
+                    fontWeight: '500',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleDeleteSession(sessionToDelete.id)}
+                  style={{
+                    padding: '8px 18px',
+                    background: '#dc2626',
+                    border: 'none',
+                    borderRadius: '8px',
+                    color: '#ffffff',
+                    fontSize: '13px',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    boxShadow: '0 2px 4px rgba(220, 38, 38, 0.25)'
+                  }}
+                >
+                  Yes, Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Authentication Modal */}
         <AuthModal
           isOpen={authModalOpen || (!isAuthChecking && !currentUser)}

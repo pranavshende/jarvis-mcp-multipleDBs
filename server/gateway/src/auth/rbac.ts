@@ -36,6 +36,6 @@ export class RBACService {
   }
 
   public static canAccessAdmin(user: UserContext): boolean {
-    return user.role === 'ROLE_FOUNDER' || user.role === 'ROLE_ADMIN';
+    return user.role === 'ROLE_FOUNDER' || user.role === 'ROLE_ADMIN' || (user.role as string) === 'FOUNDER';
   }
 }

@@ -17,7 +17,7 @@ export class IdentityResolver {
       return {
         userId: jwtUser.userId,
         email: jwtUser.email,
-        role: 'FOUNDER' as UserRole,
+        role: 'ROLE_FOUNDER' as UserRole,
         department: 'EXECUTIVE_OFFICE',
         allowedScopes: ['*'],
         tokenId: `jwt-${jwtUser.userId}`,
