@@ -96,7 +96,7 @@ Phase 9 verified the complete end-to-end operational execution of the 8 core bus
 - **Failure Emulation:** Injected simulated worker failure `JOB-WF6-1793978890193` with 3 attempts.
 - **DLQ Transfer:** Job entered `jarvis_system.dlq_audit_log` with status `PENDING` and full error stack.
 - **Admin Control Plane Replay:** Admin invoked `POST /api/admin/dlq/JOB-WF6-1793978890193/retry`.
-- **Resolution:** Status transitioned to `RETRIED`, with `resolved_by = marcus@meridiansc.com`. Circuit breaker remained in `CLOSED` operational state.
+- **Resolution:** Status transitioned to `RETRIED`, with `resolved_by = operator@meridiansc.com`. Circuit breaker remained in `CLOSED` operational state.
 
 ### Workflow 7: Composite Semantic Cache Verification
 - **Cold Request (Miss):** Latency = 1591.1 ms (full downstream tool execution and cache warming).

@@ -37,7 +37,7 @@ Upon validation, Fastify injects a validated `UserContext` onto the request:
 ```typescript
 interface UserContext {
   userId: string;          // e.g. "EMP-001"
-  email: string;           // e.g. "marcus@meridiansc.com"
+  email: string;           // e.g. "operator@meridiansc.com"
   role: UserRole;          // e.g. "ROLE_FOUNDER"
   department: string;      // e.g. "EXECUTIVE"
   allowedScopes: string[]; // e.g. ["*"]

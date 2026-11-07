@@ -302,7 +302,7 @@ class KnowledgePromoter:
         seeded = 0
         canonical_seed_facts = [
             ("Standard partner payment terms are net-30.", "PAYMENT_TERMS", "sofia@meridiansc.com"),
-            ("Quotes are valid for 72 hours.", "SALES_POLICY", "marcus@meridiansc.com"),
+            ("Quotes are valid for 72 hours.", "SALES_POLICY", "operator@meridiansc.com"),
             ("All raw incoming consignments require multi-point physical verification and grading scan.", "WAREHOUSE_OPS", "hannah@meridiansc.com"),
             ("Member seller payouts execute on 15-minute cycles following QA dock clearance.", "FINANCE", "kenji@meridiansc.com"),
             ("B2B wholesale credit lines require manual sales lead approval above $50,000.", "FINANCE", "sam@meridiansc.com")

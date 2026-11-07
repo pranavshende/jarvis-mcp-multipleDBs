@@ -49,7 +49,7 @@
     {
       "workflow": "Workflow 6: Failed Worker Recovery",
       "status": "PASSED",
-      "evidence": "Job ID: JOB-WF6-1793978890193, Retry API: True, DB Status: RETRIED, Resolved By: marcus@meridiansc.com",
+      "evidence": "Job ID: JOB-WF6-1793978890193, Retry API: True, DB Status: RETRIED, Resolved By: operator@meridiansc.com",
       "details": {
         "job_id": "JOB-WF6-1793978890193",
         "dlq_uuid": "3a2707f1-0395-4365-b513-91cd04fa1148"

@@ -1,12 +1,12 @@
 {"id": "mem_00001", "created_at": "2026-05-14T19:00:00Z", "source": "remember", "author": "sofia@meridiansc.com", "text": "Standard partner payment terms are net-30."}
 {"id": "mem_00002", "created_at": "2026-05-15T06:15:00Z", "source": "nightly_ingest", "author": "hannah@meridiansc.com", "text": "Blue Ridge TCG LLC ordered again this week."}
 {"id": "mem_00003", "created_at": "2026-05-15T06:17:00Z", "source": "nightly_ingest", "author": "hannah@meridiansc.com", "text": "Weekly revenue around $289k."}
-{"id": "mem_00004", "created_at": "2026-05-15T06:23:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Partner Blue Ridge TCG is on net-15."}
+{"id": "mem_00004", "created_at": "2026-05-15T06:23:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Partner Blue Ridge TCG is on net-15."}
 {"id": "mem_00005", "created_at": "2026-05-15T06:33:00Z", "source": "nightly_ingest", "author": "hannah@meridiansc.com", "text": "West backlog is 40 packages."}
 {"id": "mem_00006", "created_at": "2026-05-15T06:34:00Z", "source": "nightly_ingest", "author": "sofia@meridiansc.com", "text": "Pocket Spirits \u2014 Twilight Bloom Set Booster Box (30ct) sells to partners around $152.78."}
 {"id": "mem_00007", "created_at": "2026-05-16T06:33:00Z", "source": "nightly_ingest", "author": "sam@meridiansc.com", "text": "Ben prefers to get reports in Slack, not email."}
 {"id": "mem_00008", "created_at": "2026-05-17T06:21:00Z", "source": "nightly_ingest", "author": "sofia@meridiansc.com", "text": "Partner Sunset Cards is on net-15."}
-{"id": "mem_00009", "created_at": "2026-05-17T06:30:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Quotes are valid 72 hours."}
+{"id": "mem_00009", "created_at": "2026-05-17T06:30:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Quotes are valid 72 hours."}
 {"id": "mem_00010", "created_at": "2026-05-17T06:31:00Z", "source": "nightly_ingest", "author": "arjun@meridiansc.com", "text": "Weekly revenue around $284k."}
 {"id": "mem_00011", "created_at": "2026-05-17T23:00:00Z", "source": "remember", "author": "priya@meridiansc.com", "text": "East warehouse receiving hours are 9am\u20139pm ET."}
 {"id": "mem_00012", "created_at": "2026-05-18T06:15:00Z", "source": "nightly_ingest", "author": "kenji@meridiansc.com", "text": "Members asked about rejections in Discord."}
@@ -29,14 +29,14 @@
 {"id": "mem_00029", "created_at": "2026-05-22T06:22:00Z", "source": "nightly_ingest", "author": "arjun@meridiansc.com", "text": "Ben prefers to get reports in Slack, not email."}
 {"id": "mem_00030", "created_at": "2026-05-22T06:32:00Z", "source": "nightly_ingest", "author": "sofia@meridiansc.com", "text": "Remember to remove manual stock overrides."}
 {"id": "mem_00031", "created_at": "2026-05-23T06:23:00Z", "source": "nightly_ingest", "author": "dana@meridiansc.com", "text": "Weekly revenue around $380k."}
-{"id": "mem_00032", "created_at": "2026-05-23T06:37:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Index is at 99.0."}
-{"id": "mem_00033", "created_at": "2026-05-23T06:38:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Use the dashboard for receiving numbers."}
-{"id": "mem_00034", "created_at": "2026-05-23T06:38:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Marcus said the label printer is broken again."}
+{"id": "mem_00032", "created_at": "2026-05-23T06:37:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Index is at 99.0."}
+{"id": "mem_00033", "created_at": "2026-05-23T06:38:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Use the dashboard for receiving numbers."}
+{"id": "mem_00034", "created_at": "2026-05-23T06:38:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Marcus said the label printer is broken again."}
 {"id": "mem_00035", "created_at": "2026-05-24T00:00:00Z", "source": "session", "author": "priya@meridiansc.com", "text": "Avg cost = avg_paid_180d in wms_items."}
-{"id": "mem_00036", "created_at": "2026-05-24T06:10:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Quotes are valid 72 hours."}
+{"id": "mem_00036", "created_at": "2026-05-24T06:10:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Quotes are valid 72 hours."}
 {"id": "mem_00037", "created_at": "2026-05-24T06:15:00Z", "source": "nightly_ingest", "author": "arjun@meridiansc.com", "text": "Mythkin \u2014 Ashen Vale Booster Box Case (6 boxes) buy price is $471.41."}
 {"id": "mem_00038", "created_at": "2026-05-24T06:29:00Z", "source": "nightly_ingest", "author": "sam@meridiansc.com", "text": "Sam owns the buy list import."}
-{"id": "mem_00039", "created_at": "2026-05-25T06:16:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Falcon Card Shop Distributors asked about allocation on the next release."}
+{"id": "mem_00039", "created_at": "2026-05-25T06:16:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Falcon Card Shop Distributors asked about allocation on the next release."}
 {"id": "mem_00040", "created_at": "2026-05-25T06:17:00Z", "source": "nightly_ingest", "author": "leo@meridiansc.com", "text": "Use the dashboard for receiving numbers."}
 {"id": "mem_00041", "created_at": "2026-05-25T06:36:00Z", "source": "nightly_ingest", "author": "arjun@meridiansc.com", "text": "Sam prefers to get reports in Slack, not email."}
 {"id": "mem_00042", "created_at": "2026-05-26T06:20:00Z", "source": "nightly_ingest", "author": "sofia@meridiansc.com", "text": "Grace prefers to get reports in Slack, not email."}
@@ -49,17 +49,17 @@
 {"id": "mem_00049", "created_at": "2026-05-27T06:20:00Z", "source": "nightly_ingest", "author": "arjun@meridiansc.com", "text": "Chrono Clash \u2014 Lost Epoch Starter Deck Display (8ct) buy price is $74.89."}
 {"id": "mem_00050", "created_at": "2026-05-27T06:28:00Z", "source": "nightly_ingest", "author": "hannah@meridiansc.com", "text": "ProCourt Hoops \u2014 2025-26 Flagship Retail Display (24ct) buy price is $327.27."}
 {"id": "mem_00051", "created_at": "2026-05-27T06:30:00Z", "source": "nightly_ingest", "author": "dana@meridiansc.com", "text": "Inspection fail rate is about 3%."}
-{"id": "mem_00052", "created_at": "2026-05-28T06:10:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Remember to remove manual stock overrides."}
+{"id": "mem_00052", "created_at": "2026-05-28T06:10:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Remember to remove manual stock overrides."}
 {"id": "mem_00053", "created_at": "2026-05-28T06:29:00Z", "source": "nightly_ingest", "author": "hannah@meridiansc.com", "text": "Cardinal Bullion asked about allocation on the next release."}
 {"id": "mem_00054", "created_at": "2026-05-29T06:21:00Z", "source": "nightly_ingest", "author": "leo@meridiansc.com", "text": "Starbound Duel \u2014 Dark Matter Collector Booster Box (12ct) sells to partners around $215.56."}
-{"id": "mem_00055", "created_at": "2026-05-29T06:21:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Partner Frontier Hobby Supply Group is on net-15."}
+{"id": "mem_00055", "created_at": "2026-05-29T06:21:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Partner Frontier Hobby Supply Group is on net-15."}
 {"id": "mem_00056", "created_at": "2026-05-29T06:27:00Z", "source": "nightly_ingest", "author": "dana@meridiansc.com", "text": "Members asked about ACH timing in Discord."}
-{"id": "mem_00057", "created_at": "2026-05-29T06:35:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Starbound Duel \u2014 Nebula Rising Starter Deck Display (8ct) sells to partners around $91.93."}
+{"id": "mem_00057", "created_at": "2026-05-29T06:35:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Starbound Duel \u2014 Nebula Rising Starter Deck Display (8ct) sells to partners around $91.93."}
 {"id": "mem_00058", "created_at": "2026-05-30T00:00:00Z", "source": "remember", "author": "sam@meridiansc.com", "text": "Margin is about 20%."}
-{"id": "mem_00059", "created_at": "2026-05-30T06:33:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Pocket Spirits \u2014 Twilight Bloom Collector Booster Case (4 boxes) buy price is $1,132.51."}
+{"id": "mem_00059", "created_at": "2026-05-30T06:33:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Pocket Spirits \u2014 Twilight Bloom Collector Booster Case (4 boxes) buy price is $1,132.51."}
 {"id": "mem_00060", "created_at": "2026-05-30T06:34:00Z", "source": "nightly_ingest", "author": "hannah@meridiansc.com", "text": "ACH batch runs at 16:00 ET."}
 {"id": "mem_00061", "created_at": "2026-05-30T06:35:00Z", "source": "nightly_ingest", "author": "hannah@meridiansc.com", "text": "ProCourt Hoops \u2014 2025-26 Flagship FOTL Hobby Box sells to partners around $754.02."}
-{"id": "mem_00062", "created_at": "2026-05-30T06:38:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Use the dashboard for receiving numbers."}
+{"id": "mem_00062", "created_at": "2026-05-30T06:38:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Use the dashboard for receiving numbers."}
 {"id": "mem_00063", "created_at": "2026-05-31T06:09:00Z", "source": "nightly_ingest", "author": "kenji@meridiansc.com", "text": "Weekly revenue around $346k."}
 {"id": "mem_00064", "created_at": "2026-05-31T06:11:00Z", "source": "nightly_ingest", "author": "kenji@meridiansc.com", "text": "Index is at 99.3."}
 {"id": "mem_00065", "created_at": "2026-05-31T06:15:00Z", "source": "nightly_ingest", "author": "sofia@meridiansc.com", "text": "Use the dashboard for receiving numbers."}
@@ -70,7 +70,7 @@
 {"id": "mem_00070", "created_at": "2026-06-01T06:35:00Z", "source": "nightly_ingest", "author": "leo@meridiansc.com", "text": "Members asked about rejections in Discord."}
 {"id": "mem_00071", "created_at": "2026-06-01T06:36:00Z", "source": "nightly_ingest", "author": "kenji@meridiansc.com", "text": "Metro Gaming Wholesale ordered again this week."}
 {"id": "mem_00072", "created_at": "2026-06-01T17:00:00Z", "source": "remember", "author": "sam@meridiansc.com", "text": "Sam prefers numbers with one decimal."}
-{"id": "mem_00073", "created_at": "2026-06-02T06:15:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Aisha said the label printer is broken again."}
+{"id": "mem_00073", "created_at": "2026-06-02T06:15:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Aisha said the label printer is broken again."}
 {"id": "mem_00074", "created_at": "2026-06-02T06:15:00Z", "source": "nightly_ingest", "author": "kenji@meridiansc.com", "text": "Crown Mint \u2014 2026 Maple-Line 1 oz Silver Coin Tube (20 coins) buy price is $569.95."}
 {"id": "mem_00075", "created_at": "2026-06-02T06:25:00Z", "source": "nightly_ingest", "author": "arjun@meridiansc.com", "text": "Mythkin \u2014 Wildroot Collector Booster Box (12ct) buy price is $335.49."}
 {"id": "mem_00076", "created_at": "2026-06-02T06:29:00Z", "source": "nightly_ingest", "author": "dana@meridiansc.com", "text": "Nora owns the stock-sync job."}
@@ -80,12 +80,12 @@
 {"id": "mem_00080", "created_at": "2026-06-03T06:24:00Z", "source": "nightly_ingest", "author": "dana@meridiansc.com", "text": "Lucia is out Monday morning."}
 {"id": "mem_00081", "created_at": "2026-06-03T06:27:00Z", "source": "nightly_ingest", "author": "kenji@meridiansc.com", "text": "West backlog is 55 packages."}
 {"id": "mem_00082", "created_at": "2026-06-04T06:06:00Z", "source": "nightly_ingest", "author": "leo@meridiansc.com", "text": "West backlog is 63 packages."}
-{"id": "mem_00083", "created_at": "2026-06-04T06:09:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Index is at 103.3."}
+{"id": "mem_00083", "created_at": "2026-06-04T06:09:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Index is at 103.3."}
 {"id": "mem_00084", "created_at": "2026-06-04T06:21:00Z", "source": "nightly_ingest", "author": "hannah@meridiansc.com", "text": "Ops margin this week ~22%."}
-{"id": "mem_00085", "created_at": "2026-06-04T06:26:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Use the dashboard for receiving numbers."}
+{"id": "mem_00085", "created_at": "2026-06-04T06:26:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Use the dashboard for receiving numbers."}
 {"id": "mem_00086", "created_at": "2026-06-04T06:33:00Z", "source": "nightly_ingest", "author": "sofia@meridiansc.com", "text": "Starbound Duel \u2014 Ion Storm Prerelease Kit Display (6ct) is low on stock at East."}
 {"id": "mem_00087", "created_at": "2026-06-05T00:00:00Z", "source": "session", "author": "priya@meridiansc.com", "text": "West inspection target is 36h."}
-{"id": "mem_00088", "created_at": "2026-06-05T06:22:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Crown Mint \u2014 2026 Maple-Line 1 oz Silver Coin Tube (20 coins) buy price is $569.95."}
+{"id": "mem_00088", "created_at": "2026-06-05T06:22:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Crown Mint \u2014 2026 Maple-Line 1 oz Silver Coin Tube (20 coins) buy price is $569.95."}
 {"id": "mem_00089", "created_at": "2026-06-05T06:34:00Z", "source": "nightly_ingest", "author": "kenji@meridiansc.com", "text": "Gridiron Prime \u2014 2025 Contenders-Line Jumbo Box sells to partners around $568.44."}
 {"id": "mem_00090", "created_at": "2026-06-06T06:17:00Z", "source": "nightly_ingest", "author": "priya@meridiansc.com", "text": "Bayou TCG & Co. asked about allocation on the next release."}
 {"id": "mem_00091", "created_at": "2026-06-07T06:07:00Z", "source": "nightly_ingest", "author": "kenji@meridiansc.com", "text": "Members asked about rejections in Discord."}
@@ -96,7 +96,7 @@
 {"id": "mem_00096", "created_at": "2026-06-07T23:00:00Z", "source": "session", "author": "sofia@meridiansc.com", "text": "Ember Throne is the hottest set this year."}
 {"id": "mem_00097", "created_at": "2026-06-08T06:14:00Z", "source": "nightly_ingest", "author": "kenji@meridiansc.com", "text": "Remember to remove manual stock overrides."}
 {"id": "mem_00098", "created_at": "2026-06-08T06:34:00Z", "source": "nightly_ingest", "author": "kenji@meridiansc.com", "text": "Remember to remove manual stock overrides."}
-{"id": "mem_00099", "created_at": "2026-06-08T06:39:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Ravi owns the buy list import."}
+{"id": "mem_00099", "created_at": "2026-06-08T06:39:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Ravi owns the buy list import."}
 {"id": "mem_00100", "created_at": "2026-06-09T06:40:00Z", "source": "nightly_ingest", "author": "leo@meridiansc.com", "text": "Prairie Hobby Supply Group asked about allocation on the next release."}
 {"id": "mem_00101", "created_at": "2026-06-10T06:05:00Z", "source": "nightly_ingest", "author": "sofia@meridiansc.com", "text": "Arjun is out Friday."}
 {"id": "mem_00102", "created_at": "2026-06-10T06:13:00Z", "source": "nightly_ingest", "author": "sam@meridiansc.com", "text": "Ops margin this week ~22%."}
@@ -106,7 +106,7 @@
 {"id": "mem_00106", "created_at": "2026-06-11T06:22:00Z", "source": "nightly_ingest", "author": "sam@meridiansc.com", "text": "Inspection fail rate is about 3%."}
 {"id": "mem_00107", "created_at": "2026-06-11T06:23:00Z", "source": "nightly_ingest", "author": "sam@meridiansc.com", "text": "West backlog is 34 packages."}
 {"id": "mem_00108", "created_at": "2026-06-11T06:39:00Z", "source": "nightly_ingest", "author": "leo@meridiansc.com", "text": "Partner Canyon Gaming is on net-30."}
-{"id": "mem_00109", "created_at": "2026-06-12T06:21:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Index is at 105.9."}
+{"id": "mem_00109", "created_at": "2026-06-12T06:21:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Index is at 105.9."}
 {"id": "mem_00110", "created_at": "2026-06-12T06:40:00Z", "source": "nightly_ingest", "author": "hannah@meridiansc.com", "text": "Maya owns the stock-sync job."}
 {"id": "mem_00111", "created_at": "2026-06-13T06:11:00Z", "source": "nightly_ingest", "author": "leo@meridiansc.com", "text": "ProCourt Hoops \u2014 2025-26 Flagship FOTL Hobby Box sells to partners around $754.02."}
 {"id": "mem_00112", "created_at": "2026-06-13T06:24:00Z", "source": "nightly_ingest", "author": "dana@meridiansc.com", "text": "Lucia owns the buy list import."}
@@ -117,10 +117,10 @@
 {"id": "mem_00117", "created_at": "2026-06-14T06:19:00Z", "source": "nightly_ingest", "author": "kenji@meridiansc.com", "text": "Silver Gaming & Co. ordered again this week."}
 {"id": "mem_00118", "created_at": "2026-06-14T06:20:00Z", "source": "nightly_ingest", "author": "priya@meridiansc.com", "text": "Chrono Clash \u2014 Paradox Engine Starter Deck Display (8ct) buy price is $49.87."}
 {"id": "mem_00119", "created_at": "2026-06-14T06:23:00Z", "source": "nightly_ingest", "author": "sofia@meridiansc.com", "text": "West backlog is 85 packages."}
-{"id": "mem_00120", "created_at": "2026-06-15T06:09:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Liberty Hobby Group ordered again this week."}
-{"id": "mem_00121", "created_at": "2026-06-15T06:26:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "ACH batch runs at 16:00 ET."}
+{"id": "mem_00120", "created_at": "2026-06-15T06:09:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Liberty Hobby Group ordered again this week."}
+{"id": "mem_00121", "created_at": "2026-06-15T06:26:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "ACH batch runs at 16:00 ET."}
 {"id": "mem_00122", "created_at": "2026-06-15T06:30:00Z", "source": "nightly_ingest", "author": "arjun@meridiansc.com", "text": "Chrono Clash \u2014 Zero Hour Prerelease Kit Display (6ct) buy price is $63.09."}
-{"id": "mem_00123", "created_at": "2026-06-16T06:17:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "ACH batch runs at 16:00 ET."}
+{"id": "mem_00123", "created_at": "2026-06-16T06:17:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "ACH batch runs at 16:00 ET."}
 {"id": "mem_00124", "created_at": "2026-06-16T06:19:00Z", "source": "nightly_ingest", "author": "leo@meridiansc.com", "text": "Diamond Series Baseball \u2014 2026 Bowman-Line Jumbo Box sells to partners around $401.29."}
 {"id": "mem_00125", "created_at": "2026-06-16T15:00:00Z", "source": "session", "author": "hannah@meridiansc.com", "text": "Members are paid by ACH in 2\u20133 business days."}
 {"id": "mem_00126", "created_at": "2026-06-17T06:15:00Z", "source": "nightly_ingest", "author": "arjun@meridiansc.com", "text": "Ethan owns the label printer."}
@@ -137,9 +137,9 @@
 {"id": "mem_00137", "created_at": "2026-06-20T06:21:00Z", "source": "nightly_ingest", "author": "sam@meridiansc.com", "text": "Inspection fail rate is about 3%."}
 {"id": "mem_00138", "created_at": "2026-06-20T06:27:00Z", "source": "nightly_ingest", "author": "sam@meridiansc.com", "text": "West backlog is 73 packages."}
 {"id": "mem_00139", "created_at": "2026-06-20T06:32:00Z", "source": "nightly_ingest", "author": "leo@meridiansc.com", "text": "Diamond Series Baseball \u2014 2026 Heritage-Line Hanger Box Display sells to partners around $136.82."}
-{"id": "mem_00140", "created_at": "2026-06-20T06:36:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Ops margin this week ~22%."}
+{"id": "mem_00140", "created_at": "2026-06-20T06:36:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Ops margin this week ~22%."}
 {"id": "mem_00141", "created_at": "2026-06-21T06:09:00Z", "source": "nightly_ingest", "author": "dana@meridiansc.com", "text": "Index is at 105.2."}
-{"id": "mem_00142", "created_at": "2026-06-21T06:09:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Partner Keystone Card Shop is on prepay."}
+{"id": "mem_00142", "created_at": "2026-06-21T06:09:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Partner Keystone Card Shop is on prepay."}
 {"id": "mem_00143", "created_at": "2026-06-21T06:32:00Z", "source": "nightly_ingest", "author": "priya@meridiansc.com", "text": "Weekly revenue around $323k."}
 {"id": "mem_00144", "created_at": "2026-06-21T06:35:00Z", "source": "nightly_ingest", "author": "dana@meridiansc.com", "text": "Weekly revenue around $347k."}
 {"id": "mem_00145", "created_at": "2026-06-22T06:06:00Z", "source": "nightly_ingest", "author": "kenji@meridiansc.com", "text": "Highland Card Shop Distributors asked about allocation on the next release."}
@@ -151,15 +151,15 @@
 {"id": "mem_00151", "created_at": "2026-06-23T06:32:00Z", "source": "nightly_ingest", "author": "sofia@meridiansc.com", "text": "Aisha is out Monday morning."}
 {"id": "mem_00152", "created_at": "2026-06-24T06:08:00Z", "source": "nightly_ingest", "author": "priya@meridiansc.com", "text": "Owen owns the buy list import."}
 {"id": "mem_00153", "created_at": "2026-06-24T06:22:00Z", "source": "nightly_ingest", "author": "hannah@meridiansc.com", "text": "Liberty Bullion \u2014 2026 Proof Program 1 oz Silver Coin Tube (20 coins) buy price is $539.75."}
-{"id": "mem_00154", "created_at": "2026-06-24T06:24:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Diego prefers to get reports in Slack, not email."}
-{"id": "mem_00155", "created_at": "2026-06-24T06:28:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Arcane Realms \u2014 Sunforge Booster Box (36ct) is low on stock at East."}
-{"id": "mem_00156", "created_at": "2026-06-25T06:10:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Members asked about rejections in Discord."}
+{"id": "mem_00154", "created_at": "2026-06-24T06:24:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Diego prefers to get reports in Slack, not email."}
+{"id": "mem_00155", "created_at": "2026-06-24T06:28:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Arcane Realms \u2014 Sunforge Booster Box (36ct) is low on stock at East."}
+{"id": "mem_00156", "created_at": "2026-06-25T06:10:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Members asked about rejections in Discord."}
 {"id": "mem_00157", "created_at": "2026-06-25T06:14:00Z", "source": "nightly_ingest", "author": "dana@meridiansc.com", "text": "Quotes are valid 72 hours."}
 {"id": "mem_00158", "created_at": "2026-06-25T06:24:00Z", "source": "nightly_ingest", "author": "arjun@meridiansc.com", "text": "Tomas prefers to get reports in Slack, not email."}
 {"id": "mem_00159", "created_at": "2026-06-25T06:25:00Z", "source": "nightly_ingest", "author": "hannah@meridiansc.com", "text": "ProCourt Hoops \u2014 2026 Draft Picks Hobby Case (12 boxes) buy price is $3,581.76."}
 {"id": "mem_00160", "created_at": "2026-06-25T06:37:00Z", "source": "nightly_ingest", "author": "leo@meridiansc.com", "text": "Ops margin this week ~21%."}
 {"id": "mem_00161", "created_at": "2026-06-25T22:00:00Z", "source": "session", "author": "arjun@meridiansc.com", "text": "The market page index base is 100 on 2026-07-22."}
-{"id": "mem_00162", "created_at": "2026-06-26T06:11:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Mythkin \u2014 Gilded Grove Starter Deck Display (8ct) sells to partners around $78.60."}
+{"id": "mem_00162", "created_at": "2026-06-26T06:11:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Mythkin \u2014 Gilded Grove Starter Deck Display (8ct) sells to partners around $78.60."}
 {"id": "mem_00163", "created_at": "2026-06-26T06:18:00Z", "source": "nightly_ingest", "author": "hannah@meridiansc.com", "text": "Weekly revenue around $436k."}
 {"id": "mem_00164", "created_at": "2026-06-26T06:26:00Z", "source": "nightly_ingest", "author": "dana@meridiansc.com", "text": "Arcane Realms \u2014 Hollow Tides Starter Deck Display (8ct) is low on stock at East."}
 {"id": "mem_00165", "created_at": "2026-06-27T06:14:00Z", "source": "nightly_ingest", "author": "sam@meridiansc.com", "text": "Inspection fail rate is about 3%."}
@@ -176,7 +176,7 @@
 {"id": "mem_00176", "created_at": "2026-06-29T06:39:00Z", "source": "nightly_ingest", "author": "leo@meridiansc.com", "text": "Quotes are valid 72 hours."}
 {"id": "mem_00177", "created_at": "2026-06-30T06:27:00Z", "source": "nightly_ingest", "author": "hannah@meridiansc.com", "text": "West backlog is 125 packages."}
 {"id": "mem_00178", "created_at": "2026-06-30T06:27:00Z", "source": "nightly_ingest", "author": "priya@meridiansc.com", "text": "ACH batch runs at 16:00 ET."}
-{"id": "mem_00179", "created_at": "2026-06-30T06:28:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Quotes are valid 72 hours."}
+{"id": "mem_00179", "created_at": "2026-06-30T06:28:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Quotes are valid 72 hours."}
 {"id": "mem_00180", "created_at": "2026-06-30T06:35:00Z", "source": "nightly_ingest", "author": "sofia@meridiansc.com", "text": "Use the dashboard for receiving numbers."}
 {"id": "mem_00181", "created_at": "2026-07-01T06:28:00Z", "source": "nightly_ingest", "author": "priya@meridiansc.com", "text": "Grace said the label printer is broken again."}
 {"id": "mem_00182", "created_at": "2026-07-01T19:00:00Z", "source": "session", "author": "sofia@meridiansc.com", "text": "Quote floor is avg paid \u00d7 1.08."}
@@ -185,7 +185,7 @@
 {"id": "mem_00185", "created_at": "2026-07-03T06:19:00Z", "source": "nightly_ingest", "author": "priya@meridiansc.com", "text": "Ops margin this week ~18%."}
 {"id": "mem_00186", "created_at": "2026-07-03T06:38:00Z", "source": "nightly_ingest", "author": "dana@meridiansc.com", "text": "West backlog is 88 packages."}
 {"id": "mem_00187", "created_at": "2026-07-04T06:13:00Z", "source": "nightly_ingest", "author": "sam@meridiansc.com", "text": "Aisha is out next week."}
-{"id": "mem_00188", "created_at": "2026-07-04T06:20:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Remember to remove manual stock overrides."}
+{"id": "mem_00188", "created_at": "2026-07-04T06:20:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Remember to remove manual stock overrides."}
 {"id": "mem_00189", "created_at": "2026-07-04T06:34:00Z", "source": "nightly_ingest", "author": "arjun@meridiansc.com", "text": "Inspection fail rate is about 4%."}
 {"id": "mem_00190", "created_at": "2026-07-04T06:39:00Z", "source": "nightly_ingest", "author": "dana@meridiansc.com", "text": "ProCourt Hoops \u2014 2025-26 Select-Line Mega Box buy price is $45.60."}
 {"id": "mem_00191", "created_at": "2026-07-04T21:00:00Z", "source": "remember", "author": "sam@meridiansc.com", "text": "AI spend should go down in Q4."}
@@ -208,7 +208,7 @@
 {"id": "mem_00208", "created_at": "2026-07-10T06:10:00Z", "source": "nightly_ingest", "author": "leo@meridiansc.com", "text": "Ops margin this week ~20%."}
 {"id": "mem_00209", "created_at": "2026-07-10T06:15:00Z", "source": "nightly_ingest", "author": "priya@meridiansc.com", "text": "Frontier Gaming ordered again this week."}
 {"id": "mem_00210", "created_at": "2026-07-10T06:31:00Z", "source": "nightly_ingest", "author": "kenji@meridiansc.com", "text": "ACH batch runs at 16:00 ET."}
-{"id": "mem_00211", "created_at": "2026-07-10T06:36:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Mei prefers to get reports in Slack, not email."}
+{"id": "mem_00211", "created_at": "2026-07-10T06:36:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Mei prefers to get reports in Slack, not email."}
 {"id": "mem_00212", "created_at": "2026-07-10T19:00:00Z", "source": "session", "author": "arjun@meridiansc.com", "text": "Stock-sync runs every 15 minutes."}
 {"id": "mem_00213", "created_at": "2026-07-11T06:17:00Z", "source": "nightly_ingest", "author": "sofia@meridiansc.com", "text": "Pocket Spirits \u2014 Twilight Bloom Collector Booster Box (12ct) sells to partners around $372.25."}
 {"id": "mem_00214", "created_at": "2026-07-11T06:24:00Z", "source": "nightly_ingest", "author": "sofia@meridiansc.com", "text": "Ops margin this week ~19%."}
@@ -220,11 +220,11 @@
 {"id": "mem_00220", "created_at": "2026-07-13T06:23:00Z", "source": "nightly_ingest", "author": "sam@meridiansc.com", "text": "West backlog is 49 packages."}
 {"id": "mem_00221", "created_at": "2026-07-14T06:18:00Z", "source": "nightly_ingest", "author": "arjun@meridiansc.com", "text": "ACH batch runs at 16:00 ET."}
 {"id": "mem_00222", "created_at": "2026-07-14T06:31:00Z", "source": "nightly_ingest", "author": "priya@meridiansc.com", "text": "Index is at 100.7."}
-{"id": "mem_00223", "created_at": "2026-07-15T06:05:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Quotes are valid 72 hours."}
-{"id": "mem_00224", "created_at": "2026-07-15T06:29:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Mythkin \u2014 Gilded Grove Collector Booster Case (4 boxes) buy price is $836.18."}
+{"id": "mem_00223", "created_at": "2026-07-15T06:05:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Quotes are valid 72 hours."}
+{"id": "mem_00224", "created_at": "2026-07-15T06:29:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Mythkin \u2014 Gilded Grove Collector Booster Case (4 boxes) buy price is $836.18."}
 {"id": "mem_00225", "created_at": "2026-07-15T06:33:00Z", "source": "nightly_ingest", "author": "hannah@meridiansc.com", "text": "Partner Canyon Card Shop Group is on net-30."}
 {"id": "mem_00226", "created_at": "2026-07-15T06:38:00Z", "source": "nightly_ingest", "author": "arjun@meridiansc.com", "text": "Mythkin \u2014 Feral Moon Booster Bundle (6pk) sells to partners around $34.70."}
-{"id": "mem_00227", "created_at": "2026-07-15T06:40:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Quotes are valid 72 hours."}
+{"id": "mem_00227", "created_at": "2026-07-15T06:40:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Quotes are valid 72 hours."}
 {"id": "mem_00228", "created_at": "2026-07-16T06:28:00Z", "source": "nightly_ingest", "author": "sofia@meridiansc.com", "text": "Inspection fail rate is about 2%."}
 {"id": "mem_00229", "created_at": "2026-07-17T06:08:00Z", "source": "nightly_ingest", "author": "dana@meridiansc.com", "text": "Inspection fail rate is about 2%."}
 {"id": "mem_00230", "created_at": "2026-07-17T06:12:00Z", "source": "nightly_ingest", "author": "arjun@meridiansc.com", "text": "Granite Card Shop ordered again this week."}
@@ -237,14 +237,14 @@
 {"id": "mem_00237", "created_at": "2026-07-20T06:28:00Z", "source": "nightly_ingest", "author": "kenji@meridiansc.com", "text": "ACH batch runs at 16:00 ET."}
 {"id": "mem_00238", "created_at": "2026-07-20T06:37:00Z", "source": "nightly_ingest", "author": "dana@meridiansc.com", "text": "Ops margin this week ~21%."}
 {"id": "mem_00239", "created_at": "2026-07-20T06:40:00Z", "source": "nightly_ingest", "author": "leo@meridiansc.com", "text": "Members asked about ACH timing in Discord."}
-{"id": "mem_00240", "created_at": "2026-07-21T06:16:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "West backlog is 32 packages."}
+{"id": "mem_00240", "created_at": "2026-07-21T06:16:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "West backlog is 32 packages."}
 {"id": "mem_00241", "created_at": "2026-07-22T06:19:00Z", "source": "nightly_ingest", "author": "dana@meridiansc.com", "text": "Chloe is out next week."}
 {"id": "mem_00242", "created_at": "2026-07-22T06:27:00Z", "source": "nightly_ingest", "author": "leo@meridiansc.com", "text": "Members asked about buy list cuts in Discord."}
 {"id": "mem_00243", "created_at": "2026-07-22T06:27:00Z", "source": "nightly_ingest", "author": "arjun@meridiansc.com", "text": "West backlog is 139 packages."}
 {"id": "mem_00244", "created_at": "2026-07-22T06:30:00Z", "source": "nightly_ingest", "author": "kenji@meridiansc.com", "text": "Inspection fail rate is about 3%."}
 {"id": "mem_00245", "created_at": "2026-07-23T06:07:00Z", "source": "nightly_ingest", "author": "arjun@meridiansc.com", "text": "Blue Ridge Collectibles Inc. asked about allocation on the next release."}
 {"id": "mem_00246", "created_at": "2026-07-23T06:12:00Z", "source": "nightly_ingest", "author": "priya@meridiansc.com", "text": "Yesterday's receiving (2026-07-22): East 0, West 0, total 0 packages."}
-{"id": "mem_00247", "created_at": "2026-07-23T06:14:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Lakeside Games Co. ordered again this week."}
+{"id": "mem_00247", "created_at": "2026-07-23T06:14:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Lakeside Games Co. ordered again this week."}
 {"id": "mem_00248", "created_at": "2026-07-23T06:14:00Z", "source": "nightly_ingest", "author": "priya@meridiansc.com", "text": "Margin this month is ~20% (ops dashboard)."}
 {"id": "mem_00249", "created_at": "2026-07-23T06:19:00Z", "source": "nightly_ingest", "author": "hannah@meridiansc.com", "text": "Quotes are valid 72 hours."}
 {"id": "mem_00250", "created_at": "2026-07-24T06:13:00Z", "source": "nightly_ingest", "author": "hannah@meridiansc.com", "text": "Arcane Realms \u2014 Hollow Tides Set Booster Box (30ct) buy price is $65.92."}
@@ -276,17 +276,17 @@
 {"id": "mem_00276", "created_at": "2026-07-31T06:36:00Z", "source": "nightly_ingest", "author": "sofia@meridiansc.com", "text": "Ops margin this week ~22%."}
 {"id": "mem_00277", "created_at": "2026-07-31T06:37:00Z", "source": "nightly_ingest", "author": "sam@meridiansc.com", "text": "Falcon Games LLC asked about allocation on the next release."}
 {"id": "mem_00278", "created_at": "2026-08-01T06:12:00Z", "source": "nightly_ingest", "author": "priya@meridiansc.com", "text": "Yesterday's receiving (2026-07-31): East 33, West 12, total 45 packages."}
-{"id": "mem_00279", "created_at": "2026-08-01T06:26:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Remember to remove manual stock overrides."}
+{"id": "mem_00279", "created_at": "2026-08-01T06:26:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Remember to remove manual stock overrides."}
 {"id": "mem_00280", "created_at": "2026-08-01T06:38:00Z", "source": "nightly_ingest", "author": "leo@meridiansc.com", "text": "West backlog is 120 packages."}
 {"id": "mem_00281", "created_at": "2026-08-02T06:12:00Z", "source": "nightly_ingest", "author": "priya@meridiansc.com", "text": "Yesterday's receiving (2026-08-01): East 30, West 15, total 45 packages."}
-{"id": "mem_00282", "created_at": "2026-08-02T06:17:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Members asked about ACH timing in Discord."}
+{"id": "mem_00282", "created_at": "2026-08-02T06:17:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Members asked about ACH timing in Discord."}
 {"id": "mem_00283", "created_at": "2026-08-03T06:14:00Z", "source": "nightly_ingest", "author": "sam@meridiansc.com", "text": "Mythkin \u2014 Feral Moon Booster Box (36ct) is selling well."}
 {"id": "mem_00284", "created_at": "2026-08-03T06:15:00Z", "source": "nightly_ingest", "author": "dana@meridiansc.com", "text": "Partner Keystone Card Club Inc. is on net-30."}
 {"id": "mem_00285", "created_at": "2026-08-03T06:30:00Z", "source": "nightly_ingest", "author": "sofia@meridiansc.com", "text": "Tomas said the label printer is broken again."}
 {"id": "mem_00286", "created_at": "2026-08-04T06:09:00Z", "source": "nightly_ingest", "author": "leo@meridiansc.com", "text": "Chrono Clash \u2014 Clockfall Prerelease Kit Display (6ct) is low on stock at East."}
 {"id": "mem_00287", "created_at": "2026-08-04T06:12:00Z", "source": "nightly_ingest", "author": "priya@meridiansc.com", "text": "Yesterday's receiving (2026-08-03): East 50, West 17, total 67 packages."}
 {"id": "mem_00288", "created_at": "2026-08-04T06:14:00Z", "source": "nightly_ingest", "author": "priya@meridiansc.com", "text": "Partners complain about stock accuracy sometimes."}
-{"id": "mem_00289", "created_at": "2026-08-04T06:16:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Sam is out Monday morning."}
+{"id": "mem_00289", "created_at": "2026-08-04T06:16:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Sam is out Monday morning."}
 {"id": "mem_00290", "created_at": "2026-08-05T06:12:00Z", "source": "nightly_ingest", "author": "priya@meridiansc.com", "text": "Yesterday's receiving (2026-08-04): East 38, West 22, total 60 packages."}
 {"id": "mem_00291", "created_at": "2026-08-05T06:13:00Z", "source": "nightly_ingest", "author": "hannah@meridiansc.com", "text": "Grace is out Friday."}
 {"id": "mem_00292", "created_at": "2026-08-05T06:34:00Z", "source": "nightly_ingest", "author": "sofia@meridiansc.com", "text": "Remember to remove manual stock overrides."}
@@ -295,9 +295,9 @@
 {"id": "mem_00295", "created_at": "2026-08-07T06:12:00Z", "source": "nightly_ingest", "author": "priya@meridiansc.com", "text": "Yesterday's receiving (2026-08-06): East 36, West 23, total 59 packages."}
 {"id": "mem_00296", "created_at": "2026-08-07T06:18:00Z", "source": "nightly_ingest", "author": "dana@meridiansc.com", "text": "Ops margin this week ~19%."}
 {"id": "mem_00297", "created_at": "2026-08-07T06:23:00Z", "source": "nightly_ingest", "author": "sam@meridiansc.com", "text": "Remember to remove manual stock overrides."}
-{"id": "mem_00298", "created_at": "2026-08-07T06:40:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Members asked about ACH timing in Discord."}
+{"id": "mem_00298", "created_at": "2026-08-07T06:40:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Members asked about ACH timing in Discord."}
 {"id": "mem_00299", "created_at": "2026-08-08T06:12:00Z", "source": "nightly_ingest", "author": "priya@meridiansc.com", "text": "Yesterday's receiving (2026-08-07): East 30, West 9, total 39 packages."}
-{"id": "mem_00300", "created_at": "2026-08-08T06:28:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Mythkin \u2014 Gilded Grove Prerelease Kit Display (6ct) sells to partners around $126.15."}
+{"id": "mem_00300", "created_at": "2026-08-08T06:28:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Mythkin \u2014 Gilded Grove Prerelease Kit Display (6ct) sells to partners around $126.15."}
 {"id": "mem_00301", "created_at": "2026-08-09T06:07:00Z", "source": "nightly_ingest", "author": "leo@meridiansc.com", "text": "Partner Maple Card Shop & Co. is on net-30."}
 {"id": "mem_00302", "created_at": "2026-08-09T06:16:00Z", "source": "nightly_ingest", "author": "dana@meridiansc.com", "text": "Ops margin this week ~18%."}
 {"id": "mem_00303", "created_at": "2026-08-09T06:25:00Z", "source": "nightly_ingest", "author": "hannah@meridiansc.com", "text": "Liberty Bullion \u2014 2025 Eagle-Line Silver Round Roll (20 rounds) sells to partners around $580.50."}
@@ -309,10 +309,10 @@
 {"id": "mem_00309", "created_at": "2026-08-10T06:39:00Z", "source": "nightly_ingest", "author": "kenji@meridiansc.com", "text": "Index is at 103.5."}
 {"id": "mem_00310", "created_at": "2026-08-11T06:12:00Z", "source": "nightly_ingest", "author": "priya@meridiansc.com", "text": "Yesterday's receiving (2026-08-10): East 72, West 20, total 92 packages."}
 {"id": "mem_00311", "created_at": "2026-08-11T06:18:00Z", "source": "nightly_ingest", "author": "kenji@meridiansc.com", "text": "Remember to remove manual stock overrides."}
-{"id": "mem_00312", "created_at": "2026-08-11T06:20:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Sofia prefers to get reports in Slack, not email."}
+{"id": "mem_00312", "created_at": "2026-08-11T06:20:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Sofia prefers to get reports in Slack, not email."}
 {"id": "mem_00313", "created_at": "2026-08-11T06:21:00Z", "source": "nightly_ingest", "author": "arjun@meridiansc.com", "text": "Mythkin \u2014 Ashen Vale Collector Booster Case (4 boxes) sells to partners around $707.25."}
-{"id": "mem_00314", "created_at": "2026-08-11T06:33:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Weekly revenue around $439k."}
-{"id": "mem_00315", "created_at": "2026-08-11T06:37:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Members asked about ACH timing in Discord."}
+{"id": "mem_00314", "created_at": "2026-08-11T06:33:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Weekly revenue around $439k."}
+{"id": "mem_00315", "created_at": "2026-08-11T06:37:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Members asked about ACH timing in Discord."}
 {"id": "mem_00316", "created_at": "2026-08-12T06:12:00Z", "source": "nightly_ingest", "author": "priya@meridiansc.com", "text": "Yesterday's receiving (2026-08-11): East 41, West 13, total 54 packages."}
 {"id": "mem_00317", "created_at": "2026-08-12T06:18:00Z", "source": "nightly_ingest", "author": "sam@meridiansc.com", "text": "Use the dashboard for receiving numbers."}
 {"id": "mem_00318", "created_at": "2026-08-12T06:19:00Z", "source": "nightly_ingest", "author": "sofia@meridiansc.com", "text": "Index is at 107.3."}
@@ -362,7 +362,7 @@
 {"id": "mem_00362", "created_at": "2026-08-23T06:18:00Z", "source": "nightly_ingest", "author": "sam@meridiansc.com", "text": "Granite Breaks ordered again this week."}
 {"id": "mem_00363", "created_at": "2026-08-23T06:26:00Z", "source": "nightly_ingest", "author": "leo@meridiansc.com", "text": "Quotes are valid 72 hours."}
 {"id": "mem_00364", "created_at": "2026-08-24T06:06:00Z", "source": "nightly_ingest", "author": "kenji@meridiansc.com", "text": "Index is at 101.8."}
-{"id": "mem_00365", "created_at": "2026-08-24T06:08:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Remember to remove manual stock overrides."}
+{"id": "mem_00365", "created_at": "2026-08-24T06:08:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Remember to remove manual stock overrides."}
 {"id": "mem_00366", "created_at": "2026-08-24T06:36:00Z", "source": "nightly_ingest", "author": "priya@meridiansc.com", "text": "Chrono Clash \u2014 Paradox Engine Booster Bundle (6pk) sells to partners around $27.50."}
 {"id": "mem_00367", "created_at": "2026-08-24T06:39:00Z", "source": "nightly_ingest", "author": "sofia@meridiansc.com", "text": "Owen owns the daily report."}
 {"id": "mem_00368", "created_at": "2026-08-25T06:12:00Z", "source": "nightly_ingest", "author": "priya@meridiansc.com", "text": "Yesterday's receiving (2026-08-24): East 71, West 24, total 95 packages."}
@@ -385,11 +385,11 @@
 {"id": "mem_00385", "created_at": "2026-08-29T06:23:00Z", "source": "nightly_ingest", "author": "priya@meridiansc.com", "text": "Priya prefers to get reports in Slack, not email."}
 {"id": "mem_00386", "created_at": "2026-08-30T06:06:00Z", "source": "nightly_ingest", "author": "arjun@meridiansc.com", "text": "Isaac prefers to get reports in Slack, not email."}
 {"id": "mem_00387", "created_at": "2026-08-30T06:12:00Z", "source": "nightly_ingest", "author": "priya@meridiansc.com", "text": "Yesterday's receiving (2026-08-29): East 38, West 12, total 50 packages."}
-{"id": "mem_00388", "created_at": "2026-08-30T06:13:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Tomas is out next week."}
+{"id": "mem_00388", "created_at": "2026-08-30T06:13:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Tomas is out next week."}
 {"id": "mem_00389", "created_at": "2026-08-30T06:14:00Z", "source": "nightly_ingest", "author": "kenji@meridiansc.com", "text": "Margin this month is ~20% (ops dashboard)."}
 {"id": "mem_00390", "created_at": "2026-08-30T06:15:00Z", "source": "nightly_ingest", "author": "sam@meridiansc.com", "text": "Remember to remove manual stock overrides."}
 {"id": "mem_00391", "created_at": "2026-08-30T06:16:00Z", "source": "nightly_ingest", "author": "priya@meridiansc.com", "text": "West backlog is 40 packages."}
-{"id": "mem_00392", "created_at": "2026-08-30T06:37:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Liberty Bullion \u2014 2026 Liberty Series 10 oz Silver Bar is low on stock at East."}
+{"id": "mem_00392", "created_at": "2026-08-30T06:37:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Liberty Bullion \u2014 2026 Liberty Series 10 oz Silver Bar is low on stock at East."}
 {"id": "mem_00393", "created_at": "2026-08-31T06:13:00Z", "source": "nightly_ingest", "author": "sofia@meridiansc.com", "text": "Felix owns the stock-sync job."}
 {"id": "mem_00394", "created_at": "2026-08-31T06:14:00Z", "source": "nightly_ingest", "author": "priya@meridiansc.com", "text": "Partners complain about stock accuracy sometimes."}
 {"id": "mem_00395", "created_at": "2026-08-31T06:23:00Z", "source": "nightly_ingest", "author": "dana@meridiansc.com", "text": "Marcus owns the stock-sync job."}
@@ -398,7 +398,7 @@
 {"id": "mem_00398", "created_at": "2026-09-01T06:26:00Z", "source": "nightly_ingest", "author": "priya@meridiansc.com", "text": "Use the dashboard for receiving numbers."}
 {"id": "mem_00399", "created_at": "2026-09-02T06:09:00Z", "source": "nightly_ingest", "author": "dana@meridiansc.com", "text": "Crown Mint \u2014 2026 Philharmonic-Line 5 oz Silver Bar is low on stock at East."}
 {"id": "mem_00400", "created_at": "2026-09-02T06:12:00Z", "source": "nightly_ingest", "author": "priya@meridiansc.com", "text": "Yesterday's receiving (2026-09-01): East 25, West 13, total 38 packages."}
-{"id": "mem_00401", "created_at": "2026-09-02T06:14:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Liberty Card Shop LLC asked about allocation on the next release."}
+{"id": "mem_00401", "created_at": "2026-09-02T06:14:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Liberty Card Shop LLC asked about allocation on the next release."}
 {"id": "mem_00402", "created_at": "2026-09-02T06:14:00Z", "source": "nightly_ingest", "author": "priya@meridiansc.com", "text": "West is short-staffed on inspection."}
 {"id": "mem_00403", "created_at": "2026-09-02T06:16:00Z", "source": "nightly_ingest", "author": "dana@meridiansc.com", "text": "Use the dashboard for receiving numbers."}
 {"id": "mem_00404", "created_at": "2026-09-02T06:26:00Z", "source": "nightly_ingest", "author": "leo@meridiansc.com", "text": "Lucia owns the stock-sync job."}
@@ -437,7 +437,7 @@
 {"id": "mem_00437", "created_at": "2026-09-09T06:06:00Z", "source": "nightly_ingest", "author": "leo@meridiansc.com", "text": "Ops margin this week ~18%."}
 {"id": "mem_00438", "created_at": "2026-09-09T06:10:00Z", "source": "nightly_ingest", "author": "sofia@meridiansc.com", "text": "Ravi owns the label printer."}
 {"id": "mem_00439", "created_at": "2026-09-09T06:14:00Z", "source": "nightly_ingest", "author": "sam@meridiansc.com", "text": "Partners complain about stock accuracy sometimes."}
-{"id": "mem_00440", "created_at": "2026-09-09T06:34:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Ben prefers to get reports in Slack, not email."}
+{"id": "mem_00440", "created_at": "2026-09-09T06:34:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Ben prefers to get reports in Slack, not email."}
 {"id": "mem_00441", "created_at": "2026-09-09T06:39:00Z", "source": "nightly_ingest", "author": "sam@meridiansc.com", "text": "Nora is out next week."}
 {"id": "mem_00442", "created_at": "2026-09-10T06:12:00Z", "source": "nightly_ingest", "author": "priya@meridiansc.com", "text": "Yesterday's receiving (2026-09-09): East 40, West 16, total 56 packages."}
 {"id": "mem_00443", "created_at": "2026-09-10T06:27:00Z", "source": "nightly_ingest", "author": "sofia@meridiansc.com", "text": "Weekly revenue around $394k."}
@@ -449,14 +449,14 @@
 {"id": "mem_00449", "created_at": "2026-09-12T06:20:00Z", "source": "nightly_ingest", "author": "sam@meridiansc.com", "text": "Nora owns the ACH batch."}
 {"id": "mem_00450", "created_at": "2026-09-12T06:28:00Z", "source": "nightly_ingest", "author": "sam@meridiansc.com", "text": "Use the dashboard for receiving numbers."}
 {"id": "mem_00451", "created_at": "2026-09-12T06:34:00Z", "source": "nightly_ingest", "author": "hannah@meridiansc.com", "text": "Ethan said the label printer is broken again."}
-{"id": "mem_00452", "created_at": "2026-09-12T06:37:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Canyon Card Shop Distributors ordered again this week."}
+{"id": "mem_00452", "created_at": "2026-09-12T06:37:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Canyon Card Shop Distributors ordered again this week."}
 {"id": "mem_00453", "created_at": "2026-09-13T06:08:00Z", "source": "nightly_ingest", "author": "sam@meridiansc.com", "text": "Remember to remove manual stock overrides."}
 {"id": "mem_00454", "created_at": "2026-09-13T06:12:00Z", "source": "nightly_ingest", "author": "priya@meridiansc.com", "text": "Yesterday's receiving (2026-09-12): East 48, West 14, total 62 packages."}
 {"id": "mem_00455", "created_at": "2026-09-13T06:29:00Z", "source": "nightly_ingest", "author": "sofia@meridiansc.com", "text": "Dana prefers to get reports in Slack, not email."}
 {"id": "mem_00456", "created_at": "2026-09-13T06:30:00Z", "source": "nightly_ingest", "author": "dana@meridiansc.com", "text": "Pocket Spirits \u2014 Mistwood Mini Tin Display (10ct) sells to partners around $54.66."}
 {"id": "mem_00457", "created_at": "2026-09-13T06:34:00Z", "source": "nightly_ingest", "author": "sam@meridiansc.com", "text": "Partner Highland Sports Cards & Co. is on prepay."}
 {"id": "mem_00458", "created_at": "2026-09-13T06:39:00Z", "source": "nightly_ingest", "author": "sam@meridiansc.com", "text": "Atlas Hobby Supply Wholesale ordered again this week."}
-{"id": "mem_00459", "created_at": "2026-09-14T06:06:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Weekly revenue around $460k."}
+{"id": "mem_00459", "created_at": "2026-09-14T06:06:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Weekly revenue around $460k."}
 {"id": "mem_00460", "created_at": "2026-09-14T06:14:00Z", "source": "nightly_ingest", "author": "priya@meridiansc.com", "text": "Partners complain about stock accuracy sometimes."}
 {"id": "mem_00461", "created_at": "2026-09-14T06:19:00Z", "source": "nightly_ingest", "author": "hannah@meridiansc.com", "text": "Weekly revenue around $409k."}
 {"id": "mem_00462", "created_at": "2026-09-14T06:21:00Z", "source": "nightly_ingest", "author": "priya@meridiansc.com", "text": "Ops margin this week ~20%."}
@@ -506,11 +506,11 @@
 {"id": "mem_00506", "created_at": "2026-09-27T06:37:00Z", "source": "nightly_ingest", "author": "sofia@meridiansc.com", "text": "West backlog is 43 packages."}
 {"id": "mem_00507", "created_at": "2026-09-28T06:06:00Z", "source": "nightly_ingest", "author": "priya@meridiansc.com", "text": "ACH batch runs at 16:00 ET."}
 {"id": "mem_00508", "created_at": "2026-09-28T06:14:00Z", "source": "nightly_ingest", "author": "kenji@meridiansc.com", "text": "ACH payouts take 2\u20133 days."}
-{"id": "mem_00509", "created_at": "2026-09-28T06:27:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Diamond Series Baseball \u2014 2026 Series 2 Hanger Box Display buy price is $87.35."}
+{"id": "mem_00509", "created_at": "2026-09-28T06:27:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Diamond Series Baseball \u2014 2026 Series 2 Hanger Box Display buy price is $87.35."}
 {"id": "mem_00510", "created_at": "2026-09-29T06:12:00Z", "source": "nightly_ingest", "author": "priya@meridiansc.com", "text": "Yesterday's receiving (2026-09-28): East 71, West 27, total 98 packages."}
 {"id": "mem_00511", "created_at": "2026-09-29T06:14:00Z", "source": "nightly_ingest", "author": "kenji@meridiansc.com", "text": "Weekly revenue is around $507,408."}
 {"id": "mem_00512", "created_at": "2026-09-29T06:17:00Z", "source": "nightly_ingest", "author": "arjun@meridiansc.com", "text": "Ethan said the stock-sync job is broken again."}
-{"id": "mem_00513", "created_at": "2026-09-30T06:12:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Silver Hobby Wholesale asked about allocation on the next release."}
+{"id": "mem_00513", "created_at": "2026-09-30T06:12:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Silver Hobby Wholesale asked about allocation on the next release."}
 {"id": "mem_00514", "created_at": "2026-09-30T06:12:00Z", "source": "nightly_ingest", "author": "priya@meridiansc.com", "text": "Yesterday's receiving (2026-09-29): East 39, West 18, total 57 packages."}
 {"id": "mem_00515", "created_at": "2026-09-30T06:24:00Z", "source": "nightly_ingest", "author": "sam@meridiansc.com", "text": "Inspection fail rate is about 3%."}
 {"id": "mem_00516", "created_at": "2026-09-30T06:27:00Z", "source": "nightly_ingest", "author": "arjun@meridiansc.com", "text": "Members asked about buy list cuts in Discord."}
@@ -545,7 +545,7 @@
 {"id": "mem_00545", "created_at": "2026-10-07T06:12:00Z", "source": "nightly_ingest", "author": "priya@meridiansc.com", "text": "Yesterday's receiving (2026-10-06): East 39, West 15, total 54 packages."}
 {"id": "mem_00546", "created_at": "2026-10-07T06:13:00Z", "source": "nightly_ingest", "author": "arjun@meridiansc.com", "text": "Partner terms: gold-tier partners are on net-90; standard partners net-30 (per partner-portal README, finance 2026-06)."}
 {"id": "mem_00547", "created_at": "2026-10-07T06:15:00Z", "source": "nightly_ingest", "author": "sam@meridiansc.com", "text": "Ops margin this week ~21%."}
-{"id": "mem_00548", "created_at": "2026-10-07T06:25:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Quotes are valid 72 hours."}
+{"id": "mem_00548", "created_at": "2026-10-07T06:25:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Quotes are valid 72 hours."}
 {"id": "mem_00549", "created_at": "2026-10-07T06:32:00Z", "source": "nightly_ingest", "author": "leo@meridiansc.com", "text": "Harbor Cards ordered again this week."}
 {"id": "mem_00550", "created_at": "2026-10-07T06:34:00Z", "source": "nightly_ingest", "author": "sofia@meridiansc.com", "text": "Use the dashboard for receiving numbers."}
 {"id": "mem_00551", "created_at": "2026-10-08T06:05:00Z", "source": "nightly_ingest", "author": "hannah@meridiansc.com", "text": "Grace owns the stock-sync job."}
@@ -555,12 +555,12 @@
 {"id": "mem_00555", "created_at": "2026-10-08T06:21:00Z", "source": "nightly_ingest", "author": "leo@meridiansc.com", "text": "Ops margin this week ~19%."}
 {"id": "mem_00556", "created_at": "2026-10-08T06:25:00Z", "source": "nightly_ingest", "author": "leo@meridiansc.com", "text": "ACH batch runs at 16:00 ET."}
 {"id": "mem_00557", "created_at": "2026-10-09T06:05:00Z", "source": "nightly_ingest", "author": "sofia@meridiansc.com", "text": "Sofia owns the buy list import."}
-{"id": "mem_00558", "created_at": "2026-10-09T06:10:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Nora owns the stock-sync job."}
+{"id": "mem_00558", "created_at": "2026-10-09T06:10:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Nora owns the stock-sync job."}
 {"id": "mem_00559", "created_at": "2026-10-09T06:10:00Z", "source": "nightly_ingest", "author": "leo@meridiansc.com", "text": "Seller API integration key (prod) has buylist:write and payouts:write; Jarvis uses it. Key starts mscsk_live_7c41."}
 {"id": "mem_00560", "created_at": "2026-10-09T06:26:00Z", "source": "nightly_ingest", "author": "leo@meridiansc.com", "text": "Highland Cards LLC asked about allocation on the next release."}
 {"id": "mem_00561", "created_at": "2026-10-09T06:35:00Z", "source": "nightly_ingest", "author": "arjun@meridiansc.com", "text": "Partner Liberty Trading Post Distributors is on net-15."}
 {"id": "mem_00562", "created_at": "2026-10-09T06:36:00Z", "source": "nightly_ingest", "author": "sofia@meridiansc.com", "text": "Weekly revenue around $312k."}
-{"id": "mem_00563", "created_at": "2026-10-10T06:08:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "West backlog is 62 packages."}
+{"id": "mem_00563", "created_at": "2026-10-10T06:08:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "West backlog is 62 packages."}
 {"id": "mem_00564", "created_at": "2026-10-10T06:12:00Z", "source": "nightly_ingest", "author": "kenji@meridiansc.com", "text": "Inspection fail rate is about 5%."}
 {"id": "mem_00565", "created_at": "2026-10-10T06:12:00Z", "source": "nightly_ingest", "author": "priya@meridiansc.com", "text": "Yesterday's receiving (2026-10-09): East 32, West 13, total 45 packages."}
 {"id": "mem_00566", "created_at": "2026-10-10T06:14:00Z", "source": "nightly_ingest", "author": "priya@meridiansc.com", "text": "ACH payouts take 2\u20133 days."}
@@ -585,11 +585,11 @@
 {"id": "mem_00585", "created_at": "2026-10-15T06:27:00Z", "source": "nightly_ingest", "author": "kenji@meridiansc.com", "text": "Ethan prefers to get reports in Slack, not email."}
 {"id": "mem_00586", "created_at": "2026-10-16T06:21:00Z", "source": "nightly_ingest", "author": "sofia@meridiansc.com", "text": "Leo owns the daily report."}
 {"id": "mem_00587", "created_at": "2026-10-16T06:30:00Z", "source": "nightly_ingest", "author": "sam@meridiansc.com", "text": "Use the dashboard for receiving numbers."}
-{"id": "mem_00588", "created_at": "2026-10-17T06:27:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Highland Sports Cards Inc. ordered again this week."}
+{"id": "mem_00588", "created_at": "2026-10-17T06:27:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Highland Sports Cards Inc. ordered again this week."}
 {"id": "mem_00589", "created_at": "2026-10-18T06:09:00Z", "source": "nightly_ingest", "author": "sofia@meridiansc.com", "text": "Atlas consignment incoming; portal stock for Gridiron Prime \u2014 2026 Rookies & Stars Jumbo Box manually set higher."}
 {"id": "mem_00590", "created_at": "2026-10-18T06:12:00Z", "source": "nightly_ingest", "author": "priya@meridiansc.com", "text": "Yesterday's receiving (2026-10-17): East 40, West 24, total 64 packages."}
 {"id": "mem_00591", "created_at": "2026-10-18T06:35:00Z", "source": "nightly_ingest", "author": "sofia@meridiansc.com", "text": "Starbound Duel \u2014 Comet Run Mini Tin Display (10ct) is low on stock at East."}
-{"id": "mem_00592", "created_at": "2026-10-19T06:05:00Z", "source": "nightly_ingest", "author": "marcus@meridiansc.com", "text": "Ravi prefers to get reports in Slack, not email."}
+{"id": "mem_00592", "created_at": "2026-10-19T06:05:00Z", "source": "nightly_ingest", "author": "operator@meridiansc.com", "text": "Ravi prefers to get reports in Slack, not email."}
 {"id": "mem_00593", "created_at": "2026-10-19T06:13:00Z", "source": "nightly_ingest", "author": "priya@meridiansc.com", "text": "Partner Crescent Card Club Wholesale is on net-30."}
 {"id": "mem_00594", "created_at": "2026-10-19T06:14:00Z", "source": "nightly_ingest", "author": "kenji@meridiansc.com", "text": "Diamond Series Baseball \u2014 2025 Update Blaster Box is selling well."}
 {"id": "mem_00595", "created_at": "2026-10-19T06:31:00Z", "source": "nightly_ingest", "author": "sam@meridiansc.com", "text": "Crown Mint \u2014 2026 Kangaroo-Line 1 oz Silver Coin Monster Box (500 coins) buy price is $13,128.22."}

@@ -20895,7 +20895,7 @@ COPY public.price_index (index_date, msc_sealed_index, tcg_index, sports_index, 
 COPY public.staff_users (user_id, email, name, role) FROM stdin;
 1	sam@meridiansc.com	Sam Okafor	admin
 2	priya@meridiansc.com	Priya Raman	staff
-3	marcus@meridiansc.com	Marcus Bell	staff
+3	operator@meridiansc.com	Marcus Bell	staff
 4	dana@meridiansc.com	Dana Ortiz	staff
 5	kenji@meridiansc.com	Kenji Watanabe	staff
 6	sofia@meridiansc.com	Sofia Lindqvist	admin

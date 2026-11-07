@@ -149,7 +149,7 @@ Any lot exceeding 5% failure must be placed in quarantine bin Q-1.
         cand_conflict = "Partner Blue Ridge TCG has standard credit payment terms of net-90."
         stage_res1 = self.promoter.stage_candidate_fact(
             candidate_fact=cand_conflict,
-            originating_user="marcus@meridiansc.com",
+            originating_user="operator@meridiansc.com",
             session_id="sess_conflict_01",
             category="PAYMENT_TERMS"
         )
