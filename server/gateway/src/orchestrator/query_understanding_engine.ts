@@ -163,7 +163,7 @@ CRITICAL INSTRUCTIONS:
       }
     }
 
-    const classification: QueryClassification = [
+    let classification: QueryClassification = [
       'RAG_ONLY',
       'SQL_ONLY',
       'HYBRID_SQL_RAG',
@@ -173,6 +173,37 @@ CRITICAL INSTRUCTIONS:
     ].includes(raw.classification)
       ? raw.classification
       : 'RAG_ONLY';
+
+    const isMetricQuery =
+      cleanLower.includes('ar aging') ||
+      cleanLower.includes('overdue ar') ||
+      cleanLower.includes('inventory valuation') ||
+      cleanLower.includes('fifo') ||
+      cleanLower.includes('receiving summary') ||
+      cleanLower.includes('dock to stock') ||
+      cleanLower.includes('packages received') ||
+      cleanLower.includes('package counts') ||
+      cleanLower.includes('aged debtor') ||
+      cleanLower.includes('61-90') ||
+      cleanLower.includes('units received');
+
+    const isKnowledgeQuery =
+      cleanLower.includes('policy') ||
+      cleanLower.includes('terms') ||
+      cleanLower.includes('sop') ||
+      cleanLower.includes('procedure') ||
+      cleanLower.includes('incident') ||
+      cleanLower.includes('who is on call') ||
+      cleanLower.includes('glossary') ||
+      cleanLower.includes('rules for') ||
+      cleanLower.includes('guidelines') ||
+      cleanLower.includes('sla');
+
+    if (isMetricQuery && isKnowledgeQuery) {
+      classification = 'HYBRID_SQL_RAG';
+    } else if (isMetricQuery && classification !== 'HYBRID_SQL_RAG') {
+      classification = 'SQL_ONLY';
+    }
 
     const retrievalQueries: string[] = Array.isArray(raw.retrievalQueries) && raw.retrievalQueries.length > 0
       ? raw.retrievalQueries
