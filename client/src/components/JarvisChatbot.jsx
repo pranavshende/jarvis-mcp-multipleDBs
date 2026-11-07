@@ -14,6 +14,7 @@ import StructuredResponse from './StructuredResponse';
 import ExecutionWorkflow from './ExecutionWorkflow';
 import AuthModal from './AuthModal';
 import PagePurposeBanner from './PagePurposeBanner';
+import TutorialGuide from './TutorialGuide';
 
 // Import enterprise sub-views to consolidate everything within the chatbot
 import FounderDashboard from './FounderDashboard';
@@ -438,6 +439,15 @@ export default function JarvisChatbot() {
   // In-place prompt editing & rewriting state
   const [editingMessageId, setEditingMessageId] = useState(null);
   const [editingMessageText, setEditingMessageText] = useState('');
+
+  // First-time user tutorial guide walkthrough state
+  const [showTutorial, setShowTutorial] = useState(() => {
+    try {
+      return !localStorage.getItem('jarvis_tutorial_completed');
+    } catch {
+      return false;
+    }
+  });
 
   // Stop active AI execution mid-way
   const handleStopExecution = () => {
@@ -1374,6 +1384,38 @@ export default function JarvisChatbot() {
               </button>
             )}
 
+            {/* Tutorial & Onboarding Guide Restart Button */}
+            <button
+              type="button"
+              onClick={() => setShowTutorial(true)}
+              title="Restart guided tutorial walkthrough"
+              style={{
+                background: '#f4f3ef',
+                border: '1px solid #e5e5e0',
+                color: '#0e372d',
+                padding: isMobile ? '4px 8px' : '6px 12px',
+                borderRadius: '8px',
+                fontSize: isMobile ? '11px' : '12px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '5px',
+                transition: 'all 0.15s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = '#e8f5ec';
+                e.currentTarget.style.borderColor = '#bbf7d0';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = '#f4f3ef';
+                e.currentTarget.style.borderColor = '#e5e5e0';
+              }}
+            >
+              <span>🎓</span>
+              <span>{!isMobile ? 'Tutorial Tour' : 'Tour'}</span>
+            </button>
+
             {/* Operations Dashboard Button */}
             {!isMobile ? (
               <button
@@ -2006,6 +2048,12 @@ export default function JarvisChatbot() {
               handleSelectSession({ id: initialConvId });
             }
           }}
+        />
+
+        {/* First-Time Guided Tutorial Walkthrough Modal */}
+        <TutorialGuide
+          isOpen={showTutorial}
+          onClose={() => setShowTutorial(false)}
         />
 
         {/* Mobile Workflow Modal / Bottom Sheet */}
