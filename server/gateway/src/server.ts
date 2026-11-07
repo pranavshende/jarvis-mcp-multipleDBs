@@ -58,6 +58,46 @@ export async function buildGatewayServer(): Promise<FastifyInstance> {
       reply.send(result);
     });
 
+    // Real-Time Execution Workflow Event Streaming (SSE)
+    protectedApp.post('/api/query/stream', async (request, reply) => {
+      const body = request.body as { query?: string; sessionId?: string };
+      if (!body || !body.query) {
+        reply.status(400).send({ error: 'BAD_REQUEST', message: "Field 'query' is required." });
+        return;
+      }
+
+      const user = request.userContext!;
+
+      reply.raw.writeHead(200, {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache, no-transform',
+        'Connection': 'keep-alive',
+        'Access-Control-Allow-Origin': '*',
+        'X-Accel-Buffering': 'no',
+      });
+
+      const sendSse = (eventType: string, data: any) => {
+        reply.raw.write(`event: ${eventType}\ndata: ${JSON.stringify(data)}\n\n`);
+      };
+
+      try {
+        const result = await IntentRouter.routeAndExecute(
+          body.query,
+          user,
+          body.sessionId || 'default',
+          (event) => {
+            sendSse('workflow_event', event);
+          }
+        );
+
+        sendSse('complete', result);
+        reply.raw.end();
+      } catch (err: any) {
+        sendSse('error', { error: err.message });
+        reply.raw.end();
+      }
+    });
+
     // Tool Discovery Endpoint
     protectedApp.get('/api/tools', async (request, reply) => {
       const user = request.userContext!;

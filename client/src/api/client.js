@@ -334,6 +334,65 @@ export async function queryGatewayIntent(queryText, sessionId = 'default') {
   return res.json();
 }
 
+export async function queryGatewayStream(queryText, sessionId = 'default', onWorkflowEvent, onComplete, onError) {
+  try {
+    const res = await fetch('http://127.0.0.1:4000/api/query/stream', {
+      method: 'POST',
+      headers: getAdminHeaders(),
+      body: JSON.stringify({ query: queryText, sessionId }),
+    });
+
+    if (!res.ok) {
+      throw new Error(`Streaming failed: HTTP ${res.status}`);
+    }
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder('utf-8');
+    let buffer = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+      const blocks = buffer.split('\n\n');
+      buffer = blocks.pop() || '';
+
+      for (const block of blocks) {
+        if (!block.trim()) continue;
+        const eventLines = block.split('\n');
+        let eventType = 'message';
+        let dataStr = '';
+
+        for (const line of eventLines) {
+          if (line.startsWith('event: ')) {
+            eventType = line.substring(7).trim();
+          } else if (line.startsWith('data: ')) {
+            dataStr = line.substring(6).trim();
+          }
+        }
+
+        if (dataStr) {
+          try {
+            const data = JSON.parse(dataStr);
+            if (eventType === 'workflow_event' && onWorkflowEvent) {
+              onWorkflowEvent(data);
+            } else if (eventType === 'complete' && onComplete) {
+              onComplete(data);
+            } else if (eventType === 'error' && onError) {
+              onError(new Error(data.error || 'Server stream error'));
+            }
+          } catch (e) {
+            console.error('Failed to parse SSE payload:', e);
+          }
+        }
+      }
+    }
+  } catch (err) {
+    if (onError) onError(err);
+  }
+}
+
 // ============================================================================
 // Phase 5: Evaluation, Cache, DLQ, Model Budgets & Security Center APIs
 // ============================================================================
