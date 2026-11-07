@@ -34,6 +34,173 @@ const TOUR_STEPS = [
     )
   },
   {
+    target: '[data-tour="nav-chat"]',
+    title: 'Conversational Intelligence',
+    badge: 'NATURAL LANGUAGE AI',
+    badgeColor: '#0e372d',
+    badgeBg: '#e8f5ec',
+    icon: '💬',
+    preferredPlacement: 'right',
+    requiresSidebar: true,
+    description: (
+      <div>
+        <p style={{ margin: '0 0 8px 0', fontSize: '13px', lineHeight: '1.5', color: '#374151' }}>
+          The primary natural language interface powered by Google Gemini.
+        </p>
+        <p style={{ margin: 0, fontSize: '12px', color: '#4b5563', lineHeight: '1.5' }}>
+          Ask operational, financial, or warehouse questions in plain English. Jarvis identifies intent, retrieves official SOP policies, queries certified SQL metrics, and streams back verified answers with citations.
+        </p>
+      </div>
+    )
+  },
+  {
+    target: '[data-tour="nav-founder"]',
+    title: 'Operations Dashboard',
+    badge: 'EXECUTIVE GROUND TRUTH',
+    badgeColor: '#18181b',
+    badgeBg: '#f4f4f5',
+    icon: '⭐',
+    preferredPlacement: 'right',
+    requiresSidebar: true,
+    description: (
+      <div>
+        <p style={{ margin: '0 0 8px 0', fontSize: '13px', lineHeight: '1.5', color: '#374151' }}>
+          Executive panoramic overview across all Meridian Supply Chain operational domains.
+        </p>
+        <ul style={{ margin: 0, paddingLeft: '16px', fontSize: '12px', color: '#4b5563', lineHeight: '1.6' }}>
+          <li>Daily warehouse dock intake volumes across facilities (EWR1 East &amp; ONT1 West).</li>
+          <li>Real-time partner AR aging breakdown and credit utilization risk metrics.</li>
+          <li>System connectivity and database health telemetry.</li>
+        </ul>
+      </div>
+    )
+  },
+  {
+    target: '[data-tour="nav-metrics"]',
+    title: 'Explore Deterministic Metrics',
+    badge: 'CERTIFIED SQL ENGINE',
+    badgeColor: '#059669',
+    badgeBg: '#d1fae5',
+    icon: '📊',
+    preferredPlacement: 'right',
+    requiresSidebar: true,
+    description: (
+      <div>
+        <p style={{ margin: '0 0 8px 0', fontSize: '13px', lineHeight: '1.5', color: '#374151' }}>
+          Direct playground to execute certified deterministic SQL queries with <strong>zero LLM math hallucinations</strong>.
+        </p>
+        <p style={{ margin: 0, fontSize: '12px', color: '#4b5563', lineHeight: '1.5' }}>
+          Run 15 pre-compiled business calculations including Daily Warehouse Package Receipts, Partner Overdue Balances, and FIFO Inventory Valuation.
+        </p>
+      </div>
+    )
+  },
+  {
+    target: '[data-tour="nav-knowledge"]',
+    title: 'Library (SOPs & Documents)',
+    badge: 'ENTERPRISE RAG & HNSW',
+    badgeColor: '#2563eb',
+    badgeBg: '#eff6ff',
+    icon: '📖',
+    preferredPlacement: 'right',
+    requiresSidebar: true,
+    description: (
+      <div>
+        <p style={{ margin: '0 0 8px 0', fontSize: '13px', lineHeight: '1.5', color: '#374151' }}>
+          Official Company Knowledge Base powered by pgvector with HNSW Cosine Similarity.
+        </p>
+        <ul style={{ margin: 0, paddingLeft: '16px', fontSize: '12px', color: '#4b5563', lineHeight: '1.6' }}>
+          <li>Explores 109 indexed documents and 746 certified semantic chunks.</li>
+          <li>Tests hybrid vector queries across return grading, packaging inspection, and payment terms.</li>
+          <li>Human governance candidate review for proposed memory updates.</li>
+        </ul>
+      </div>
+    )
+  },
+  {
+    target: '[data-tour="nav-alerts"]',
+    title: 'Alert Center & Restricted Actions',
+    badge: 'PROACTIVE ANOMALY DETECTOR',
+    badgeColor: '#dc2626',
+    badgeBg: '#fee2e2',
+    icon: '🚨',
+    preferredPlacement: 'right',
+    requiresSidebar: true,
+    description: (
+      <div>
+        <p style={{ margin: '0 0 8px 0', fontSize: '13px', lineHeight: '1.5', color: '#374151' }}>
+          Autonomous 24/7 anomaly monitoring and human-gated restricted action ledger.
+        </p>
+        <ul style={{ margin: 0, paddingLeft: '16px', fontSize: '12px', color: '#4b5563', lineHeight: '1.6' }}>
+          <li>Detects partner credit breaches (&gt;100% credit limit) and statistical intake outliers.</li>
+          <li>Safely proposes and confirms sensitive operational mutations (e.g. placing partner credit holds) with cryptographic tokens.</li>
+        </ul>
+      </div>
+    )
+  },
+  {
+    target: '[data-tour="nav-sync"]',
+    title: 'Scheduled Sync & Replication',
+    badge: 'BACKGROUND WORKER PIPELINE',
+    badgeColor: '#b45309',
+    badgeBg: '#fef3c7',
+    icon: '🕒',
+    preferredPlacement: 'right',
+    requiresSidebar: true,
+    description: (
+      <div>
+        <p style={{ margin: '0 0 8px 0', fontSize: '13px', lineHeight: '1.5', color: '#374151' }}>
+          Live telemetry for background ingestion and data synchronization workers.
+        </p>
+        <p style={{ margin: 0, fontSize: '12px', color: '#4b5563', lineHeight: '1.5' }}>
+          Monitors automated ETL pipelines pulling data from WMS intake scanners, partner portals, and accounting journals into the central Supabase PostgreSQL star schema.
+        </p>
+      </div>
+    )
+  },
+  {
+    target: '[data-tour="nav-crosswalk"]',
+    title: 'Entity Crosswalk',
+    badge: 'CANONICAL RESOLUTION',
+    badgeColor: '#4f46e5',
+    badgeBg: '#eef2ff',
+    icon: '👤',
+    preferredPlacement: 'right',
+    requiresSidebar: true,
+    description: (
+      <div>
+        <p style={{ margin: '0 0 8px 0', fontSize: '13px', lineHeight: '1.5', color: '#374151' }}>
+          Resolves disjoint identifiers across independent business systems.
+        </p>
+        <p style={{ margin: 0, fontSize: '12px', color: '#4b5563', lineHeight: '1.5' }}>
+          Maps disparate IDs (e.g., matching a Seller DB product SKU to a WMS warehouse bin item and a QuickBooks order ledger UUID) to maintain clean cross-department data integrity.
+        </p>
+      </div>
+    )
+  },
+  {
+    target: '[data-tour="nav-admin"]',
+    title: 'Plugins & Tools (MCP Control Plane)',
+    badge: 'GOVERNANCE & EVALUATION',
+    badgeColor: '#7c3aed',
+    badgeBg: '#ede9fe',
+    icon: '@',
+    preferredPlacement: 'right',
+    requiresSidebar: true,
+    description: (
+      <div>
+        <p style={{ margin: '0 0 8px 0', fontSize: '13px', lineHeight: '1.5', color: '#374151' }}>
+          Enterprise control plane for Model Context Protocol (MCP) and platform optimization.
+        </p>
+        <ul style={{ margin: 0, paddingLeft: '16px', fontSize: '12px', color: '#4b5563', lineHeight: '1.6' }}>
+          <li>50-scenario continuous evaluation testing center with pass-rate analytics.</li>
+          <li>SHA-256 composite semantic cache monitoring (&lt;15ms latency).</li>
+          <li>Departmental LLM spending budgets, BullMQ dead-letter queues, and RBAC tokens.</li>
+        </ul>
+      </div>
+    )
+  },
+  {
     target: '[data-tour="recent-chats"]',
     title: 'Recents & Session History',
     badge: 'POSTGRESQL CONTINUITY',
@@ -51,37 +218,6 @@ const TOUR_STEPS = [
           <li>Click any session to restore its messages, citations, and execution telemetry.</li>
           <li>Click <strong>✎</strong> to rename a thread or <strong>✕</strong> to archive/delete it.</li>
         </ul>
-      </div>
-    )
-  },
-  {
-    target: '[data-tour="sidebar-modules"]',
-    title: 'Enterprise Intelligence Modules',
-    badge: 'SYSTEM NAVIGATION',
-    badgeColor: '#7c3aed',
-    badgeBg: '#ede9fe',
-    icon: '🏢',
-    preferredPlacement: 'right',
-    requiresSidebar: true,
-    description: (
-      <div>
-        <p style={{ margin: '0 0 8px 0', fontSize: '13px', lineHeight: '1.5', color: '#374151' }}>
-          Switch between the conversational chat and specialized supply chain engines:
-        </p>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px', fontSize: '11px' }}>
-          <div style={{ background: '#f8f7f4', padding: '5px 7px', borderRadius: '5px' }}>
-            <strong>🚨 Alert Center:</strong> Credit breach monitors
-          </div>
-          <div style={{ background: '#f8f7f4', padding: '5px 7px', borderRadius: '5px' }}>
-            <strong>📊 SQL Metrics:</strong> 15 deterministic queries
-          </div>
-          <div style={{ background: '#f8f7f4', padding: '5px 7px', borderRadius: '5px' }}>
-            <strong>📚 Library:</strong> 746 verified SOP chunks
-          </div>
-          <div style={{ background: '#f8f7f4', padding: '5px 7px', borderRadius: '5px' }}>
-            <strong>⚡ MCP Admin:</strong> Tool tokens &amp; budgets
-          </div>
-        </div>
       </div>
     )
   },

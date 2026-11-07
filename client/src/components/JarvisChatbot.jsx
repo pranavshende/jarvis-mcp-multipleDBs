@@ -817,6 +817,7 @@ export default function JarvisChatbot() {
             return (
               <button
                 key={item.id}
+                data-tour={`nav-${item.id}`}
                 onClick={() => {
                   setActiveView(item.id);
                   if (isMobile) setSidebarOpen(false);
