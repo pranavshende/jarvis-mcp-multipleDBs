@@ -421,21 +421,23 @@ export async function fetchAdminHealth() {
   return res.json();
 }
 
-export async function queryGatewayIntent(queryText, sessionId = 'default') {
+export async function queryGatewayIntent(queryText, sessionId = 'default', signal = null) {
   const res = await fetch(`${GATEWAY_BASE}/api/query`, {
     method: 'POST',
     headers: getAdminHeaders(),
-    body: JSON.stringify({ query: queryText, sessionId })
+    body: JSON.stringify({ query: queryText, sessionId }),
+    signal
   });
   return res.json();
 }
 
-export async function queryGatewayStream(queryText, sessionId = 'default', onWorkflowEvent, onComplete, onError) {
+export async function queryGatewayStream(queryText, sessionId = 'default', onWorkflowEvent, onComplete, onError, signal = null) {
   try {
     const res = await fetch(`${GATEWAY_BASE}/api/query/stream`, {
       method: 'POST',
       headers: getAdminHeaders(),
       body: JSON.stringify({ query: queryText, sessionId }),
+      signal
     });
 
     if (!res.ok) {
@@ -447,6 +449,10 @@ export async function queryGatewayStream(queryText, sessionId = 'default', onWor
     let buffer = '';
 
     while (true) {
+      if (signal && signal.aborted) {
+        reader.cancel();
+        break;
+      }
       const { done, value } = await reader.read();
       if (done) break;
 
@@ -484,7 +490,34 @@ export async function queryGatewayStream(queryText, sessionId = 'default', onWor
         }
       }
     }
+
+    if (buffer.trim()) {
+      const eventLines = buffer.split('\n');
+      let eventType = 'message';
+      let dataStr = '';
+      for (const line of eventLines) {
+        if (line.startsWith('event: ')) {
+          eventType = line.substring(7).trim();
+        } else if (line.startsWith('data: ')) {
+          dataStr = line.substring(6).trim();
+        }
+      }
+      if (dataStr) {
+        try {
+          const data = JSON.parse(dataStr);
+          if (eventType === 'workflow_event' && onWorkflowEvent) onWorkflowEvent(data);
+          else if (eventType === 'complete' && onComplete) onComplete(data);
+          else if (eventType === 'error' && onError) onError(new Error(data.error || 'Server stream error'));
+        } catch (e) {
+          console.error('Failed to parse final SSE payload:', e);
+        }
+      }
+    }
   } catch (err) {
+    if (err.name === 'AbortError') {
+      console.log('Stream aborted by user.');
+      return;
+    }
     if (onError) onError(err);
   }
 }

@@ -432,10 +432,65 @@ export default function JarvisChatbot() {
     setAuthModalOpen(true);
   };
 
+  // Execution cancellation controller
+  const abortControllerRef = useRef(null);
+
+  // In-place prompt editing & rewriting state
+  const [editingMessageId, setEditingMessageId] = useState(null);
+  const [editingMessageText, setEditingMessageText] = useState('');
+
+  // Stop active AI execution mid-way
+  const handleStopExecution = () => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
+    }
+    setIsLoading(false);
+    setMessages((prev) =>
+      prev.map((m) =>
+        m.isGenerating
+          ? {
+              ...m,
+              isGenerating: false,
+              content: m.content
+                ? `${m.content}\n\n*(Execution stopped mid-way by user)*`
+                : '*(Execution stopped mid-way by user)*'
+            }
+          : m
+      )
+    );
+  };
+
+  // Rewrite and re-execute a user prompt
+  const handleRewritePrompt = (messageId, newText) => {
+    const trimmed = newText.trim();
+    if (!trimmed) return;
+
+    handleStopExecution();
+    setEditingMessageId(null);
+
+    const idx = messages.findIndex((m) => m.id === messageId);
+    if (idx !== -1) {
+      // Rewind messages to before this message, so the rewritten prompt replaces it cleanly
+      const priorMessages = messages.slice(0, idx);
+      setMessages(priorMessages);
+      handleSubmit(null, trimmed);
+    } else {
+      handleSubmit(null, trimmed);
+    }
+  };
+
   const handleSubmit = async (e, customQuery) => {
     if (e) e.preventDefault();
     const query = (customQuery !== undefined ? customQuery : inputQuery).trim();
     if (!query || isLoading) return;
+
+    // Abort previous running request if any
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
 
     // Use synchronous ref to ensure whole chats continue in the same session
     const activeSessionId = currentSessionIdRef.current || currentSessionId || 'new';
@@ -484,6 +539,7 @@ export default function JarvisChatbot() {
         },
         // On Complete
         (res) => {
+          abortControllerRef.current = null;
           const latency = Math.round((performance.now() - startTime) * 10) / 10;
           const finalBotMessage = {
             id: pendingBotId,
@@ -514,15 +570,21 @@ export default function JarvisChatbot() {
         },
         // On Error fallback
         async (streamErr) => {
+          if (controller.signal.aborted) return;
           try {
-            const res = await queryGatewayIntent(query, activeSessionId);
+            const res = await queryGatewayIntent(query, activeSessionId, controller.signal);
+            abortControllerRef.current = null;
             const latency = Math.round((performance.now() - startTime) * 10) / 10;
 
             const finalBotMessage = {
               id: pendingBotId,
               role: 'assistant',
               isGenerating: false,
-              content: res.response || 'No response returned.',
+              content:
+                res.response ||
+                (res.message || res.error
+                  ? `⚠️ Gateway notice: ${res.message || res.error}`
+                  : 'Jarvis received your request, but no textual response payload was generated. Please verify gateway connectivity or retry.'),
               route: res.route || 'KNOWLEDGE + DATA',
               citations: res.citations || [],
               toolsInvoked: res.toolsInvoked || [],
@@ -544,6 +606,8 @@ export default function JarvisChatbot() {
             }
             loadConversations();
           } catch (fallbackErr) {
+            abortControllerRef.current = null;
+            if (fallbackErr.name === 'AbortError') return;
             const errBotMessage = {
               id: pendingBotId,
               role: 'assistant',
@@ -554,9 +618,12 @@ export default function JarvisChatbot() {
             };
             setMessages((prev) => prev.map((m) => (m.id === pendingBotId ? errBotMessage : m)));
           }
-        }
+        },
+        controller.signal
       );
     } catch (outerErr) {
+      abortControllerRef.current = null;
+      if (outerErr.name === 'AbortError') return;
       const errBotMessage = {
         id: pendingBotId,
         role: 'assistant',
@@ -1496,23 +1563,164 @@ export default function JarvisChatbot() {
                     >
                       {/* USER MESSAGE BUBBLE */}
                       {m.role === 'user' ? (
-                        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', maxWidth: isMobile ? '90%' : '80%' }}>
+                        <div
+                          style={{
+                            display: 'flex',
+                            alignItems: 'flex-start',
+                            gap: '8px',
+                            maxWidth: isMobile ? '95%' : '85%',
+                            position: 'relative'
+                          }}
+                        >
                           <div
                             style={{
                               background: '#ebe5df',
-                              border: '1px solid #ded9d2',
+                              border: editingMessageId === m.id ? '1.5px solid #0e372d' : '1px solid #ded9d2',
                               borderRadius: '16px',
-                              padding: isMobile ? '10px 14px' : '12px 18px',
+                              padding: isMobile ? '10px 12px' : '12px 18px',
                               fontSize: isMobile ? '13.5px' : '14.5px',
                               color: '#1f211e',
                               lineHeight: '1.55',
-                              boxShadow: '0 1px 3px rgba(0, 0, 0, 0.03)'
+                              boxShadow: '0 1px 3px rgba(0, 0, 0, 0.03)',
+                              width: editingMessageId === m.id ? (isMobile ? '100%' : '560px') : 'auto',
+                              transition: 'all 0.15s ease'
                             }}
                           >
-                            <div>{m.content}</div>
-                            <div style={{ textAlign: 'right', fontSize: '10.5px', color: '#787a74', marginTop: '4px' }}>
-                              {m.timestamp}
-                            </div>
+                            {editingMessageId === m.id ? (
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                <div style={{ fontSize: '11px', fontWeight: '700', color: '#0e372d', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                                  Rewrite &amp; Re-run Prompt:
+                                </div>
+                                <textarea
+                                  value={editingMessageText}
+                                  onChange={(e) => setEditingMessageText(e.target.value)}
+                                  onKeyDown={(e) => {
+                                    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                                      e.preventDefault();
+                                      handleRewritePrompt(m.id, editingMessageText);
+                                    } else if (e.key === 'Escape') {
+                                      setEditingMessageId(null);
+                                    }
+                                  }}
+                                  autoFocus
+                                  rows={3}
+                                  style={{
+                                    width: '100%',
+                                    background: '#ffffff',
+                                    border: '1px solid #0e372d',
+                                    borderRadius: '8px',
+                                    padding: '8px 10px',
+                                    fontSize: '13.5px',
+                                    color: '#111827',
+                                    fontFamily: 'inherit',
+                                    outline: 'none',
+                                    resize: 'vertical',
+                                    boxSizing: 'border-box'
+                                  }}
+                                />
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', flexWrap: 'wrap' }}>
+                                  <span style={{ fontSize: '11px', color: '#787a74' }}>
+                                    Press <b>Ctrl+Enter</b> to re-execute
+                                  </span>
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        setInputQuery(editingMessageText);
+                                        setEditingMessageId(null);
+                                        if (inputRef.current) inputRef.current.focus();
+                                      }}
+                                      title="Copy this prompt to the bottom input bar"
+                                      style={{
+                                        background: 'transparent',
+                                        border: '1px solid #d1d5db',
+                                        borderRadius: '6px',
+                                        padding: '4px 8px',
+                                        fontSize: '11.5px',
+                                        color: '#4b5563',
+                                        cursor: 'pointer'
+                                      }}
+                                    >
+                                      To Input Bar
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => setEditingMessageId(null)}
+                                      style={{
+                                        background: '#f3f4f6',
+                                        border: '1px solid #e5e7eb',
+                                        borderRadius: '6px',
+                                        padding: '4px 10px',
+                                        fontSize: '11.5px',
+                                        fontWeight: '500',
+                                        color: '#374151',
+                                        cursor: 'pointer'
+                                      }}
+                                    >
+                                      Cancel
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => handleRewritePrompt(m.id, editingMessageText)}
+                                      disabled={!editingMessageText.trim()}
+                                      style={{
+                                        background: '#0e372d',
+                                        border: 'none',
+                                        borderRadius: '6px',
+                                        padding: '4px 12px',
+                                        fontSize: '11.5px',
+                                        fontWeight: '600',
+                                        color: '#ffffff',
+                                        cursor: editingMessageText.trim() ? 'pointer' : 'default',
+                                        opacity: editingMessageText.trim() ? 1 : 0.6
+                                      }}
+                                    >
+                                      Save &amp; Submit
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            ) : (
+                              <>
+                                <div>{m.content}</div>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '8px', marginTop: '4px' }}>
+                                  <span style={{ fontSize: '10.5px', color: '#787a74' }}>
+                                    {m.timestamp}
+                                  </span>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setEditingMessageId(m.id);
+                                      setEditingMessageText(m.content);
+                                    }}
+                                    title="Edit and rewrite prompt"
+                                    style={{
+                                      background: 'transparent',
+                                      border: 'none',
+                                      color: '#787a74',
+                                      cursor: 'pointer',
+                                      padding: '1px 5px',
+                                      borderRadius: '4px',
+                                      fontSize: '11px',
+                                      display: 'inline-flex',
+                                      alignItems: 'center',
+                                      gap: '3px'
+                                    }}
+                                    onMouseEnter={(e) => {
+                                      e.currentTarget.style.color = '#0e372d';
+                                      e.currentTarget.style.background = '#ded9d2';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                      e.currentTarget.style.color = '#787a74';
+                                      e.currentTarget.style.background = 'transparent';
+                                    }}
+                                  >
+                                    <span>✎</span>
+                                    <span>Edit</span>
+                                  </button>
+                                </div>
+                              </>
+                            )}
                           </div>
 
                           {/* User Avatar */}
@@ -1594,7 +1802,9 @@ export default function JarvisChatbot() {
                                 events={m.events && m.events.length > 0 ? m.events : liveStreamEvents}
                                 isStreaming={m.isGenerating}
                                 queryTitle={latestUserQuery}
+                                route={m.route || 'KNOWLEDGE + DATA'}
                                 inline={true}
+                                onStopExecution={handleStopExecution}
                               />
                             )}
 
@@ -1725,31 +1935,61 @@ export default function JarvisChatbot() {
                   <span>Think</span>
                 </button>
 
-                {/* Submit button */}
-                <button
-                  type="submit"
-                  disabled={!inputQuery.trim() || isLoading}
-                  style={{
-                    width: isMobile ? '32px' : '36px',
-                    height: isMobile ? '32px' : '36px',
-                    borderRadius: '50%',
-                    background: '#0e372d',
-                    border: 'none',
-                    color: '#ffffff',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: inputQuery.trim() && !isLoading ? 'pointer' : 'default',
-                    opacity: inputQuery.trim() && !isLoading ? 1 : 0.6,
-                    transition: 'opacity 0.15s ease',
-                    flexShrink: 0
-                  }}
-                >
-                  <svg width={isMobile ? '13' : '15'} height={isMobile ? '13' : '15'} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                    <line x1="12" y1="19" x2="12" y2="5"/>
-                    <polyline points="5 12 12 5 19 12"/>
-                  </svg>
-                </button>
+                {/* Submit or Stop Button */}
+                {isLoading ? (
+                  <button
+                    type="button"
+                    onClick={handleStopExecution}
+                    title="Stop AI execution mid-way"
+                    style={{
+                      width: isMobile ? '32px' : '36px',
+                      height: isMobile ? '32px' : '36px',
+                      borderRadius: '50%',
+                      background: '#dc2626',
+                      border: 'none',
+                      color: '#ffffff',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      cursor: 'pointer',
+                      boxShadow: '0 2px 6px rgba(220, 38, 38, 0.35)',
+                      flexShrink: 0,
+                      transition: 'transform 0.15s ease'
+                    }}
+                    onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.05)')}
+                    onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1.0)')}
+                  >
+                    <svg width={isMobile ? '12' : '14'} height={isMobile ? '12' : '14'} viewBox="0 0 24 24" fill="currentColor">
+                      <rect x="6" y="6" width="12" height="12" rx="2" />
+                    </svg>
+                  </button>
+                ) : (
+                  <button
+                    type="submit"
+                    disabled={!inputQuery.trim()}
+                    title="Send message (Enter)"
+                    style={{
+                      width: isMobile ? '32px' : '36px',
+                      height: isMobile ? '32px' : '36px',
+                      borderRadius: '50%',
+                      background: '#0e372d',
+                      border: 'none',
+                      color: '#ffffff',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      cursor: inputQuery.trim() ? 'pointer' : 'default',
+                      opacity: inputQuery.trim() ? 1 : 0.6,
+                      transition: 'opacity 0.15s ease',
+                      flexShrink: 0
+                    }}
+                  >
+                    <svg width={isMobile ? '13' : '15'} height={isMobile ? '13' : '15'} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <line x1="12" y1="19" x2="12" y2="5"/>
+                      <polyline points="5 12 12 5 19 12"/>
+                    </svg>
+                  </button>
+                )}
               </div>
             </form>
           </div>
@@ -1767,6 +2007,85 @@ export default function JarvisChatbot() {
             }
           }}
         />
+
+        {/* Mobile Workflow Modal / Bottom Sheet */}
+        {isMobile && mobileWorkflowOpen && (
+          <div
+            style={{
+              position: 'fixed',
+              inset: 0,
+              background: 'rgba(0, 0, 0, 0.45)',
+              zIndex: 9999,
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'flex-end',
+              animation: 'fadeIn 0.2s ease'
+            }}
+            onClick={() => setMobileWorkflowOpen(false)}
+          >
+            <div
+              style={{
+                background: '#ffffff',
+                borderTopLeftRadius: '20px',
+                borderTopRightRadius: '20px',
+                maxHeight: '85vh',
+                display: 'flex',
+                flexDirection: 'column',
+                overflow: 'hidden',
+                boxShadow: '0 -6px 24px rgba(0, 0, 0, 0.2)'
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  padding: '14px 18px',
+                  borderBottom: '1px solid #e5e7eb',
+                  background: '#fcfbf9'
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ fontSize: '15px' }}>⚡</span>
+                  <span style={{ fontSize: '14px', fontWeight: '700', color: '#111827' }}>
+                    Live Execution Workflow &amp; DB Flow
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setMobileWorkflowOpen(false)}
+                  style={{
+                    background: '#f3f4f6',
+                    border: 'none',
+                    borderRadius: '50%',
+                    width: '28px',
+                    height: '28px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    color: '#6b7280',
+                    fontWeight: '700'
+                  }}
+                >
+                  ✕
+                </button>
+              </div>
+
+              <div style={{ padding: '16px', overflowY: 'auto', flex: 1 }}>
+                <ExecutionWorkflow
+                  events={liveStreamEvents}
+                  isStreaming={isLoading}
+                  queryTitle={latestUserQuery}
+                  route="KNOWLEDGE + DATA"
+                  inline={false}
+                  onStopExecution={handleStopExecution}
+                />
+              </div>
+            </div>
+          </div>
+        )}
 
       </main>
     </div>
